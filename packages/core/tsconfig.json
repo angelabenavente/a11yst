@@ -12,6 +12,7 @@
     { "path": "../artifacts" },
     { "path": "../baseline" },
     { "path": "../browser" },
-    { "path": "../flows" }
+    { "path": "../flows" },
+    { "path": "../policy" }
   ]
 }

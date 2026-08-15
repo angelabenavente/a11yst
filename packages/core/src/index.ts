@@ -44,3 +44,4 @@ export {
   type ApplyBaselineComparisonOptions,
   type ApplyBaselineComparisonOutput,
 } from "./baseline-comparison.js";
+export { applyPolicyEvaluation } from "./policy-evaluation.js";

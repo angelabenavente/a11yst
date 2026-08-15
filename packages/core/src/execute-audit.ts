@@ -18,6 +18,7 @@ import type {
   FlowTrace,
   PlannedRun,
   ProgressReporter,
+  ResolvedCiPolicyConfig,
   ResolvedConfig,
 } from "@a11yst/types";
 import { productMetadata } from "@a11yst/types";
@@ -25,6 +26,7 @@ import { aggregateSummary, buildProfileSummary, buildFlowSummary, emptySeverityC
 import { createAuditPlan } from "./create-audit-plan.js";
 import { prepareAuditConfig } from "./resolve-project-routes.js";
 import { applyBaselineComparison } from "./baseline-comparison.js";
+import { applyPolicyEvaluation } from "./policy-evaluation.js";
 import { selectRuns, skipReasonForRun, UnknownProfileError, UnknownProjectError, UnknownFlowError, isRouteRun, isFlowCheckpointRun } from "./select-runs.js";
 
 export interface ExecuteAuditOptions {
@@ -66,6 +68,8 @@ export interface ExecuteAuditOptions {
   baselinePath?: string;
   /** Fail when `baselinePath` does not exist. */
   explicitBaselineRequired?: boolean;
+  /** Resolved CI policy override; defaults to `config.ci`. */
+  ciPolicy?: ResolvedCiPolicyConfig;
   /** Optional CLI progress reporter for long-running phases. */
   progress?: ProgressReporter;
 }
@@ -501,6 +505,12 @@ export async function executeAudit(
     explicitBaselineRequired: options.explicitBaselineRequired,
   });
   result = baselineApplied.result;
+
+  const resolvedPolicy = options.ciPolicy ?? config.ci;
+  result = {
+    ...result,
+    policyEvaluation: applyPolicyEvaluation(result, resolvedPolicy, baselineApplied),
+  };
 
   if (!writer) {
     return result;

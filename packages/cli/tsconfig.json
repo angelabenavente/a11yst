@@ -13,6 +13,7 @@
     { "path": "../core" },
     { "path": "../detect" },
     { "path": "../flows" },
+    { "path": "../policy" },
     { "path": "../profiles" }
   ]
 }

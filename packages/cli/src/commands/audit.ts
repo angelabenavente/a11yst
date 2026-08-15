@@ -1,4 +1,4 @@
-import type { AuditExecutionResult } from "@a11yst/types";
+import type { AuditExecutionResult, Severity } from "@a11yst/types";
 import { checkingMessage, formatLabelValue } from "../output.js";
 import {
   formatAuditExecutionHeader,
@@ -9,6 +9,7 @@ import {
   type AuditPresentationOptions,
 } from "../presentation/audit-presentation.js";
 import { formatFlowExecutionsHuman, hasFlowExecutions } from "./audit-flow-output.js";
+import { formatPolicyEvaluationSection } from "./audit-policy-output.js";
 
 function formatArtifactsSection(result: AuditExecutionResult): string[] {
   if (!result.auditId && !result.artifacts?.resultsPath) {
@@ -26,7 +27,10 @@ function formatArtifactsSection(result: AuditExecutionResult): string[] {
   return lines;
 }
 
-export type FormatAuditHumanOptions = AuditPresentationOptions;
+export type FormatAuditHumanOptions = AuditPresentationOptions & {
+  explicitCiFlagsUsed?: boolean;
+  minimumSeverity?: Severity;
+};
 
 export function formatAuditHuman(
   result: AuditExecutionResult,
@@ -55,6 +59,20 @@ export function formatAuditHuman(
       skipFlowCheckpoints: hasFlowExecutions(result),
     }),
   );
+
+  if (result.policyEvaluation) {
+    const minimumSeverity = options?.minimumSeverity ?? "high";
+    blocks.push(
+      ...formatPolicyEvaluationSection(result.policyEvaluation, {
+        explicitCiFlagsUsed: options?.explicitCiFlagsUsed,
+        minimumSeverity,
+        findings: result.findings,
+      }),
+    );
+    if (result.policyEvaluation.policyEnabled || options?.explicitCiFlagsUsed) {
+      blocks.push("");
+    }
+  }
 
   blocks.push(...formatProfileReviewSections(result));
   blocks.push(...formatAuditFooterSummary(result));

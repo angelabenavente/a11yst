@@ -1,8 +1,10 @@
 import { resolve } from "node:path";
 import { Command } from "commander";
 import { ConfigError, loadConfig } from "@a11yst/config";
+import { getAuditExitCode, resolveCiPolicyConfig } from "@a11yst/policy";
 import type { AccessibilityProfile } from "@a11yst/types";
 import { productMetadata } from "@a11yst/types";
+import { parseCiPolicyCliOptions } from "./ci-policy-options.js";
 import { formatAuditHuman, formatAuditJson } from "./commands/audit.js";
 import {
   formatDetectHuman,
@@ -61,10 +63,6 @@ function parsePositiveInteger(value: string, optionName: string): number {
     throw new Error(`${optionName} must be a positive integer; received "${value}".`);
   }
   return parsed;
-}
-
-function getAuditExitCode(status: string): number {
-  return status === "completed" ? 0 : 1;
 }
 
 export async function runCli(options: RunCliOptions = {}): Promise<number> {
@@ -249,13 +247,55 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
     .option("--full-page-screenshots", "Capture full-page screenshots", false)
     .option("--no-baseline", "Do not compare against a baseline file")
     .option("--baseline <path>", "Compare against this baseline file")
+    .option("--fail-on-new", "Fail CI policy when new findings meet the severity threshold", false)
+    .option("--no-fail-on-new", "Do not fail CI policy on new findings")
+    .option(
+      "--fail-on-regression",
+      "Fail CI policy when regressed findings meet the severity threshold",
+      false,
+    )
+    .option("--no-fail-on-regression", "Do not fail CI policy on regressions")
+    .option(
+      "--fail-on-expired-classification",
+      "Fail CI policy when an accepted classification has expired",
+      false,
+    )
+    .option(
+      "--no-fail-on-expired-classification",
+      "Do not fail CI policy on expired classifications",
+    )
+    .option(
+      "--minimum-severity <severity>",
+      "Minimum severity for CI policy breaches (minor, medium, high, critical)",
+    )
     .option(
       "--color <mode>",
       "Color output for human presentation (auto, always, never)",
       "auto",
     )
     .option("--verbose", "Include technical finding details in human output", false)
-    .addHelpText("after", `\n${AUDIT_HELP_DISCLAIMER}\n`)
+    .addHelpText(
+      "after",
+      `
+CI policy flags override the ci section in your a11yst config. CLI values take
+precedence over configuration. Setting --minimum-severity alone does not enable
+the policy; at least one fail-on flag must be enabled.
+
+Enabled CI policy requires baseline comparison. Use a baseline file or remove
+--no-baseline.
+
+Exit codes:
+  0  Audit completed; CI policy disabled or passed
+  1  Operational/config error, or CI policy could not be evaluated
+  2  Audit completed but CI policy failed
+
+false-positive and not-applicable classifications are excluded from policy
+breaches. accepted-risk, third-party, and manual-review may still block when
+new or regressed. A baseline records known debt; it does not make findings pass.
+
+${AUDIT_HELP_DISCLAIMER}
+`,
+    )
     .action(
       async (opts: {
         json?: boolean;
@@ -274,6 +314,13 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
         screenshots?: boolean;
         fullPageScreenshots?: boolean;
         baseline?: string | boolean;
+        failOnNew?: boolean;
+        noFailOnNew?: boolean;
+        failOnRegression?: boolean;
+        noFailOnRegression?: boolean;
+        failOnExpiredClassification?: boolean;
+        noFailOnExpiredClassification?: boolean;
+        minimumSeverity?: string;
         color?: string;
         verbose?: boolean;
       }) => {
@@ -301,6 +348,22 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
             configPath: opts.config,
           });
           progress.succeed("Configuration loaded");
+          const { overrides: ciOverrides, explicitFlagsUsed } = parseCiPolicyCliOptions(
+            {
+              failOnNew: opts.failOnNew,
+              noFailOnNew: opts.noFailOnNew,
+              failOnRegression: opts.failOnRegression,
+              noFailOnRegression: opts.noFailOnRegression,
+              failOnExpiredClassification: opts.failOnExpiredClassification,
+              noFailOnExpiredClassification: opts.noFailOnExpiredClassification,
+              minimumSeverity: opts.minimumSeverity,
+            },
+            argv,
+          );
+          const resolvedCiPolicy = resolveCiPolicyConfig({
+            configPolicy: config.ci,
+            cliOverrides: ciOverrides,
+          });
           const baselineOverride =
             typeof opts.baseline === "string" ? opts.baseline : undefined;
           const noBaseline = opts.baseline === false;
@@ -322,6 +385,7 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
             noBaseline: noBaseline || undefined,
             baselinePath: baselineOverride,
             explicitBaselineRequired: Boolean(baselineOverride),
+            ciPolicy: resolvedCiPolicy,
             progress,
           });
 
@@ -330,6 +394,8 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
           } else {
             const capabilities = resolveTerminalCapabilities();
             const body = formatAuditHuman(result, {
+              explicitCiFlagsUsed: explicitFlagsUsed,
+              minimumSeverity: resolvedCiPolicy.minimumSeverity,
               colorMode: parseColorMode(
                 typeof opts.color === "string" ? opts.color : undefined,
               ),
@@ -339,7 +405,10 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
             });
             writeStdout(prependHumanBrandHeader(body, capabilities));
           }
-          process.exitCode = getAuditExitCode(result.status);
+          process.exitCode = getAuditExitCode({
+            auditIncomplete: result.status !== "completed",
+            policyEvaluation: result.policyEvaluation,
+          });
         } catch (error) {
           progress.fail("Audit failed");
           if (opts.json) {
