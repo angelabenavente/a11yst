@@ -1,0 +1,130 @@
+{
+  "schemaVersion": "1",
+  "fingerprintVersion": "1",
+  "createdAt": "2026-02-10T10:00:00.000Z",
+  "updatedAt": "2026-02-10T10:00:00.000Z",
+  "productVersion": "0.1.0",
+  "sourceAudit": {
+    "coverage": {
+      "projects": ["baseline-flow-regression"],
+      "profiles": ["default", "keyboard"],
+      "viewports": ["desktop"],
+      "routeRuns": 5,
+      "flowCheckpointRuns": 8,
+      "skippedRuns": 0
+    }
+  },
+  "entries": [
+    {
+      "fingerprint": "dialog-focus-entry::baseline-flow-regression::panel-known::panel-open::default::desktop::#open-known",
+      "fingerprintVersion": "1",
+      "ruleId": "dialog-focus-entry",
+      "source": "a11yst",
+      "projectName": "baseline-flow-regression",
+      "location": {
+        "kind": "flow-checkpoint",
+        "flowId": "panel-known",
+        "checkpointId": "panel-open",
+        "profile": "default",
+        "viewport": "desktop"
+      },
+      "severity": "high",
+      "firstSeenAt": "2026-02-10T10:00:00.000Z",
+      "lastSeenAt": "2026-02-10T10:00:00.000Z",
+      "snapshot": {
+        "title": "Focus did not move into the opened dialog",
+        "target": ["#open-known"],
+        "flowId": "panel-known",
+        "checkpointId": "panel-open",
+        "profile": "default",
+        "viewport": "desktop",
+        "framework": "html",
+        "confidence": "medium"
+      },
+      "history": [{ "at": "2026-02-10T10:00:00.000Z", "action": "created" }]
+    },
+    {
+      "fingerprint": "dialog-focus-entry::baseline-flow-regression::panel-new::panel-open::default::desktop::#open-new",
+      "fingerprintVersion": "1",
+      "ruleId": "dialog-focus-entry",
+      "source": "a11yst",
+      "projectName": "baseline-flow-regression",
+      "location": {
+        "kind": "flow-checkpoint",
+        "flowId": "panel-new",
+        "checkpointId": "panel-open",
+        "profile": "default",
+        "viewport": "desktop"
+      },
+      "severity": "high",
+      "firstSeenAt": "2026-02-10T10:00:00.000Z",
+      "lastSeenAt": "2026-02-10T10:00:00.000Z",
+      "snapshot": {
+        "title": "Focus did not move into the opened dialog",
+        "target": ["#open-new"],
+        "flowId": "panel-new",
+        "checkpointId": "panel-open",
+        "profile": "default",
+        "viewport": "desktop",
+        "framework": "html",
+        "confidence": "medium"
+      },
+      "history": [{ "at": "2026-02-10T10:00:00.000Z", "action": "created" }]
+    },
+    {
+      "fingerprint": "dialog-focus-entry::baseline-flow-regression::panel-resolved::panel-open::default::desktop::#open-resolved",
+      "fingerprintVersion": "1",
+      "ruleId": "dialog-focus-entry",
+      "source": "a11yst",
+      "projectName": "baseline-flow-regression",
+      "location": {
+        "kind": "flow-checkpoint",
+        "flowId": "panel-resolved",
+        "checkpointId": "panel-open",
+        "profile": "default",
+        "viewport": "desktop"
+      },
+      "severity": "high",
+      "firstSeenAt": "2026-02-10T10:00:00.000Z",
+      "lastSeenAt": "2026-02-10T10:00:00.000Z",
+      "snapshot": {
+        "title": "Focus did not move into the opened dialog",
+        "target": ["#open-resolved"],
+        "flowId": "panel-resolved",
+        "checkpointId": "panel-open",
+        "profile": "default",
+        "viewport": "desktop",
+        "framework": "html",
+        "confidence": "medium"
+      },
+      "history": [{ "at": "2026-02-10T10:00:00.000Z", "action": "created" }]
+    },
+    {
+      "fingerprint": "label|baseline-flow-regression|/partial|default|desktop|#confirm-email",
+      "fingerprintVersion": "1",
+      "ruleId": "label",
+      "source": "axe",
+      "projectName": "baseline-flow-regression",
+      "location": {
+        "kind": "flow-checkpoint",
+        "flowId": "checkout-partial",
+        "checkpointId": "confirmation",
+        "profile": "default",
+        "viewport": "desktop"
+      },
+      "severity": "critical",
+      "firstSeenAt": "2026-02-10T10:00:00.000Z",
+      "lastSeenAt": "2026-02-10T10:00:00.000Z",
+      "snapshot": {
+        "title": "Form elements must have labels",
+        "target": ["#confirm-email"],
+        "flowId": "checkout-partial",
+        "checkpointId": "confirmation",
+        "profile": "default",
+        "viewport": "desktop",
+        "framework": "html"
+      },
+      "history": [{ "at": "2026-02-10T10:00:00.000Z", "action": "created" }]
+    }
+  ]
+}

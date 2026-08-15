@@ -10,6 +10,7 @@
     { "path": "../types" },
     { "path": "../adapters" },
     { "path": "../artifacts" },
+    { "path": "../baseline" },
     { "path": "../browser" },
     { "path": "../flows" }
   ]

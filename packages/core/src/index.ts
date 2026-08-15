@@ -39,3 +39,8 @@ export {
   resolveAuditOutputDirectory,
   type ExecuteAuditOptions,
 } from "./execute-audit.js";
+export {
+  applyBaselineComparison,
+  type ApplyBaselineComparisonOptions,
+  type ApplyBaselineComparisonOutput,
+} from "./baseline-comparison.js";

@@ -1,0 +1,188 @@
+{
+  "schemaVersion": "1",
+  "fingerprintVersion": "1",
+  "createdAt": "2026-01-15T10:00:00.000Z",
+  "updatedAt": "2026-01-15T10:00:00.000Z",
+  "productVersion": "0.1.0",
+  "sourceAudit": {
+    "coverage": {
+      "projects": ["baseline-legacy-html"],
+      "profiles": ["default"],
+      "viewports": ["desktop"],
+      "routeRuns": 5,
+      "flowCheckpointRuns": 0,
+      "skippedRuns": 0
+    }
+  },
+  "entries": [
+    {
+      "fingerprint": "image-alt|baseline-legacy-html|/|default|desktop|#site-logo",
+      "fingerprintVersion": "1",
+      "ruleId": "image-alt",
+      "source": "axe",
+      "projectName": "baseline-legacy-html",
+      "location": {
+        "kind": "route",
+        "route": "/",
+        "routeId": "home",
+        "profile": "default",
+        "viewport": "desktop"
+      },
+      "severity": "critical",
+      "firstSeenAt": "2026-01-15T10:00:00.000Z",
+      "lastSeenAt": "2026-01-15T10:00:00.000Z",
+      "snapshot": {
+        "title": "Images must have alternate text",
+        "target": ["#site-logo"],
+        "route": "/",
+        "routeId": "home",
+        "profile": "default",
+        "viewport": "desktop",
+        "framework": "html"
+      },
+      "history": [{ "at": "2026-01-15T10:00:00.000Z", "action": "created" }]
+    },
+    {
+      "fingerprint": "button-name|baseline-legacy-html|/|default|desktop|#icon-action",
+      "fingerprintVersion": "1",
+      "ruleId": "button-name",
+      "source": "axe",
+      "projectName": "baseline-legacy-html",
+      "location": {
+        "kind": "route",
+        "route": "/",
+        "routeId": "home",
+        "profile": "default",
+        "viewport": "desktop"
+      },
+      "severity": "critical",
+      "firstSeenAt": "2026-01-15T10:00:00.000Z",
+      "lastSeenAt": "2026-01-15T10:00:00.000Z",
+      "snapshot": {
+        "title": "Buttons must have discernible text",
+        "target": ["#icon-action"],
+        "route": "/",
+        "routeId": "home",
+        "profile": "default",
+        "viewport": "desktop",
+        "framework": "html"
+      },
+      "classification": {
+        "disposition": "false-positive",
+        "reason": "Decorative control covered by adjacent heading copy in legacy CMS export.",
+        "createdAt": "2026-01-15T10:05:00.000Z",
+        "createdBy": "fixture",
+        "scope": {
+          "type": "finding",
+          "fingerprint": "button-name|baseline-legacy-html|/|default|desktop|#icon-action"
+        }
+      },
+      "history": [
+        { "at": "2026-01-15T10:00:00.000Z", "action": "created" },
+        {
+          "at": "2026-01-15T10:05:00.000Z",
+          "action": "classification-added",
+          "details": { "disposition": "false-positive" }
+        }
+      ]
+    },
+    {
+      "fingerprint": "button-name|baseline-legacy-html|/fixed|default|desktop|#fixed-action",
+      "fingerprintVersion": "1",
+      "ruleId": "button-name",
+      "source": "axe",
+      "projectName": "baseline-legacy-html",
+      "location": {
+        "kind": "route",
+        "route": "/fixed",
+        "routeId": "fixed",
+        "profile": "default",
+        "viewport": "desktop"
+      },
+      "severity": "critical",
+      "firstSeenAt": "2026-01-15T10:00:00.000Z",
+      "lastSeenAt": "2026-01-15T10:00:00.000Z",
+      "snapshot": {
+        "title": "Buttons must have discernible text",
+        "target": ["#fixed-action"],
+        "route": "/fixed",
+        "routeId": "fixed",
+        "profile": "default",
+        "viewport": "desktop",
+        "framework": "html"
+      },
+      "history": [{ "at": "2026-01-15T10:00:00.000Z", "action": "created" }]
+    },
+    {
+      "fingerprint": "label|baseline-legacy-html|/review|default|desktop|#newsletter-input",
+      "fingerprintVersion": "1",
+      "ruleId": "label",
+      "source": "axe",
+      "projectName": "baseline-legacy-html",
+      "location": {
+        "kind": "route",
+        "route": "/review",
+        "routeId": "review",
+        "profile": "default",
+        "viewport": "desktop"
+      },
+      "severity": "critical",
+      "firstSeenAt": "2026-01-15T10:00:00.000Z",
+      "lastSeenAt": "2026-01-15T10:00:00.000Z",
+      "snapshot": {
+        "title": "Form elements must have labels",
+        "target": ["#newsletter-input"],
+        "route": "/review",
+        "routeId": "review",
+        "profile": "default",
+        "viewport": "desktop",
+        "framework": "html"
+      },
+      "classification": {
+        "disposition": "accepted-risk",
+        "reason": "Newsletter field scheduled for replacement in Q2 redesign.",
+        "owner": "platform-team",
+        "expiresAt": "2099-12-31",
+        "createdAt": "2026-01-15T10:05:00.000Z",
+        "createdBy": "fixture",
+        "scope": {
+          "type": "finding",
+          "fingerprint": "label|baseline-legacy-html|/review|default|desktop|#newsletter-input"
+        }
+      },
+      "history": [
+        { "at": "2026-01-15T10:00:00.000Z", "action": "created" },
+        {
+          "at": "2026-01-15T10:05:00.000Z",
+          "action": "classification-added",
+          "details": { "disposition": "accepted-risk" }
+        }
+      ]
+    },
+    {
+      "fingerprint": "image-alt|baseline-legacy-html|/archive|default|desktop|#archive-logo",
+      "fingerprintVersion": "1",
+      "ruleId": "image-alt",
+      "source": "axe",
+      "projectName": "baseline-legacy-html",
+      "location": {
+        "kind": "route",
+        "route": "/archive",
+        "profile": "default",
+        "viewport": "desktop"
+      },
+      "severity": "critical",
+      "firstSeenAt": "2026-01-15T10:00:00.000Z",
+      "lastSeenAt": "2026-01-15T10:00:00.000Z",
+      "snapshot": {
+        "title": "Images must have alternate text",
+        "target": ["#archive-logo"],
+        "route": "/archive",
+        "profile": "default",
+        "viewport": "desktop",
+        "framework": "html"
+      },
+      "history": [{ "at": "2026-01-15T10:00:00.000Z", "action": "created" }]
+    }
+  ]
+}

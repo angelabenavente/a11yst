@@ -24,6 +24,7 @@ import { productMetadata } from "@a11yst/types";
 import { aggregateSummary, buildProfileSummary, buildFlowSummary, emptySeverityCounts, sortRunResults } from "./aggregate.js";
 import { createAuditPlan } from "./create-audit-plan.js";
 import { prepareAuditConfig } from "./resolve-project-routes.js";
+import { applyBaselineComparison } from "./baseline-comparison.js";
 import { selectRuns, skipReasonForRun, UnknownProfileError, UnknownProjectError, UnknownFlowError, isRouteRun, isFlowCheckpointRun } from "./select-runs.js";
 
 export interface ExecuteAuditOptions {
@@ -59,6 +60,12 @@ export interface ExecuteAuditOptions {
   flowsOnly?: boolean;
   /** Per-step timeout in milliseconds for flow execution. */
   stepTimeoutMs?: number;
+  /** Skip baseline comparison even when a baseline file exists. */
+  noBaseline?: boolean;
+  /** Compare against this baseline file instead of the configured default. */
+  baselinePath?: string;
+  /** Fail when `baselinePath` does not exist. */
+  explicitBaselineRequired?: boolean;
   /** Optional CLI progress reporter for long-running phases. */
   progress?: ProgressReporter;
 }
@@ -488,6 +495,13 @@ export async function executeAudit(
     throw new Error("Audit execution did not produce a result.");
   }
 
+  const baselineApplied = await applyBaselineComparison(config, result, {
+    noBaseline: options.noBaseline,
+    baselinePath: options.baselinePath,
+    explicitBaselineRequired: options.explicitBaselineRequired,
+  });
+  result = baselineApplied.result;
+
   if (!writer) {
     return result;
   }
@@ -509,6 +523,7 @@ export async function executeAudit(
     const artifactReferences = await writer.finalize({
       result: persistedResult,
       manifest,
+      baselineComparison: baselineApplied.artifact,
     });
     result.artifacts = artifactReferences;
     return result;

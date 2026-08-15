@@ -247,6 +247,8 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
     .option("--output <path>", "Directory for audit results")
     .option("--no-screenshots", "Do not capture screenshot evidence")
     .option("--full-page-screenshots", "Capture full-page screenshots", false)
+    .option("--no-baseline", "Do not compare against a baseline file")
+    .option("--baseline <path>", "Compare against this baseline file")
     .option(
       "--color <mode>",
       "Color output for human presentation (auto, always, never)",
@@ -271,6 +273,7 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
         output?: string;
         screenshots?: boolean;
         fullPageScreenshots?: boolean;
+        baseline?: string | boolean;
         color?: string;
         verbose?: boolean;
       }) => {
@@ -298,6 +301,9 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
             configPath: opts.config,
           });
           progress.succeed("Configuration loaded");
+          const baselineOverride =
+            typeof opts.baseline === "string" ? opts.baseline : undefined;
+          const noBaseline = opts.baseline === false;
           const { executeAudit } = await import("@a11yst/core");
           const result = await executeAudit(config, {
             headed: opts.headed,
@@ -313,6 +319,9 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
             screenshots: opts.screenshots === false ? false : undefined,
             fullPageScreenshots: opts.fullPageScreenshots || undefined,
             signal: controller.signal,
+            noBaseline: noBaseline || undefined,
+            baselinePath: baselineOverride,
+            explicitBaselineRequired: Boolean(baselineOverride),
             progress,
           });
 
