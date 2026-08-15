@@ -33,6 +33,7 @@ describe("CLI foundation", () => {
     expect(result.stdout).toMatch(/Commands:/);
     expect(result.stdout).toMatch(/\bflows\b/);
     expect(result.stdout).toMatch(/\bdetect\b/);
+    expect(result.stdout).toMatch(/\broutes\b/);
     for (const marker of LEGACY_IDENTITY) {
       expect(result.stdout).not.toContain(marker);
     }

@@ -33,4 +33,23 @@ describe("package dependency graph", () => {
     expect(cli.dependencies?.["@a11yst/detect"]).toBe("workspace:*");
     expect(detect.dependencies?.["@a11yst/cli"]).toBeUndefined();
   });
+
+  it("keeps adapters depending only on types and static parsers", () => {
+    const adapters = readPkg("packages/adapters/package.json");
+    expect(adapters.dependencies).toEqual({
+      "@a11yst/types": "workspace:*",
+      "@babel/parser": "^7.26.3",
+      "@babel/types": "^7.26.3",
+    });
+  });
+
+  it("keeps core planning free of a reverse edge to the CLI", () => {
+    const core = readPkg("packages/core/package.json");
+    const adapters = readPkg("packages/adapters/package.json");
+    expect(core.dependencies?.["@a11yst/adapters"]).toBe("workspace:*");
+    expect(core.dependencies?.["@a11yst/types"]).toBe("workspace:*");
+    expect(core.dependencies?.["@a11yst/cli"]).toBeUndefined();
+    expect(adapters.dependencies?.["@a11yst/core"]).toBeUndefined();
+    expect(adapters.dependencies?.["@a11yst/cli"]).toBeUndefined();
+  });
 });

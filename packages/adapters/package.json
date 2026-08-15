@@ -1,0 +1,32 @@
+{
+  "name": "@a11yst/adapters",
+  "version": "0.1.0",
+  "description": "Framework adapters for route discovery, dev-server hints, and readiness for a11yst",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist *.tsbuildinfo"
+  },
+  "dependencies": {
+    "@a11yst/types": "workspace:*",
+    "@babel/parser": "^7.26.3",
+    "@babel/types": "^7.26.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  },
+  "license": "MPL-2.0"
+}

@@ -9,6 +9,7 @@
   "references": [
     { "path": "../types" },
     { "path": "../config" },
+    { "path": "../adapters" },
     { "path": "../detect" },
     { "path": "../flows" }
   ]

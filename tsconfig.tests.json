@@ -7,6 +7,7 @@
     "paths": {
       "@a11yst/types": ["./packages/types/src/index.ts"],
       "@a11yst/config": ["./packages/config/src/index.ts"],
+      "@a11yst/flows": ["./packages/flows/src/index.ts"],
       "@a11yst/core": ["./packages/core/src/index.ts"],
       "@a11yst/detect": ["./packages/detect/src/index.ts"],
       "@a11yst/browser": ["./packages/browser/src/index.ts"],

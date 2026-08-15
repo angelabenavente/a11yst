@@ -25,6 +25,7 @@ export default defineConfig({
     alias: {
       "@a11yst/types": resolve(__dirname, "packages/types/src/index.ts"),
       "@a11yst/config": resolve(__dirname, "packages/config/src/index.ts"),
+      "@a11yst/flows": resolve(__dirname, "packages/flows/src/index.ts"),
       "@a11yst/core": resolve(__dirname, "packages/core/src/index.ts"),
       "@a11yst/detect": resolve(__dirname, "packages/detect/src/index.ts"),
       "@a11yst/browser": resolve(__dirname, "packages/browser/src/index.ts"),

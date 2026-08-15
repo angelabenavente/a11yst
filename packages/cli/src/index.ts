@@ -12,6 +12,11 @@ import {
   formatFlowsJson,
   runFlows,
 } from "./commands/flows.js";
+import {
+  formatRoutesHuman,
+  formatRoutesJson,
+  runRoutes,
+} from "./commands/routes.js";
 import { writeJson, writeStderr, writeStdout } from "./output.js";
 import { createBrandHeader } from "./presentation/index.js";
 
@@ -128,6 +133,60 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
       },
     );
 
+  program
+    .command("routes")
+    .description("Resolve configured routes via framework adapters")
+    .option("--json", "Emit machine-readable JSON on stdout", false)
+    .option("--config <path>", "Path to a configuration file")
+    .option("--cwd <path>", "Directory to load configuration from")
+    .option("--project <name>", "Resolve routes for this project only (repeatable)", collectProjectNames, [] as string[])
+    .option("--explain", "Show route discovery provenance and unresolved patterns", false)
+    .action(
+      async (opts: {
+        json?: boolean;
+        config?: string;
+        cwd?: string;
+        project?: string[];
+        explain?: boolean;
+      }) => {
+        try {
+          const result = await runRoutes({
+            cwd: resolveCwd(opts.cwd),
+            configPath: opts.config,
+            projectName: opts.project,
+            json: opts.json,
+            explain: opts.explain,
+          });
+          if (opts.json) {
+            writeJson(formatRoutesJson(result));
+          } else {
+            writeStdout(formatRoutesHuman(result, { explain: opts.explain }));
+          }
+          process.exitCode = 0;
+        } catch (error) {
+          const message =
+            error instanceof ConfigError
+              ? error.format()
+              : error instanceof Error
+                ? error.message
+                : String(error);
+          if (opts.json) {
+            writeJson(
+              {
+                status: "error",
+                message,
+                code: error instanceof ConfigError ? error.code : "ROUTES_FAILED",
+                issues: error instanceof ConfigError ? error.issues : undefined,
+              },
+              process.stdout,
+            );
+          }
+          writeStderr(message);
+          process.exitCode = 1;
+        }
+      },
+    );
+
   try {
     await program.parseAsync(argv);
   } catch (error) {
@@ -148,3 +207,8 @@ export {
   formatFlowsJson,
   runFlows,
 } from "./commands/flows.js";
+export {
+  formatRoutesHuman,
+  formatRoutesJson,
+  runRoutes,
+} from "./commands/routes.js";
