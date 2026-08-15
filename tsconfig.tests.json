@@ -1,0 +1,38 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["node"],
+    "lib": ["ES2022", "DOM"],
+    "paths": {
+      "@a11yst/types": ["./packages/types/src/index.ts"],
+      "@a11yst/config": ["./packages/config/src/index.ts"],
+      "@a11yst/core": ["./packages/core/src/index.ts"],
+      "@a11yst/detect": ["./packages/detect/src/index.ts"],
+      "@a11yst/browser": ["./packages/browser/src/index.ts"],
+      "@a11yst/cli": ["./packages/cli/src/index.ts"],
+      "@a11yst/artifacts": ["./packages/artifacts/src/index.ts"],
+      "@a11yst/reporters": ["./packages/reporters/src/index.ts"],
+      "@a11yst/adapters": ["./packages/adapters/src/index.ts"],
+      "@a11yst/profiles": ["./packages/profiles/src/index.ts"],
+      "@a11yst/rules": ["./packages/rules/src/index.ts"],
+      "@a11yst/baseline": ["./packages/baseline/src/index.ts"],
+      "@a11yst/policy": ["./packages/policy/src/index.ts"],
+      "@a11yst/sarif": ["./packages/sarif/src/index.ts"],
+      "@a11yst/junit": ["./packages/junit/src/index.ts"],
+      "@a11yst/source-mapping": ["./packages/source-mapping/src/index.ts"],
+      "@a11yst/source-index": ["./packages/source-index/src/index.ts"],
+      "@a11yst/source-mapping-html": ["./packages/source-mapping-html/src/index.ts"],
+      "@a11yst/source-mapping-react": ["./packages/source-mapping-react/src/index.ts"],
+      "@a11yst/source-mapping-next": ["./packages/source-mapping-next/src/index.ts"],
+      "@a11yst/source-mapping-vue": ["./packages/source-mapping-vue/src/index.ts"],
+      "@a11yst/source-mapping-nuxt": ["./packages/source-mapping-nuxt/src/index.ts"],
+      "@a11yst/source-mapping-angular": ["./packages/source-mapping-angular/src/index.ts"],
+      "@a11yst/source-ranking": ["./packages/source-ranking/src/index.ts"],
+      "@a11yst/recommendations": ["./packages/recommendations/src/index.ts"],
+      "@a11yst/source-analysis": ["./packages/source-analysis/src/index.ts"]
+    }
+  },
+  "include": ["tests/**/*.ts", "vitest.config.ts"],
+  "exclude": ["tests/fixtures/**"]
+}
