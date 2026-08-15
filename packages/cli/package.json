@@ -42,6 +42,7 @@
     "@a11yst/core": "workspace:*",
     "@a11yst/detect": "workspace:*",
     "@a11yst/flows": "workspace:*",
+    "@a11yst/profiles": "workspace:*",
     "@a11yst/types": "workspace:*",
     "commander": "^12.1.0"
   },

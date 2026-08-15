@@ -88,6 +88,24 @@ importers:
         specifier: ^5.4.11
         version: 5.4.21(@types/node@22.20.1)
 
+  examples/profiles/keyboard:
+    devDependencies:
+      '@a11yst/config':
+        specifier: workspace:*
+        version: link:../../../packages/config
+
+  examples/profiles/large-text:
+    devDependencies:
+      '@a11yst/config':
+        specifier: workspace:*
+        version: link:../../../packages/config
+
+  examples/profiles/reduced-motion:
+    devDependencies:
+      '@a11yst/config':
+        specifier: workspace:*
+        version: link:../../../packages/config
+
   packages/adapters:
     dependencies:
       '@a11yst/types':
@@ -162,6 +180,9 @@ importers:
       '@a11yst/flows':
         specifier: workspace:*
         version: link:../flows
+      '@a11yst/profiles':
+        specifier: workspace:*
+        version: link:../profiles
       '@a11yst/types':
         specifier: workspace:*
         version: link:../types

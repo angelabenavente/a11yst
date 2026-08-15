@@ -15,6 +15,10 @@ import {
   runFlows,
 } from "./commands/flows.js";
 import {
+  formatProfilesHuman,
+  runProfiles,
+} from "./commands/profiles.js";
+import {
   formatRoutesHuman,
   formatRoutesJson,
   runRoutes,
@@ -361,6 +365,20 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
       },
     );
 
+  program
+    .command("profiles")
+    .description("List accessibility profiles, capabilities, and limitations")
+    .option("--json", "Emit machine-readable JSON on stdout", false)
+    .action((opts: { json?: boolean }) => {
+      const profiles = runProfiles();
+      if (opts.json) {
+        writeJson({ profiles });
+      } else {
+        writeStdout(formatProfilesHuman(profiles));
+      }
+      process.exitCode = 0;
+    });
+
   try {
     await program.parseAsync(argv);
   } catch (error) {
@@ -387,3 +405,8 @@ export {
   runRoutes,
 } from "./commands/routes.js";
 export { formatAuditHuman, formatAuditJson } from "./commands/audit.js";
+export {
+  formatProfilesHuman,
+  formatProfilesJson,
+  runProfiles,
+} from "./commands/profiles.js";

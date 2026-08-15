@@ -12,6 +12,7 @@
     { "path": "../adapters" },
     { "path": "../core" },
     { "path": "../detect" },
-    { "path": "../flows" }
+    { "path": "../flows" },
+    { "path": "../profiles" }
   ]
 }
