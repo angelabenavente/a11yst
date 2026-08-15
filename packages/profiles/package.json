@@ -1,0 +1,33 @@
+{
+  "name": "@a11yst/profiles",
+  "version": "0.1.0",
+  "description": "Accessibility profile registry and execution for a11yst web audits",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist *.tsbuildinfo"
+  },
+  "dependencies": {
+    "@a11yst/rules": "workspace:*",
+    "@a11yst/types": "workspace:*",
+    "@axe-core/playwright": "^4.10.1",
+    "playwright": "1.62.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  },
+  "license": "MPL-2.0"
+}

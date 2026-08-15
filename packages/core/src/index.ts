@@ -1,9 +1,9 @@
 /**
- * Core orchestrator for a11yst audit planning.
+ * Core orchestrator for a11yst audit planning and execution.
  *
  * Planning (`createAuditPlan`) builds deterministic project × route ×
- * profile × viewport combinations. Route discovery is resolved first via
- * `prepareAuditConfig` / `resolveProjectRoutesForProject`.
+ * profile × viewport combinations. Execution (`executeAudit`) selects which
+ * of those planned runs are executable and drives `@a11yst/browser`.
  */
 export { createAuditPlan, freezeAuditPlan } from "./create-audit-plan.js";
 export { buildRunId } from "./run-id.js";
@@ -12,3 +12,29 @@ export {
   resolveProjectRoutesForProject,
   type ResolveProjectRoutesForProjectResult,
 } from "./resolve-project-routes.js";
+export {
+  isExecutableRun,
+  isFlowCheckpointRun,
+  isRouteRun,
+  selectRuns,
+  skipReasonForRun,
+  UnknownProfileError,
+  UnknownProjectError,
+  UnknownFlowError,
+  AuditSelectionError,
+  type SelectRunsOptions,
+  type SelectRunsResult,
+} from "./select-runs.js";
+export {
+  aggregateSummary,
+  buildProfileSummary,
+  buildFlowSummary,
+  emptySeverityCounts,
+  sortRunResults,
+} from "./aggregate.js";
+export {
+  createArtifactEvidenceSink,
+  executeAudit,
+  resolveAuditOutputDirectory,
+  type ExecuteAuditOptions,
+} from "./execute-audit.js";

@@ -48,8 +48,18 @@ describe("package dependency graph", () => {
     const adapters = readPkg("packages/adapters/package.json");
     expect(core.dependencies?.["@a11yst/adapters"]).toBe("workspace:*");
     expect(core.dependencies?.["@a11yst/types"]).toBe("workspace:*");
+    expect(core.dependencies?.["@a11yst/browser"]).toBe("workspace:*");
     expect(core.dependencies?.["@a11yst/cli"]).toBeUndefined();
     expect(adapters.dependencies?.["@a11yst/core"]).toBeUndefined();
     expect(adapters.dependencies?.["@a11yst/cli"]).toBeUndefined();
+  });
+
+  it("keeps the browser engine depending on profiles, rules, and Playwright 1.62.0", () => {
+    const browser = readPkg("packages/browser/package.json");
+    expect(browser.dependencies?.playwright).toBe("1.62.0");
+    expect(browser.dependencies?.["playwright-core"]).toBe("1.62.0");
+    expect(browser.dependencies?.["@a11yst/profiles"]).toBe("workspace:*");
+    expect(browser.dependencies?.["@a11yst/rules"]).toBe("workspace:*");
+    expect(browser.dependencies?.["@a11yst/cli"]).toBeUndefined();
   });
 });

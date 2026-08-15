@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Audit Example — Inaccessible HTML</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 40rem;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        line-height: 1.5;
+      }
+      nav ul {
+        display: flex;
+        gap: 1rem;
+        list-style: none;
+        padding: 0;
+      }
+      input {
+        display: block;
+        margin-top: 0.25rem;
+      }
+      button {
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <!-- AXE VIOLATION (image-alt): decorative-looking logo is missing an alt attribute entirely. -->
+      <img src="logo.svg" width="48" height="48" />
+      <h1>Audit Example — Inaccessible HTML</h1>
+      <nav aria-label="Section">
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <section id="about">
+        <h2>About this page</h2>
+        <p>
+          This page intentionally contains a small set of documented
+          accessibility violations used to verify that a11yst's Phase 3
+          browser audit engine detects them via axe-core.
+        </p>
+        <!-- AXE VIOLATION (button-name): icon-only button has no text content,
+             aria-label, aria-labelledby, or title, so it has no accessible name. -->
+        <button type="button" id="icon-button">
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <circle cx="8" cy="8" r="7" fill="currentColor" />
+          </svg>
+        </button>
+      </section>
+      <section id="contact">
+        <h2>Contact form</h2>
+        <form>
+          <!-- AXE VIOLATION (label): input has no associated <label>, aria-label,
+               aria-labelledby, or title — and deliberately no placeholder either,
+               since axe-core's "label" rule accepts a non-empty placeholder as
+               (a weak) accessible name and would not flag this input otherwise. -->
+          <input type="email" id="email" name="email" />
+          <button type="submit">Subscribe</button>
+        </form>
+      </section>
+    </main>
+    <footer>
+      <p>a11yst audit example — html-inaccessible (3 documented violations).</p>
+    </footer>
+  </body>
+</html>

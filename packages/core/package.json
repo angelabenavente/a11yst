@@ -22,6 +22,8 @@
   },
   "dependencies": {
     "@a11yst/adapters": "workspace:*",
+    "@a11yst/artifacts": "workspace:*",
+    "@a11yst/browser": "workspace:*",
     "@a11yst/flows": "workspace:*",
     "@a11yst/types": "workspace:*"
   },

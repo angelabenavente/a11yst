@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Audit Example — Accessible HTML</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 40rem;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        line-height: 1.5;
+      }
+      nav ul {
+        display: flex;
+        gap: 1rem;
+        list-style: none;
+        padding: 0;
+      }
+      label {
+        display: block;
+        margin-top: 1rem;
+      }
+      input {
+        display: block;
+        margin-top: 0.25rem;
+      }
+      button {
+        margin-top: 1rem;
+      }
+      [role="status"] {
+        margin-top: 1rem;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img src="logo.svg" alt="a11yst logo" width="48" height="48" />
+      <h1>Audit Example — Accessible HTML</h1>
+      <!-- Landmark nav with named links; used to verify axe passes cleanly. -->
+      <nav aria-label="Section">
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <section id="about">
+        <h2>About this page</h2>
+        <p>
+          This is a small, intentionally accessible static HTML page used by
+          a11yst's Phase 3 browser audit engine tests. It contains a button
+          with visible text, an image with meaningful alt text, and a form
+          with a properly associated label.
+        </p>
+        <!-- Button with a real accessible name (visible text content). -->
+        <button type="button" id="greet-button">Say hello</button>
+        <p role="status" id="greet-output"></p>
+      </section>
+      <section id="contact">
+        <h2>Contact form</h2>
+        <form>
+          <!-- Input is associated with its label via for/id. -->
+          <label for="email">Email address</label>
+          <input type="email" id="email" name="email" autocomplete="email" />
+          <button type="submit">Subscribe</button>
+        </form>
+      </section>
+    </main>
+    <footer>
+      <p>a11yst audit example — html-accessible.</p>
+    </footer>
+    <script>
+      document.getElementById("greet-button").addEventListener("click", () => {
+        document.getElementById("greet-output").textContent =
+          "Hello from the accessible example!";
+      });
+    </script>
+  </body>
+</html>

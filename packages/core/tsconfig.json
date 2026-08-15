@@ -9,6 +9,8 @@
   "references": [
     { "path": "../types" },
     { "path": "../adapters" },
+    { "path": "../artifacts" },
+    { "path": "../browser" },
     { "path": "../flows" }
   ]
 }
