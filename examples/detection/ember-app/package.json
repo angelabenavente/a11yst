@@ -1,0 +1,15 @@
+{
+  "name": "detection-fixture-ember-app",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "start": "ember serve",
+    "build": "ember build"
+  },
+  "dependencies": {
+    "ember-source": "^5.12.0"
+  },
+  "devDependencies": {
+    "ember-cli": "^5.12.0"
+  }
+}

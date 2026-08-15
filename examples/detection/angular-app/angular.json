@@ -1,0 +1,5 @@
+{
+  "$comment": "Detection fixture only — intentionally not a real Angular workspace config.",
+  "version": 1,
+  "projects": {}
+}

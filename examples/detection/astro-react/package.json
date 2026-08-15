@@ -1,0 +1,21 @@
+{
+  "name": "detection-fixture-astro-react",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Astro host with the React integration installed — must still be detected as \"astro\", not \"react\".",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build"
+  },
+  "dependencies": {
+    "@astrojs/react": "^3.6.2",
+    "astro": "^4.16.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "typescript": "^5.7.2"
+  }
+}

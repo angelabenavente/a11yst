@@ -6,10 +6,5 @@
     "outDir": "dist"
   },
   "include": ["src/**/*.ts"],
-  "references": [
-    { "path": "../types" },
-    { "path": "../config" },
-    { "path": "../detect" },
-    { "path": "../flows" }
-  ]
+  "references": [{ "path": "../types" }]
 }

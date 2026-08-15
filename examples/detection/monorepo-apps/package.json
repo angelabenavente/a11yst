@@ -1,0 +1,6 @@
+{
+  "name": "detection-fixture-monorepo-apps",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": ["apps/*", "packages/*"]
+}

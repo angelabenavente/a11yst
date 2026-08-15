@@ -1,0 +1,21 @@
+{
+  "name": "@fixtures/ui",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Shared React component library — a library package, not an app. No dev/start/serve script, so a11yst should classify it as a library and exclude it from app results.",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p ."
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "typescript": "^5.7.2"
+  }
+}

@@ -50,6 +50,9 @@ importers:
       '@a11yst/config':
         specifier: workspace:*
         version: link:../config
+      '@a11yst/detect':
+        specifier: workspace:*
+        version: link:../detect
       '@a11yst/flows':
         specifier: workspace:*
         version: link:../flows
@@ -78,6 +81,16 @@ importers:
       zod:
         specifier: ^3.24.1
         version: 3.25.76
+    devDependencies:
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
+
+  packages/detect:
+    dependencies:
+      '@a11yst/types':
+        specifier: workspace:*
+        version: link:../types
     devDependencies:
       typescript:
         specifier: ^5.7.2

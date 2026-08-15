@@ -1,20 +1,8 @@
 {
-  "name": "@a11yst/cli",
+  "name": "@a11yst/detect",
   "version": "0.1.0",
-  "description": "Command-line interface for a11yst",
-  "keywords": [
-    "accessibility",
-    "a11y",
-    "testing",
-    "regression",
-    "playwright",
-    "axe",
-    "cli"
-  ],
+  "description": "Static project, framework, and package manager detection for a11yst",
   "type": "module",
-  "bin": {
-    "a11yst": "./dist/bin.js"
-  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -25,7 +13,6 @@
   "types": "./dist/index.d.ts",
   "files": [
     "dist",
-    "README.md",
     "LICENSE"
   ],
   "scripts": {
@@ -33,15 +20,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "clean": "rm -rf dist *.tsbuildinfo"
   },
-  "engines": {
-    "node": ">=20"
-  },
   "dependencies": {
-    "@a11yst/config": "workspace:*",
-    "@a11yst/detect": "workspace:*",
-    "@a11yst/flows": "workspace:*",
-    "@a11yst/types": "workspace:*",
-    "commander": "^12.1.0"
+    "@a11yst/types": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.7.2"

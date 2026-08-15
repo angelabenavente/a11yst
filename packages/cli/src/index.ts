@@ -3,6 +3,11 @@ import { Command } from "commander";
 import { ConfigError } from "@a11yst/config";
 import { productMetadata } from "@a11yst/types";
 import {
+  formatDetectHuman,
+  formatDetectJson,
+  runDetect,
+} from "./commands/detect.js";
+import {
   formatFlowsHuman,
   formatFlowsJson,
   runFlows,
@@ -43,6 +48,34 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
     });
 
   program.addHelpText("before", () => `${createBrandHeader({ tagline: true })}\n\n`);
+
+  program
+    .command("detect")
+    .description("Detect project platform, framework, and package manager")
+    .option("--json", "Emit machine-readable JSON on stdout", false)
+    .option("--workspace", "Detect every project across a monorepo workspace", false)
+    .option("--cwd <path>", "Directory to run detection in")
+    .action(async (opts: { json?: boolean; workspace?: boolean; cwd?: string }) => {
+      try {
+        const result = await runDetect({
+          cwd: resolveCwd(opts.cwd),
+          workspace: opts.workspace,
+        });
+        if (opts.json) {
+          writeJson(formatDetectJson(result));
+        } else {
+          writeStdout(formatDetectHuman(result));
+        }
+        process.exitCode = 0;
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        if (opts.json) {
+          writeJson({ status: "error", message }, process.stdout);
+        }
+        writeStderr(message);
+        process.exitCode = 1;
+      }
+    });
 
   program
     .command("flows")
@@ -105,6 +138,11 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
   return typeof process.exitCode === "number" ? process.exitCode : 0;
 }
 
+export {
+  formatDetectHuman,
+  formatDetectJson,
+  runDetect,
+} from "./commands/detect.js";
 export {
   formatFlowsHuman,
   formatFlowsJson,

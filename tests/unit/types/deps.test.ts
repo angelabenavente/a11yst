@@ -17,4 +17,20 @@ describe("package dependency graph", () => {
     const types = readPkg("packages/types/package.json");
     expect(types.dependencies ?? {}).toEqual({});
   });
+
+  it("keeps detect depending only on types", () => {
+    const detect = readPkg("packages/detect/package.json");
+    expect(detect.dependencies).toEqual({
+      "@a11yst/types": "workspace:*",
+    });
+    expect(detect.dependencies?.["@a11yst/cli"]).toBeUndefined();
+    expect(detect.dependencies?.["@a11yst/config"]).toBeUndefined();
+  });
+
+  it("lets the CLI depend on detect without a reverse edge", () => {
+    const cli = readPkg("packages/cli/package.json");
+    const detect = readPkg("packages/detect/package.json");
+    expect(cli.dependencies?.["@a11yst/detect"]).toBe("workspace:*");
+    expect(detect.dependencies?.["@a11yst/cli"]).toBeUndefined();
+  });
 });

@@ -1,0 +1,10 @@
+{
+  "name": "detection-fixture-html",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Static HTML site fixture — no framework dependencies.",
+  "scripts": {
+    "serve": "npx serve .",
+    "start": "node serve.mjs"
+  }
+}
