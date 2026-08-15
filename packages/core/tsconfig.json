@@ -13,6 +13,9 @@
     { "path": "../baseline" },
     { "path": "../browser" },
     { "path": "../flows" },
-    { "path": "../policy" }
+    { "path": "../junit" },
+    { "path": "../policy" },
+    { "path": "../reporters" },
+    { "path": "../sarif" }
   ]
 }

@@ -45,3 +45,48 @@ export {
   type ApplyBaselineComparisonOutput,
 } from "./baseline-comparison.js";
 export { applyPolicyEvaluation } from "./policy-evaluation.js";
+export {
+  buildReportManifestEntry,
+  buildReportsManifest,
+  buildJunitReportReference,
+  buildMarkdownReportReference,
+  buildSarifReportReference,
+  mergeReportReferences,
+} from "./report-manifest.js";
+export { createMarkdownInputFromAuditResult } from "./create-markdown-input.js";
+export {
+  generateMarkdownReportArtifact,
+  generateMarkdownContentFromAuditResult,
+  shouldGenerateMarkdownForAuditResult,
+  type GenerateMarkdownReportOptions,
+  type GenerateMarkdownReportOutput,
+} from "./generate-markdown-report.js";
+export {
+  resolveMarkdownReportOptions,
+  type ResolvedMarkdownReportOptions,
+  type MarkdownReportCliOptions,
+} from "./resolve-markdown-report-options.js";
+export { createJunitInputFromAuditResult } from "./create-junit-input.js";
+export {
+  generateJunitReport,
+  shouldGenerateJunitForAuditResult,
+  type GenerateJunitReportOptions,
+  type GenerateJunitReportOutput,
+} from "./generate-junit-report.js";
+export {
+  resolveJunitReportOptions,
+  type ResolvedJunitReportOptions,
+  type JunitReportCliOptions,
+} from "./resolve-junit-report-options.js";
+export { createSarifInputFromAuditResult } from "./create-sarif-input.js";
+export {
+  generateSarifReport,
+  shouldGenerateSarifForAuditResult,
+  type GenerateSarifReportOptions,
+  type GenerateSarifReportOutput,
+} from "./generate-sarif-report.js";
+export {
+  resolveSarifReportOptions,
+  type ResolvedSarifReportOptions,
+  type SarifReportCliOptions,
+} from "./resolve-sarif-report-options.js";

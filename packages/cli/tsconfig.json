@@ -12,8 +12,12 @@
     { "path": "../adapters" },
     { "path": "../core" },
     { "path": "../detect" },
+    { "path": "../artifacts" },
     { "path": "../flows" },
+    { "path": "../junit" },
     { "path": "../policy" },
-    { "path": "../profiles" }
+    { "path": "../profiles" },
+    { "path": "../reporters" },
+    { "path": "../sarif" }
   ]
 }

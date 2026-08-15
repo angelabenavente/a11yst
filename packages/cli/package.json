@@ -38,12 +38,16 @@
   },
   "dependencies": {
     "@a11yst/adapters": "workspace:*",
+    "@a11yst/artifacts": "workspace:*",
     "@a11yst/config": "workspace:*",
     "@a11yst/core": "workspace:*",
     "@a11yst/detect": "workspace:*",
     "@a11yst/flows": "workspace:*",
+    "@a11yst/junit": "workspace:*",
     "@a11yst/policy": "workspace:*",
     "@a11yst/profiles": "workspace:*",
+    "@a11yst/reporters": "workspace:*",
+    "@a11yst/sarif": "workspace:*",
     "@a11yst/types": "workspace:*",
     "commander": "^12.1.0"
   },

@@ -11,17 +11,49 @@ import {
 import { formatFlowExecutionsHuman, hasFlowExecutions } from "./audit-flow-output.js";
 import { formatPolicyEvaluationSection } from "./audit-policy-output.js";
 
-function formatArtifactsSection(result: AuditExecutionResult): string[] {
+function formatReportsSection(
+  result: AuditExecutionResult,
+  options?: {
+    sarifExternalPath?: string;
+    junitExternalPath?: string;
+    markdownExternalPath?: string;
+  },
+): string[] {
   if (!result.auditId && !result.artifacts?.resultsPath) {
     return [];
   }
 
-  const lines: string[] = ["Artifacts", ""];
+  const lines: string[] = ["Reports", ""];
   if (result.auditId) {
     lines.push(`Audit ID: ${result.auditId}`);
   }
+  lines.push(`HTML report: ${result.artifacts?.reportPath ?? "not generated"}`);
+  if (options?.markdownExternalPath) {
+    lines.push(`Markdown report: ${options.markdownExternalPath}`);
+    if (result.artifacts?.markdownPath) {
+      lines.push(`Bundle copy: ${result.artifacts.markdownPath}`);
+    }
+  } else {
+    lines.push(`Markdown report: ${result.artifacts?.markdownPath ?? "not generated"}`);
+  }
   if (result.artifacts?.resultsPath) {
     lines.push(`JSON report: ${result.artifacts.resultsPath}`);
+  }
+  if (result.artifacts?.sarifPath) {
+    if (options?.sarifExternalPath) {
+      lines.push(`SARIF report: ${options.sarifExternalPath}`);
+      lines.push(`Bundle copy: ${result.artifacts.sarifPath}`);
+    } else {
+      lines.push(`SARIF report: ${result.artifacts.sarifPath}`);
+    }
+  }
+  if (result.artifacts?.junitPath) {
+    if (options?.junitExternalPath) {
+      lines.push(`JUnit report: ${options.junitExternalPath}`);
+      lines.push(`Bundle copy: ${result.artifacts.junitPath}`);
+    } else {
+      lines.push(`JUnit report: ${result.artifacts.junitPath}`);
+    }
   }
   lines.push("");
   return lines;
@@ -30,6 +62,9 @@ function formatArtifactsSection(result: AuditExecutionResult): string[] {
 export type FormatAuditHumanOptions = AuditPresentationOptions & {
   explicitCiFlagsUsed?: boolean;
   minimumSeverity?: Severity;
+  sarifExternalPath?: string;
+  junitExternalPath?: string;
+  markdownExternalPath?: string;
 };
 
 export function formatAuditHuman(
@@ -76,7 +111,7 @@ export function formatAuditHuman(
 
   blocks.push(...formatProfileReviewSections(result));
   blocks.push(...formatAuditFooterSummary(result));
-  blocks.push(...formatArtifactsSection(result));
+  blocks.push(...formatReportsSection(result, options));
 
   const errorDiagnostics = result.diagnostics.filter((d) => d.severity === "error");
   if (errorDiagnostics.length > 0) {

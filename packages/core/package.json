@@ -26,7 +26,10 @@
     "@a11yst/baseline": "workspace:*",
     "@a11yst/browser": "workspace:*",
     "@a11yst/flows": "workspace:*",
+    "@a11yst/junit": "workspace:*",
     "@a11yst/policy": "workspace:*",
+    "@a11yst/reporters": "workspace:*",
+    "@a11yst/sarif": "workspace:*",
     "@a11yst/types": "workspace:*"
   },
   "devDependencies": {

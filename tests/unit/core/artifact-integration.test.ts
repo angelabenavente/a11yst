@@ -73,11 +73,12 @@ describe("@a11yst/core artifact integration", () => {
     expect(result.auditId).toBe("empty-web");
     expect(result.status).toBe("completed");
     expect(result.artifacts).toBeDefined();
-    expect(result.artifacts?.reportPath).toBeUndefined();
     expect(Object.values(result.artifacts ?? {}).every(isAbsolute)).toBe(true);
     await expect(access(result.artifacts!.manifestPath)).resolves.toBeUndefined();
     await expect(access(result.artifacts!.resultsPath)).resolves.toBeUndefined();
     await expect(access(result.artifacts!.latestPath)).resolves.toBeUndefined();
+    await expect(access(result.artifacts!.reportPath!)).resolves.toBeUndefined();
+    await expect(access(result.artifacts!.markdownPath!)).resolves.toBeUndefined();
 
     const persisted = await readJson(result.artifacts!.resultsPath);
     expect(persisted.auditId).toBe("empty-web");
@@ -85,6 +86,8 @@ describe("@a11yst/core artifact integration", () => {
       latestPath: "../../latest.json",
       manifestPath: "manifest.json",
       outputDirectory: ".",
+      reportPath: "report/index.html",
+      markdownPath: "reports/a11yst.md",
       resultsPath: "results.json",
     });
 
@@ -97,10 +100,30 @@ describe("@a11yst/core artifact integration", () => {
       configPath: "a11yst.config.ts",
       projectRoot: ".",
       resultsPath: "results.json",
+      reportPath: "report/index.html",
       artifactCounts: { screenshots: 0, findings: 0, runs: 0 },
     });
-    expect(manifest).not.toHaveProperty("reportPath");
     expect(manifest).not.toHaveProperty("evidenceDirectory");
+  });
+
+  it("supports html:false without treating the omitted report as an error", async () => {
+    const configDir = await temporaryDirectory();
+    const result = await executeAudit(emptyWebConfig(configDir), {
+      artifactAuditId: "json-only",
+      artifactNow,
+      html: false,
+      markdown: { enabled: false },
+    });
+
+    expect(result.status).toBe("completed");
+    expect(result.diagnostics.some((entry) => entry.code === "REPORT_GENERATION_FAILED")).toBe(
+      false,
+    );
+    expect(result.artifacts?.reportPath).toBeUndefined();
+    await expect(access(join(result.artifacts!.outputDirectory, "report/index.html"))).rejects.toMatchObject({
+      code: "ENOENT",
+    });
+    expect(await readJson(result.artifacts!.manifestPath)).not.toHaveProperty("reportPath");
   });
 
   it("defaults the artifact root to .a11yst/results under the config directory", async () => {
@@ -126,11 +149,15 @@ describe("@a11yst/core artifact integration", () => {
       artifactAuditId: "relative-output",
       artifactNow,
       outputDir: "custom/relative",
+      html: false,
+      markdown: { enabled: false },
     });
     const absoluteResult = await executeAudit(emptyWebConfig(configDir), {
       artifactAuditId: "absolute-output",
       artifactNow,
       outputDir: absoluteOutput,
+      html: false,
+      markdown: { enabled: false },
     });
 
     expect(relativeResult.artifacts?.outputDirectory).toBe(

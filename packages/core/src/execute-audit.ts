@@ -7,6 +7,7 @@ import {
   type EvidenceSink,
 } from "@a11yst/browser";
 import type { FlowEvidenceSink } from "@a11yst/flows";
+import { generateHtmlReport } from "@a11yst/reporters";
 import type {
   AccessibilityProfile,
   AuditExecutionResult,
@@ -16,10 +17,13 @@ import type {
   Diagnostic,
   Finding,
   FlowTrace,
+  JunitReportManifestEntry,
+  MarkdownReportManifestEntry,
   PlannedRun,
   ProgressReporter,
   ResolvedCiPolicyConfig,
   ResolvedConfig,
+  SarifReportManifestEntry,
 } from "@a11yst/types";
 import { productMetadata } from "@a11yst/types";
 import { aggregateSummary, buildProfileSummary, buildFlowSummary, emptySeverityCounts, sortRunResults } from "./aggregate.js";
@@ -27,6 +31,28 @@ import { createAuditPlan } from "./create-audit-plan.js";
 import { prepareAuditConfig } from "./resolve-project-routes.js";
 import { applyBaselineComparison } from "./baseline-comparison.js";
 import { applyPolicyEvaluation } from "./policy-evaluation.js";
+import {
+  generateSarifReport,
+  shouldGenerateSarifForAuditResult,
+} from "./generate-sarif-report.js";
+import {
+  generateJunitReport,
+  shouldGenerateJunitForAuditResult,
+} from "./generate-junit-report.js";
+import {
+  generateMarkdownReportArtifact,
+  shouldGenerateMarkdownForAuditResult,
+} from "./generate-markdown-report.js";
+import {
+  buildReportManifestEntry,
+  buildJunitReportReference,
+  buildMarkdownReportReference,
+  buildSarifReportReference,
+  mergeReportReferences,
+} from "./report-manifest.js";
+import type { ResolvedSarifReportOptions } from "./resolve-sarif-report-options.js";
+import type { ResolvedJunitReportOptions } from "./resolve-junit-report-options.js";
+import type { ResolvedMarkdownReportOptions } from "./resolve-markdown-report-options.js";
 import { selectRuns, skipReasonForRun, UnknownProfileError, UnknownProjectError, UnknownFlowError, isRouteRun, isFlowCheckpointRun } from "./select-runs.js";
 
 export interface ExecuteAuditOptions {
@@ -42,6 +68,8 @@ export interface ExecuteAuditOptions {
   signal?: AbortSignal;
   /** Artifact root override. Relative paths are resolved from `config.configDir`. */
   outputDir?: string;
+  /** Generate the static HTML report. Defaults to `true`. */
+  html?: boolean;
   /** Capture screenshot evidence. Defaults to `config.evidence.screenshots`. */
   screenshots?: boolean;
   /** Capture full-page screenshots. Defaults to `config.evidence.fullPage`. */
@@ -70,6 +98,18 @@ export interface ExecuteAuditOptions {
   explicitBaselineRequired?: boolean;
   /** Resolved CI policy override; defaults to `config.ci`. */
   ciPolicy?: ResolvedCiPolicyConfig;
+  /** Resolved SARIF report options from config and CLI. */
+  sarif?: ResolvedSarifReportOptions;
+  /** Absolute path for an additional SARIF copy resolved by the CLI. */
+  sarifExternalOutputPath?: string;
+  /** Resolved JUnit report options from config and CLI. */
+  junit?: ResolvedJunitReportOptions;
+  /** Absolute path for an additional JUnit copy resolved by the CLI. */
+  junitExternalOutputPath?: string;
+  /** Resolved Markdown report options from config and CLI. */
+  markdown?: ResolvedMarkdownReportOptions;
+  /** Absolute path for an additional Markdown copy resolved by the CLI. */
+  markdownExternalOutputPath?: string;
   /** Optional CLI progress reporter for long-running phases. */
   progress?: ProgressReporter;
 }
@@ -237,8 +277,12 @@ function buildManifest(
   config: ResolvedConfig,
   result: AuditExecutionResult,
   writer: ArtifactWriter,
+  reportGenerated: boolean,
+  sarifEntry?: SarifReportManifestEntry,
+  junitEntry?: JunitReportManifestEntry,
+  markdownEntry?: MarkdownReportManifestEntry,
 ): AuditManifest {
-  return {
+  const manifest: AuditManifest = {
     schemaVersion: "1",
     auditId: writer.auditId,
     createdAt: writer.createdAt,
@@ -247,6 +291,7 @@ function buildManifest(
     ...(config.configPath ? { configPath: basename(config.configPath) } : {}),
     projectRoot: ".",
     resultsPath: "results.json",
+    ...(reportGenerated ? { reportPath: "report/index.html" } : {}),
     ...(writer.screenshotCount > 0 ? { evidenceDirectory: "evidence" } : {}),
     projects: result.plan.projects.map((project) => ({
       name: project.name,
@@ -258,6 +303,47 @@ function buildManifest(
       findings: result.findings.length,
       runs: result.runs.length,
     },
+  };
+
+  const reports = buildReportManifestEntry(
+    reportGenerated,
+    reportGenerated ? "report/index.html" : undefined,
+    sarifEntry,
+    junitEntry,
+    markdownEntry,
+  );
+  if (reports) {
+    manifest.reports = reports;
+  }
+
+  if (result.policyEvaluation) {
+    manifest.policy = {
+      status: result.policyEvaluation.status,
+      policyEnabled: result.policyEvaluation.policyEnabled,
+      totalBreaches: result.policyEvaluation.summary.totalBreaches,
+    };
+  }
+
+  return manifest;
+}
+
+function relativeArtifactReferences(
+  writer: ArtifactWriter,
+  reportGenerated: boolean,
+  sarifBundlePath?: string,
+  junitBundlePath?: string,
+  markdownBundlePath?: string,
+): NonNullable<AuditExecutionResult["artifacts"]> {
+  return {
+    outputDirectory: ".",
+    manifestPath: "manifest.json",
+    resultsPath: "results.json",
+    latestPath: "../../latest.json",
+    ...(writer.screenshotCount > 0 ? { evidenceDirectory: "evidence" } : {}),
+    ...(reportGenerated ? { reportPath: "report/index.html" } : {}),
+    ...(sarifBundlePath ? { sarifPath: sarifBundlePath } : {}),
+    ...(junitBundlePath ? { junitPath: junitBundlePath } : {}),
+    ...(markdownBundlePath ? { markdownPath: markdownBundlePath } : {}),
   };
 }
 
@@ -517,17 +603,187 @@ export async function executeAudit(
   }
 
   result.auditId = writer.auditId;
-  result.artifacts = {
-    outputDirectory: ".",
-    manifestPath: "manifest.json",
-    resultsPath: "results.json",
-    latestPath: "../../latest.json",
-    ...(writer.screenshotCount > 0 ? { evidenceDirectory: "evidence" } : {}),
-  };
+  let reportGenerated = false;
+  let sarifBundlePath: string | undefined;
+  let sarifManifestEntry: SarifReportManifestEntry | undefined;
+  let sarifExternalPath: string | undefined;
+  let junitBundlePath: string | undefined;
+  let junitManifestEntry: JunitReportManifestEntry | undefined;
+  let junitExternalPath: string | undefined;
+  let markdownBundlePath: string | undefined;
+  let markdownManifestEntry: MarkdownReportManifestEntry | undefined;
+  let markdownExternalPath: string | undefined;
 
+  const sarifEnabled = options.sarif?.enabled ?? false;
+  const shouldGenerateSarif =
+    sarifEnabled && shouldGenerateSarifForAuditResult(result);
+
+  const junitEnabled = options.junit?.enabled ?? false;
+  const shouldGenerateJunit =
+    junitEnabled && shouldGenerateJunitForAuditResult(result);
+
+  const markdownEnabled = options.markdown?.enabled ?? true;
+  const shouldGenerateMarkdown =
+    markdownEnabled && shouldGenerateMarkdownForAuditResult(result);
+
+  const willGenerateReports =
+    (options.html ?? true) ||
+    shouldGenerateSarif ||
+    shouldGenerateJunit ||
+    shouldGenerateMarkdown;
+
+  if (willGenerateReports) {
+    progress?.start("Generating reports…");
+  }
+
+  if (options.html ?? true) {
+    result.artifacts = relativeArtifactReferences(writer, true);
+    try {
+      await generateHtmlReport({
+        auditResult: result,
+        outputDirectory: writer.runDirectory,
+        auditId: writer.auditId,
+      });
+      reportGenerated = true;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      result.diagnostics.push({
+        code: "REPORT_GENERATION_FAILED",
+        severity: "error",
+        message: `Could not generate the HTML report: ${message}`,
+      });
+      if (result.status !== "failed") {
+        result.status = "completed-with-errors";
+        result.summary.status = "completed-with-errors";
+      }
+    }
+  }
+
+  if (shouldGenerateSarif) {
+    try {
+      const externalPath = options.sarifExternalOutputPath
+        ?? (options.sarif?.outputPath
+          ? resolve(config.configDir, options.sarif.outputPath)
+          : undefined);
+      const sarifReport = await generateSarifReport({
+        result,
+        bundleDirectory: writer.runDirectory,
+        ...(externalPath ? { externalOutputPath: externalPath } : {}),
+      });
+      sarifBundlePath = sarifReport.bundlePath;
+      sarifManifestEntry = sarifReport.manifestEntry;
+      sarifExternalPath = sarifReport.externalPath;
+      result.reports = mergeReportReferences(
+        result.reports,
+        buildSarifReportReference(sarifReport.resultReference),
+      );
+    } catch (error) {
+      await writer.cleanupPartial().catch(() => {
+        // Keep the original SARIF failure as the operational error.
+      });
+      const message = error instanceof Error ? error.message : String(error);
+      throw new Error(`Failed to generate SARIF report: ${message}`, { cause: error });
+    }
+  }
+
+  if (shouldGenerateJunit) {
+    try {
+      const externalPath = options.junitExternalOutputPath
+        ?? (options.junit?.outputPath
+          ? resolve(config.configDir, options.junit.outputPath)
+          : undefined);
+      const junitReport = await generateJunitReport({
+        result,
+        bundleDirectory: writer.runDirectory,
+        ...(externalPath ? { externalOutputPath: externalPath } : {}),
+        policy: resolvedPolicy,
+      });
+      junitBundlePath = junitReport.bundlePath;
+      junitManifestEntry = junitReport.manifestEntry;
+      junitExternalPath = junitReport.externalPath;
+      result.reports = mergeReportReferences(
+        result.reports,
+        buildJunitReportReference(junitReport.resultReference),
+      );
+    } catch (error) {
+      await writer.cleanupPartial().catch(() => {
+        // Keep the original JUnit failure as the operational error.
+      });
+      const message = error instanceof Error ? error.message : String(error);
+      throw new Error(`Failed to generate JUnit report: ${message}`, { cause: error });
+    }
+  }
+
+  if (shouldGenerateMarkdown) {
+    try {
+      const externalPath = options.markdownExternalOutputPath
+        ?? (options.markdown?.outputPath
+          ? resolve(config.configDir, options.markdown.outputPath)
+          : undefined);
+      const markdownReport = await generateMarkdownReportArtifact({
+        result,
+        bundleDirectory: writer.runDirectory,
+        ...(externalPath ? { externalOutputPath: externalPath } : {}),
+        policy: resolvedPolicy,
+        artifactReportPaths: {
+          ...(reportGenerated ? { html: "report/index.html" } : {}),
+          ...(sarifBundlePath ? { sarif: sarifBundlePath } : {}),
+          ...(junitBundlePath ? { junit: junitBundlePath } : {}),
+        },
+      });
+      markdownBundlePath = markdownReport.bundlePath;
+      markdownManifestEntry = markdownReport.manifestEntry;
+      markdownExternalPath = markdownReport.externalPath;
+      result.reports = mergeReportReferences(
+        result.reports,
+        buildMarkdownReportReference(markdownReport.resultReference),
+      );
+    } catch (error) {
+      await writer.cleanupPartial().catch(() => {});
+      const message = error instanceof Error ? error.message : String(error);
+      throw new Error(`Failed to generate Markdown report: ${message}`, { cause: error });
+    }
+  }
+
+  if (willGenerateReports) {
+    const reportLabels: string[] = [];
+    if (reportGenerated) {
+      reportLabels.push("HTML");
+    }
+    if (markdownBundlePath) {
+      reportLabels.push("Markdown");
+    }
+    if (sarifBundlePath) {
+      reportLabels.push("SARIF");
+    }
+    if (junitBundlePath) {
+      reportLabels.push("JUnit");
+    }
+    reportLabels.push("JSON");
+    progress?.succeed(reportLabels.join(" · "));
+  }
+
+  result.artifacts = relativeArtifactReferences(
+    writer,
+    reportGenerated,
+    sarifBundlePath,
+    junitBundlePath,
+    markdownBundlePath,
+  );
+  const sarifExternalPathForOutput = sarifExternalPath;
+  const junitExternalPathForOutput = junitExternalPath;
+  const markdownExternalPathForOutput = markdownExternalPath;
   const persistedResult = structuredClone(result);
   removeUndefinedProperties(persistedResult);
-  const manifest = buildManifest(config, persistedResult, writer);
+  const manifest = buildManifest(
+    config,
+    persistedResult,
+    writer,
+    reportGenerated,
+    sarifManifestEntry,
+    junitManifestEntry,
+    markdownManifestEntry,
+  );
 
   try {
     const artifactReferences = await writer.finalize({
@@ -536,6 +792,18 @@ export async function executeAudit(
       baselineComparison: baselineApplied.artifact,
     });
     result.artifacts = artifactReferences;
+    if (sarifExternalPathForOutput) {
+      (result as AuditExecutionResult & { sarifExternalPath?: string }).sarifExternalPath =
+        sarifExternalPathForOutput;
+    }
+    if (junitExternalPathForOutput) {
+      (result as AuditExecutionResult & { junitExternalPath?: string }).junitExternalPath =
+        junitExternalPathForOutput;
+    }
+    if (markdownExternalPathForOutput) {
+      (result as AuditExecutionResult & { markdownExternalPath?: string }).markdownExternalPath =
+        markdownExternalPathForOutput;
+    }
     return result;
   } catch (error) {
     await writer.cleanupPartial().catch(() => {
