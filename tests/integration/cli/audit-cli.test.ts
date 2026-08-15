@@ -206,6 +206,7 @@ describe.sequential("CLI audit integration (real Chromium + axe-core)", () => {
           "--json",
           "--output",
           "custom output",
+          "--no-html",
           "--no-screenshots",
           "--full-page-screenshots",
         ],
@@ -222,7 +223,7 @@ describe.sequential("CLI audit integration (real Chromium + axe-core)", () => {
       expect(payload.artifacts.reportPath).toBeUndefined();
 
       const human = await runCli(
-        ["audit", "--output", "human output"],
+        ["audit", "--output", "human output", "--no-html"],
         { cwd: dir },
       );
       expect(human.code).toBe(0);

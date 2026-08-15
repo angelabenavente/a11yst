@@ -50,24 +50,15 @@ describe.sequential("CLI artifacts (real CLI + Chromium)", () => {
           outputDirectory: string;
           manifestPath: string;
           resultsPath: string;
+          reportPath: string;
           evidenceDirectory: string;
           latestPath: string;
-          reportPath?: string;
         };
       };
       expect(payload.auditId).toBeTruthy();
       expect(payload.status).toBe("completed");
       expect(payload.findings.some((finding) => finding.ruleId === "button-name")).toBe(true);
-      expect(payload.artifacts.reportPath).toBeUndefined();
-      for (const path of [
-        payload.artifacts.outputDirectory,
-        payload.artifacts.manifestPath,
-        payload.artifacts.resultsPath,
-        payload.artifacts.evidenceDirectory,
-        payload.artifacts.latestPath,
-      ]) {
-        await access(path);
-      }
+      for (const path of Object.values(payload.artifacts)) await access(path);
       const pngs = (await filesBelow(payload.artifacts.outputDirectory)).filter((path) =>
         path.endsWith(".png"),
       );
@@ -82,7 +73,7 @@ describe.sequential("CLI artifacts (real CLI + Chromium)", () => {
         evidenceDirectory?: string;
       };
       expect(manifest.auditId).toBe(payload.auditId);
-      expect(manifest.reportPath).toBeUndefined();
+      expect(manifest.reportPath).toBe("report/index.html");
       expect(manifest.evidenceDirectory).toBe("evidence");
     });
   }, TEST_TIMEOUT_MS);

@@ -36,9 +36,14 @@ describe("CLI foundation", () => {
     expect(result.stdout).toMatch(/\broutes\b/);
     expect(result.stdout).toMatch(/\baudit\b/);
     expect(result.stdout).toMatch(/\bprofiles\b/);
+    expect(result.stdout).toMatch(/--progress/);
     for (const marker of LEGACY_IDENTITY) {
       expect(result.stdout).not.toContain(marker);
     }
+
+    const auditHelp = await runCli(["audit", "--help"]);
+    expect(auditHelp.code).toBe(0);
+    expect(auditHelp.stdout).toMatch(/--color/);
   });
 
   it("prints version", async () => {

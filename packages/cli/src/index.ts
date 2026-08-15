@@ -70,6 +70,32 @@ function parsePositiveInteger(value: string, optionName: string): number {
   return parsed;
 }
 
+function readGlobalPresentationOptions(command: Command): {
+  progress?: string;
+  noProgress?: boolean;
+} {
+  const root =
+    command.parent && typeof command.parent.opts === "function" ? command.parent : command;
+  const opts = root.opts() as { progress?: string; noProgress?: boolean };
+  return {
+    progress: opts.progress,
+    noProgress: opts.noProgress,
+  };
+}
+
+function createCommandProgress(
+  command: Command,
+  opts: { json?: boolean; color?: string },
+) {
+  const global = readGlobalPresentationOptions(command);
+  return createCliProgressReporter({
+    json: opts.json,
+    progress: global.progress,
+    noProgress: global.noProgress,
+    colorMode: parseColorMode(typeof opts.color === "string" ? opts.color : undefined),
+  });
+}
+
 export async function runCli(options: RunCliOptions = {}): Promise<number> {
   const cwd = resolve(options.cwd ?? process.cwd());
   const argv = options.argv ?? process.argv;
@@ -90,7 +116,13 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
     .configureOutput({
       writeOut: (str) => process.stdout.write(str),
       writeErr: (str) => process.stderr.write(str),
-    });
+    })
+    .option(
+      "--progress <mode>",
+      "Progress feedback while long operations run (auto, always, never)",
+      "auto",
+    )
+    .option("--no-progress", "Disable progress feedback");
 
   program.addHelpText("before", () => `${createBrandHeader({ tagline: true })}\n\n`);
 
@@ -100,12 +132,15 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
     .option("--json", "Emit machine-readable JSON on stdout", false)
     .option("--workspace", "Detect every project across a monorepo workspace", false)
     .option("--cwd <path>", "Directory to run detection in")
-    .action(async (opts: { json?: boolean; workspace?: boolean; cwd?: string }) => {
+    .action(async function (this: Command, opts: { json?: boolean; workspace?: boolean; cwd?: string }) {
+      const progress = createCommandProgress(this, opts);
       try {
+        progress.start("Scanning project…");
         const result = await runDetect({
           cwd: resolveCwd(opts.cwd),
           workspace: opts.workspace,
         });
+        progress.succeed("Scan complete");
         if (opts.json) {
           writeJson(formatDetectJson(result));
         } else {
@@ -113,12 +148,15 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
         }
         process.exitCode = 0;
       } catch (error) {
+        progress.fail("Detection failed");
         const message = error instanceof Error ? error.message : String(error);
         if (opts.json) {
           writeJson({ status: "error", message }, process.stdout);
         }
         writeStderr(message);
         process.exitCode = 1;
+      } finally {
+        progress.stop();
       }
     });
 
@@ -182,14 +220,18 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
     .option("--project <name>", "Resolve routes for this project only (repeatable)", collectProjectNames, [] as string[])
     .option("--explain", "Show route discovery provenance and unresolved patterns", false)
     .action(
-      async (opts: {
+      async function (
+        this: Command,
+        opts: {
         json?: boolean;
         config?: string;
         cwd?: string;
         project?: string[];
         explain?: boolean;
-      }) => {
+      }) {
+        const progress = createCommandProgress(this, opts);
         try {
+          progress.start("Discovering routes…");
           const result = await runRoutes({
             cwd: resolveCwd(opts.cwd),
             configPath: opts.config,
@@ -197,6 +239,11 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
             json: opts.json,
             explain: opts.explain,
           });
+          const routeCount = result.projects.reduce(
+            (total, project) => total + project.routes.length,
+            0,
+          );
+          progress.succeed(`${routeCount} route${routeCount === 1 ? "" : "s"} resolved`);
           if (opts.json) {
             writeJson(formatRoutesJson(result));
           } else {
@@ -204,6 +251,7 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
           }
           process.exitCode = 0;
         } catch (error) {
+          progress.fail("Route discovery failed");
           const message =
             error instanceof ConfigError
               ? error.format()
@@ -223,6 +271,8 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
           }
           writeStderr(message);
           process.exitCode = 1;
+        } finally {
+          progress.stop();
         }
       },
     );
@@ -323,7 +373,7 @@ ${AUDIT_HELP_DISCLAIMER}
 `,
     )
     .action(
-      async (opts: {
+      async function (this: Command, opts: {
         json?: boolean;
         config?: string;
         cwd?: string;
@@ -359,11 +409,8 @@ ${AUDIT_HELP_DISCLAIMER}
         minimumSeverity?: string;
         color?: string;
         verbose?: boolean;
-      }) => {
-        const progress = createCliProgressReporter({
-          json: opts.json,
-          colorMode: parseColorMode(typeof opts.color === "string" ? opts.color : undefined),
-        });
+      }) {
+        const progress = createCommandProgress(this, opts);
         const controller = new AbortController();
         const onSignal = () => controller.abort();
         process.once("SIGINT", onSignal);
@@ -549,17 +596,14 @@ When --format markdown is used, a11yst generates reports/a11yst.md offline.
 No browser, server, baseline comparison, or policy re-evaluation runs.`,
     )
     .action(
-      async (resultsPath: string | undefined, opts: {
+      async function (this: Command, resultsPath: string | undefined, opts: {
         from?: string;
         format?: string;
         output?: string;
         json?: boolean;
         cwd?: string;
-      }) => {
-        const progress = createCliProgressReporter({
-          json: opts.json,
-          colorMode: parseColorMode(undefined),
-        });
+      }) {
+        const progress = createCommandProgress(this, opts);
         try {
           progress.start("Regenerating report…");
           const format =
