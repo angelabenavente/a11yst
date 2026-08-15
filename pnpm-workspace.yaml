@@ -2,3 +2,4 @@ packages:
   - "packages/*"
   - "examples/audit/*"
   - "examples/profiles/*"
+  - "examples/flows/*"

@@ -5,6 +5,7 @@ import {
   isExecutableRun,
   selectRuns,
   skipReasonForRun,
+  UnknownFlowError,
   UnknownProjectError,
 } from "@a11yst/core";
 import type { AuditPlan, PlannedRun } from "@a11yst/types";
@@ -101,6 +102,47 @@ describe("selectRuns", () => {
     const selectedIds = new Set([...executable, ...skipped].map((run) => run.id));
     const planIds = new Set(plan.runs.map((run) => run.id));
     expect(selectedIds).toEqual(planIds);
+  });
+
+  it("selects flow checkpoint runs and rejects unknown flow ids", () => {
+    const config = validateConfig({
+      projects: [
+        {
+          name: "website",
+          platform: "web",
+          framework: "html",
+          baseUrl: "http://localhost:3000",
+          routes: ["/"],
+          profiles: ["default"],
+          viewports: [{ name: "desktop", width: 1440, height: 900 }],
+          flows: [
+            {
+              id: "open-dialog",
+              start: "/",
+              steps: [
+                { action: "click", locator: { role: "button", name: "Open" } },
+                { action: "checkpoint", id: "dialog-open" },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+    const plan = createAuditPlan(config);
+    const flowsOnly = selectRuns(plan, { flowsOnly: true });
+    expect(flowsOnly.executable.every((run) => run.kind === "flow-checkpoint")).toBe(true);
+    expect(flowsOnly.executable).toHaveLength(1);
+
+    const routesOnly = selectRuns(plan, { routesOnly: true });
+    expect(routesOnly.executable.every((run) => run.kind !== "flow-checkpoint")).toBe(true);
+
+    const named = selectRuns(plan, { flowNames: ["open-dialog"] });
+    expect(named.executable.every((run) => run.flowId === "open-dialog")).toBe(true);
+
+    expect(() => selectRuns(plan, { flowNames: ["missing-flow"] })).toThrow(UnknownFlowError);
+    expect(() => selectRuns(plan, { flowsOnly: true, routesOnly: true })).toThrow(
+      /Cannot use --routes-only and --flows-only together/,
+    );
   });
 
 });
