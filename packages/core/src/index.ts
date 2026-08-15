@@ -34,6 +34,7 @@ export {
 } from "./aggregate.js";
 export {
   createArtifactEvidenceSink,
+  createFlowEvidenceSink,
   executeAudit,
   resolveAuditOutputDirectory,
   type ExecuteAuditOptions,

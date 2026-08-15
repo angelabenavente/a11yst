@@ -54,9 +54,8 @@ Each example's `a11yst.config.ts` declares a `devServer` (`command` + `url`,
 reuse one you already started manually on the matching port.
 
 Each command writes `.a11yst/results`, including `latest.json`, versioned JSON
-results, screenshot evidence, an offline `report/index.html`, and a Markdown
-report at `reports/a11yst.md`. The output may contain visible or sensitive page
-data: keep `.a11yst/` private and add it to your own `.gitignore` when
+results, and screenshot evidence. The output may contain visible or sensitive
+page data: keep `.a11yst/` private and add it to your own `.gitignore` when
 appropriate. a11yst does not upload output or modify `.gitignore`.
 
 ## Ports

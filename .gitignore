@@ -6,3 +6,13 @@ coverage
 .DS_Store
 .tmp
 .tmp-*
+**/.a11yst/results/**
+**/.a11yst/*
+!**/.a11yst/baseline.json
+**/.allyst/**
+**/.allyst-out/**
+**/.a11yst-out/**
+playwright-report/
+test-results/
+examples/**/dist/
+examples/**/.vite/
