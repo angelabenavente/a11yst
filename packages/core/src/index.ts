@@ -55,6 +55,7 @@ export {
   mergeReportReferences,
 } from "./report-manifest.js";
 export { createMarkdownInputFromAuditResult } from "./create-markdown-input.js";
+export { createGitHubAnnotationsInputFromAuditResult } from "./create-github-annotations-input.js";
 export {
   generateMarkdownReportArtifact,
   generateMarkdownContentFromAuditResult,
