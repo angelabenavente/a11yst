@@ -1,0 +1,49 @@
+{
+  "name": "@a11yst/cli",
+  "version": "0.1.0",
+  "description": "Command-line interface for a11yst",
+  "keywords": [
+    "accessibility",
+    "a11y",
+    "testing",
+    "regression",
+    "playwright",
+    "axe",
+    "cli"
+  ],
+  "type": "module",
+  "bin": {
+    "a11yst": "./dist/bin.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist *.tsbuildinfo"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@a11yst/config": "workspace:*",
+    "@a11yst/flows": "workspace:*",
+    "@a11yst/types": "workspace:*",
+    "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  },
+  "license": "MPL-2.0"
+}
