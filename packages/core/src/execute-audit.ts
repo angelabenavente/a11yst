@@ -30,6 +30,7 @@ import { aggregateSummary, buildProfileSummary, buildFlowSummary, emptySeverityC
 import { createAuditPlan } from "./create-audit-plan.js";
 import { prepareAuditConfig } from "./resolve-project-routes.js";
 import { applyBaselineComparison } from "./baseline-comparison.js";
+import { applySourceAnalysis } from "./apply-source-analysis.js";
 import { applyPolicyEvaluation } from "./policy-evaluation.js";
 import {
   generateSarifReport,
@@ -584,6 +585,8 @@ export async function executeAudit(
   if (!result) {
     throw new Error("Audit execution did not produce a result.");
   }
+
+  result = await applySourceAnalysis(config, result, progress);
 
   const baselineApplied = await applyBaselineComparison(config, result, {
     noBaseline: options.noBaseline,

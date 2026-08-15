@@ -1,0 +1,21 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src"
+  },
+  "include": ["src/**/*.ts"],
+  "references": [
+    { "path": "../types" },
+    { "path": "../source-index" },
+    { "path": "../source-mapping" },
+    { "path": "../source-mapping-html" },
+    { "path": "../source-mapping-react" },
+    { "path": "../source-mapping-next" },
+    { "path": "../source-mapping-vue" },
+    { "path": "../source-mapping-nuxt" },
+    { "path": "../source-mapping-angular" },
+    { "path": "../source-ranking" },
+    { "path": "../recommendations" }
+  ]
+}

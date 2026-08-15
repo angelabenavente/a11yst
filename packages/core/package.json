@@ -30,6 +30,7 @@
     "@a11yst/policy": "workspace:*",
     "@a11yst/reporters": "workspace:*",
     "@a11yst/sarif": "workspace:*",
+    "@a11yst/source-analysis": "workspace:*",
     "@a11yst/types": "workspace:*"
   },
   "devDependencies": {

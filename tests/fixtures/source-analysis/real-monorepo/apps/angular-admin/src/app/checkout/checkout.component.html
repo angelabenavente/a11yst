@@ -1,0 +1,16 @@
+<section>
+  <h1>Checkout</h1>
+  <button
+    id="angular-submit-order"
+    type="submit"
+    aria-label="Place order"
+    data-testid="checkout-submit"
+  >
+    Place order
+  </button>
+  <label for="email">Email</label>
+  <input id="email" type="email" [value]="emailValue" (input)="onInput($event)" />
+  @if (showHelp) {
+    <p id="help-text">Need help?</p>
+  }
+</section>

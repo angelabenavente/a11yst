@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Legacy Checkout</title>
+    <script>
+      const A11YST_SECRET_PASSWORD_10K = "must-not-leak-from-script";
+    </script>
+  </head>
+  <body>
+    <main>
+      <h1>Café checkout ボタン</h1>
+      <a href="/cart">View cart</a>
+      <img src="hero.png" />
+      <label for="email">Email</label>
+      <input id="email" type="email" name="email" />
+      <button id="submit-order" type="submit">Place order</button>
+      <button type="button"><svg aria-hidden="true"></svg></button>
+      <button id="shared-submit" type="button">Shared submit</button>
+      <button class="primary action" type="button">Place order</button>
+      <button class="primary action" type="button">Place order duplicate</button>
+    </main>
+  </body>
+</html>

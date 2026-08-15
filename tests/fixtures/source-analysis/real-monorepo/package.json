@@ -1,0 +1,6 @@
+{
+  "name": "a11yst-real-monorepo-fixture",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Non-executable multi-framework fixture for a11yst source analysis integration tests"
+}

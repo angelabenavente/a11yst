@@ -1,0 +1,5 @@
+# gitignore fixture
+apps/storefront/src/ignored-by-gitignore.ts
+dist/
+# comment pattern
+!apps/storefront/src/index.ts

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Legacy Checkout</title>
+    <style>body { color: red; }</style>
+    <script>window.__SECRET__ = "must-not-index";</script>
+  </head>
+  <body>
+    <!-- hostile comment with password=SuperSecret should not appear -->
+    <main id="checkout-main" class="layout primary">
+      <h1>Café checkout ボタン</h1>
+      <form action="/submit">
+        <label for="email">Email</label>
+        <input id="email" type="email" name="email" value="user@example.com" />
+        <input id="secret-password" type="password" name="password" value="SuperSecret123" />
+        <button id="submit-order" class="primary action" type="submit" aria-label="Place order">
+          Place order
+        </button>
+        <button class="primary action" type="button">Place order</button>
+        <img src="logo.png" alt="Store logo" />
+        <p id="error-message" role="alert">Payment failed</p>
+      </form>
+      <div id="help-dialog" role="dialog" aria-label="Help dialog">
+        <p>Need assistance?</p>
+      </div>
+      <button data-testid="confirm-payment">Confirm</button>
+    </main>
+  </body>
+</html>

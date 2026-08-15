@@ -16,6 +16,7 @@
     { "path": "../junit" },
     { "path": "../policy" },
     { "path": "../reporters" },
-    { "path": "../sarif" }
+    { "path": "../sarif" },
+    { "path": "../source-analysis" }
   ]
 }

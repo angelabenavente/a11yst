@@ -1,0 +1,34 @@
+{
+  "name": "@a11yst/source-mapping-nuxt",
+  "version": "0.1.0",
+  "description": "Conservative Nuxt static route catalog and source mapping for a11yst",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist *.tsbuildinfo"
+  },
+  "dependencies": {
+    "@a11yst/source-index": "workspace:*",
+    "@a11yst/source-mapping": "workspace:*",
+    "@a11yst/source-mapping-vue": "workspace:*",
+    "@a11yst/types": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  },
+  "license": "MPL-2.0"
+}
