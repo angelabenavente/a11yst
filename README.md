@@ -11,3 +11,7 @@ pnpm exec playwright install chromium
 ```
 
 Chromium is not downloaded by `pnpm install`.
+
+## License
+
+a11yst Community is licensed under the [Mozilla Public License 2.0 (MPL-2.0)](./LICENSE). See [LICENSE](./LICENSE) and [docs/licensing.md](./docs/licensing.md) for the complete license text and Community guidance.
