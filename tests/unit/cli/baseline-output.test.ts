@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { formatAuditHuman } from "../../../packages/cli/src/commands/audit.js";
 import {
   formatBaselineComparisonArtifact,
   formatBaselineCreateHuman,
@@ -16,31 +17,135 @@ import {
   type FindingsResult,
 } from "../../../packages/cli/src/commands/findings.js";
 import type {
+  AuditExecutionResult,
   BaselineComparisonArtifact,
   BaselineEntry,
   BaselineFile,
   BaselineSummary,
+  Finding,
+  ResolvedFinding,
 } from "@a11yst/types";
 import type { CompareBaselineResult } from "@a11yst/baseline";
 
-const baselineSummary: BaselineSummary = {
-  baselineUsed: true,
-  baselinePath: ".a11yst/baseline.json",
-  currentFindings: 4,
-  newFindings: 1,
-  knownFindings: 3,
-  regressedFindings: 0,
-  resolvedFindings: 1,
-  notComparedFindings: 0,
-  expiredClassifications: 0,
-  dispositions: {
-    falsePositive: 1,
-    acceptedRisk: 1,
-    thirdParty: 0,
-    notApplicable: 0,
-    manualReview: 0,
-  },
-};
+function auditResult(overrides: Partial<AuditExecutionResult> = {}): AuditExecutionResult {
+  const finding: Finding = {
+    id: "label::baseline-legacy-html::/contact::default::desktop::#email",
+    fingerprint: "label|baseline-legacy-html|/contact|default|desktop|#email",
+    source: "axe",
+    ruleId: "label",
+    title: "Form elements must have labels",
+    description: "An input is missing an associated label.",
+    severity: "critical",
+    projectName: "baseline-legacy-html",
+    profile: "default",
+    viewport: "desktop",
+    route: "/contact",
+    url: "http://127.0.0.1/contact",
+    target: ["#email"],
+    standards: [],
+    baseline: {
+      status: "new",
+      baselineFingerprint: "label|baseline-legacy-html|/contact|default|desktop|#email",
+      currentSeverity: "critical",
+    },
+  };
+
+  const baselineSummary: BaselineSummary = {
+    baselineUsed: true,
+    baselinePath: ".a11yst/baseline.json",
+    currentFindings: 4,
+    newFindings: 1,
+    knownFindings: 3,
+    regressedFindings: 0,
+    resolvedFindings: 1,
+    notComparedFindings: 0,
+    expiredClassifications: 0,
+    dispositions: {
+      falsePositive: 1,
+      acceptedRisk: 1,
+      thirdParty: 0,
+      notApplicable: 0,
+      manualReview: 0,
+    },
+  };
+
+  const resolvedFinding: ResolvedFinding = {
+    fingerprint: "button-name|baseline-legacy-html|/contact|default|desktop|#submit",
+    fingerprintVersion: "1",
+    ruleId: "button-name",
+    source: "axe",
+    projectName: "baseline-legacy-html",
+    location: {
+      kind: "route",
+      route: "/contact",
+      profile: "default",
+      viewport: "desktop",
+    },
+    previousSeverity: "high",
+    resolvedAt: "2026-08-03T10:05:00.000Z",
+    snapshot: { title: "Submit button label", profile: "default" },
+  };
+
+  return {
+    schemaVersion: "1",
+    status: "completed",
+    summary: {
+      status: "completed",
+      startedAt: "2026-08-03T10:00:00.000Z",
+      durationMs: 1200,
+      plannedRuns: 1,
+      completedRuns: 1,
+      skippedRuns: 0,
+      failedRuns: 0,
+      findingCount: 1,
+      findingsBySeverity: { critical: 1, high: 0, medium: 0, minor: 0 },
+    },
+    plan: {
+      projects: [
+        {
+          name: "baseline-legacy-html",
+          platform: "web",
+          framework: "html",
+        },
+      ] as AuditExecutionResult["plan"]["projects"],
+      runs: [],
+      totalRuns: 1,
+      diagnostics: [],
+      createdAt: "2026-08-03T10:00:00.000Z",
+    },
+    runs: [
+      {
+        runId: "run-1",
+        kind: "route",
+        projectName: "baseline-legacy-html",
+        platform: "web",
+        framework: "html",
+        profile: "default",
+        viewport: { name: "desktop", width: 1440, height: 900 },
+        status: "completed",
+        startedAt: "2026-08-03T10:00:00.000Z",
+        durationMs: 1200,
+        findings: [finding],
+        diagnostics: [],
+        route: "/contact",
+        url: "http://127.0.0.1/contact",
+      },
+    ],
+    findings: [finding],
+    diagnostics: [],
+    limitations: [],
+    environment: {
+      product: "a11yst",
+      productVersion: "0.1.0",
+      nodeVersion: "20.0.0",
+      browser: "chromium",
+      headed: false,
+    },
+    baselineSummary,
+    resolvedFindings: [resolvedFinding],
+    ...overrides,
+  };
+}
 
 const baselineFile: BaselineFile = {
   schemaVersion: "1",
@@ -74,6 +179,8 @@ const baselineFile: BaselineFile = {
     },
   ],
 };
+
+const baselineSummary = auditResult().baselineSummary!;
 
 const comparisonArtifact = {
   schemaVersion: "1",
@@ -257,7 +364,22 @@ describe("baseline CLI human and JSON formatters", () => {
     expect(saved).toContain("Classification saved");
   });
 
+  it("formatAuditHuman includes baseline comparison, resolved findings, and disclaimers", () => {
+    const output = formatAuditHuman(auditResult());
+
+    expect(output).toContain("Baseline comparison");
+    expect(output).toContain("NEW         1");
+    expect(output).toContain("RESOLVED    1");
+    expect(output).toContain("Submit button label");
+    expect(output).toContain("CRITICAL  NEW");
+    expect(output).toContain("label");
+    expect(output).toContain("Baseline    .a11yst/baseline.json");
+    expect(output).toContain("A baseline records known accessibility debt.");
+    // eslint-disable-next-line no-control-regex
+    expect(output).not.toMatch(/\x1b\[[0-9;]*m/);
+  });
+
   it("formatBaselineComparisonArtifact returns empty output when baseline was not used", () => {
-    expect(formatBaselineComparisonArtifact({ ...baselineSummary, baselineUsed: false })).toEqual([]);
+    expect(formatBaselineComparisonArtifact({ ...auditResult().baselineSummary!, baselineUsed: false })).toEqual([]);
   });
 });

@@ -1,4 +1,4 @@
-import { mkdir, copyFile } from "node:fs/promises";
+import { mkdir, copyFile, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { ensureDir, repoRoot, runCli, withTempDir } from "../../helpers/cli.js";
@@ -140,6 +140,139 @@ describe("CLI robustness", () => {
       expect(result.code).toBe(0);
       const payload = JSON.parse(result.stdout) as { project: { framework: { framework: string } } };
       expect(payload.project.framework.framework).toBe("html");
+    });
+  });
+});
+
+describe("CLI init with detection", () => {
+  it("infers react + port 3000 from vite.config server.port fixture", async () => {
+    await withTempDir("a11yst-init-vite-port-", async (dir) => {
+      await copyFixtureFiles("react-vite-port-3000", dir, [
+        "package.json",
+        "vite.config.ts",
+        "index.html",
+        "src/App.tsx",
+        "src/main.tsx",
+      ]);
+
+      const result = await runCli(["init", "--json"], { cwd: dir });
+      expect(result.code).toBe(0);
+      const payload = JSON.parse(result.stdout) as {
+        detection: { framework: string; platform: string };
+        overrides: Record<string, string>;
+      };
+      expect(payload.detection.platform).toBe("web");
+      expect(payload.detection.framework).toBe("react");
+      expect(payload.overrides.baseUrl).toMatch(/vite\.config\.ts/);
+
+      const configContents = await readFile(join(dir, "a11yst.config.ts"), "utf8");
+      expect(configContents).toMatch(/baseUrl: "http:\/\/localhost:3000"/);
+      expect(configContents).toMatch(/url: "http:\/\/localhost:3000"/);
+    });
+  });
+
+  it("infers react + a dev server URL from a copied react-vite fixture", async () => {
+    await withTempDir("a11yst-init-detect-", async (dir) => {
+      await copyFixtureFiles("react-vite", dir, [
+        "package.json",
+        "vite.config.ts",
+        "index.html",
+        "src/App.tsx",
+        "src/main.tsx",
+      ]);
+
+      const result = await runCli(["init", "--json"], { cwd: dir });
+      expect(result.code).toBe(0);
+      const payload = JSON.parse(result.stdout) as {
+        detection: { framework: string; platform: string };
+      };
+      expect(payload.detection.platform).toBe("web");
+      expect(payload.detection.framework).toBe("react");
+
+      const configContents = await readFile(join(dir, "a11yst.config.ts"), "utf8");
+      expect(configContents).toContain('framework: "react"');
+      expect(configContents).toMatch(/baseUrl: "http:\/\/localhost:5173"/);
+    });
+  });
+
+  it("--framework and --base-url flags override detection", async () => {
+    await withTempDir("a11yst-init-override-", async (dir) => {
+      const result = await runCli(
+        ["init", "--framework", "react", "--base-url", "http://localhost:4173", "--json"],
+        { cwd: dir },
+      );
+      expect(result.code).toBe(0);
+      const payload = JSON.parse(result.stdout) as {
+        overrides: Record<string, string>;
+      };
+      expect(payload.overrides.framework).toBe("flag");
+      expect(payload.overrides.baseUrl).toBe("flag");
+
+      const configContents = await readFile(join(dir, "a11yst.config.ts"), "utf8");
+      expect(configContents).toContain('framework: "react"');
+      expect(configContents).toContain('baseUrl: "http://localhost:4173"');
+    });
+  });
+
+  it("--force allows overwriting an existing configuration", async () => {
+    await withTempDir("a11yst-init-force-", async (dir) => {
+      const first = await runCli(["init"], { cwd: dir });
+      expect(first.code).toBe(0);
+
+      const blocked = await runCli(["init"], { cwd: dir });
+      expect(blocked.code).not.toBe(0);
+
+      const forced = await runCli(["init", "--force", "--framework", "vue"], { cwd: dir });
+      expect(forced.code).toBe(0);
+      const configContents = await readFile(join(dir, "a11yst.config.ts"), "utf8");
+      expect(configContents).toContain('framework: "vue"');
+    });
+  });
+
+  it("emits valid JSON via --json without writing extra output", async () => {
+    await withTempDir("a11yst-init-json-", async (dir) => {
+      const result = await runCli(["init", "--json"], { cwd: dir });
+      expect(result.code).toBe(0);
+      const payload = JSON.parse(result.stdout) as {
+        path: string;
+        source: string;
+        detection: unknown;
+        reviewNotes: string[];
+        overrides: Record<string, string>;
+      };
+      expect(payload.path).toContain("a11yst.config.ts");
+      expect(typeof payload.source).toBe("string");
+      expect(Array.isArray(payload.reviewNotes)).toBe(true);
+    });
+  });
+});
+
+describe("CLI doctor with detection", () => {
+  it("warns when the configured framework does not match detection", async () => {
+    await withTempDir("a11yst-doctor-mismatch-", async (dir) => {
+      const config = `export default {
+  projects: [{
+    name: "website",
+    platform: "web",
+    framework: "html",
+    baseUrl: "http://localhost:3000",
+    routes: ["/"],
+  }],
+};
+`;
+      await writeFile(join(dir, "a11yst.config.mjs"), config, "utf8");
+
+      const result = await runCli(["doctor", "--json"], { cwd: dir });
+      expect(result.code).toBe(0);
+      const payload = JSON.parse(result.stdout) as {
+        status: string;
+        checks: Array<{ id: string; status: string }>;
+      };
+      expect(["ok", "warn"]).toContain(payload.status);
+      expect(payload.status).toBe("warn");
+      expect(
+        payload.checks.some((c) => c.id.startsWith("framework-match") && c.status === "warn"),
+      ).toBe(true);
     });
   });
 });

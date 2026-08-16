@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { formatAuditHuman, formatAuditJson } from "@a11yst/cli";
+import {
+  formatDoctorHuman,
+  formatDoctorJson,
+  type DoctorReport,
+} from "../../../../packages/cli/src/commands/doctor.js";
 import { shouldRenderBranding } from "../../../../packages/cli/src/presentation/index.js";
 import type { AuditExecutionResult } from "@a11yst/types";
 
@@ -41,6 +46,18 @@ function minimalAuditResult(): AuditExecutionResult {
   };
 }
 
+const doctorReport: DoctorReport = {
+  status: "ok",
+  checks: [
+    {
+      id: "node-version",
+      title: "Node.js version",
+      status: "ok",
+      detail: "Node.js 20.0.0 satisfies minimum 20.0.0.",
+    },
+  ],
+};
+
 describe("machine output branding boundary", () => {
   it("does not render branding for machine or artifact output kinds", () => {
     expect(shouldRenderBranding({ outputKind: "machine" })).toBe(false);
@@ -56,11 +73,26 @@ describe("machine output branding boundary", () => {
     expect(json).toContain('"product":"a11yst"');
   });
 
+  it("keeps taglines and legacy mascot markers out of doctor JSON serialization", () => {
+    const json = JSON.stringify(formatDoctorJson(doctorReport));
+    for (const phrase of BRANDING_PHRASES) {
+      expect(json).not.toContain(phrase);
+    }
+    expect(json).toContain('"product":"a11yst"');
+  });
+
   it("keeps presentation headers out of formatAuditHuman output", () => {
     const output = formatAuditHuman(minimalAuditResult());
     for (const phrase of BRANDING_PHRASES) {
       expect(output).not.toContain(phrase);
     }
     expect(output).toContain("Running accessibility audit.");
+  });
+
+  it("keeps presentation headers out of formatDoctorHuman output", () => {
+    const output = formatDoctorHuman(doctorReport);
+    for (const phrase of BRANDING_PHRASES) {
+      expect(output).not.toContain(phrase);
+    }
   });
 });

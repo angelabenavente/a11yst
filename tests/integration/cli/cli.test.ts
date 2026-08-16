@@ -1,3 +1,5 @@
+import { access, readFile, writeFile } from "node:fs/promises";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { runCli, withTempDir, writeConfig } from "../../helpers/cli.js";
 
@@ -36,6 +38,13 @@ describe("CLI foundation", () => {
     expect(result.stdout).toMatch(/\broutes\b/);
     expect(result.stdout).toMatch(/\baudit\b/);
     expect(result.stdout).toMatch(/\bprofiles\b/);
+    expect(result.stdout).toMatch(/\binit\b/);
+    expect(result.stdout).toMatch(/\bdoctor\b/);
+    expect(result.stdout).toMatch(/\breport\b/);
+    expect(result.stdout).toMatch(/\bbaseline\b/);
+    expect(result.stdout).toMatch(/\bfindings\b/);
+    expect(result.stdout).toMatch(/\bclassify\b/);
+    expect(result.stdout).toMatch(/\bunclassify\b/);
     expect(result.stdout).toMatch(/--progress/);
     for (const marker of LEGACY_IDENTITY) {
       expect(result.stdout).not.toContain(marker);
@@ -75,6 +84,92 @@ describe("CLI foundation", () => {
       const result = await runCli(["flows", "--project", "missing-project"], { cwd: dir });
       expect(result.code).toBe(1);
       expect(result.stderr).toMatch(/Unknown project/i);
+    });
+  });
+
+  it("init creates a web config and refuses overwrite without --force", async () => {
+    await withTempDir("a11yst-init-", async (dir) => {
+      const first = await runCli(["init"], { cwd: dir });
+      expect(first.code).toBe(0);
+      expect(first.stdout).toContain("Created");
+      const configPath = join(dir, "a11yst.config.ts");
+      await access(configPath);
+      const contents = await readFile(configPath, "utf8");
+      expect(contents).toContain("defineConfig");
+      expect(contents).toContain('platform: "web"');
+
+      const second = await runCli(["init"], { cwd: dir });
+      expect(second.code).not.toBe(0);
+      expect(second.stderr).toMatch(/already exists|--force/i);
+
+      const forced = await runCli(["init", "--force", "--framework", "vue"], { cwd: dir });
+      expect(forced.code).toBe(0);
+      const updated = await readFile(configPath, "utf8");
+      expect(updated).toContain('platform: "web"');
+      expect(updated).toContain('framework: "vue"');
+    });
+  });
+
+  it("doctor reports status and supports --json", async () => {
+    await withTempDir("a11yst-doctor-", async (dir) => {
+      await writeFile(
+        join(dir, "a11yst.config.mjs"),
+        `export default {
+  projects: [{
+    name: "website",
+    platform: "web",
+    framework: "html",
+    baseUrl: "http://127.0.0.1:65530",
+    routes: ["/"],
+    profiles: ["default"],
+    viewports: [{ name: "desktop", width: 1440, height: 900 }],
+  }],
+};
+`,
+        "utf8",
+      );
+      await writeFile(join(dir, "pnpm-lock.yaml"), "", "utf8");
+      await writeFile(join(dir, "package.json"), JSON.stringify({ name: "temp-site" }), "utf8");
+      await writeFile(join(dir, "index.html"), "<!doctype html><html></html>", "utf8");
+
+      const human = await runCli(["doctor"], { cwd: dir });
+      expect(human.code).toBe(0);
+      expect(human.stdout).toMatch(/Overall status:\s+OK/i);
+      expect(human.stdout).toMatch(/Node\.js version/i);
+
+      const json = await runCli(["doctor", "--json"], { cwd: dir });
+      expect(json.code).toBe(0);
+      const payload = JSON.parse(json.stdout) as {
+        status: string;
+        checks: unknown[];
+      };
+      expect(payload.status).toBe("ok");
+      expect(payload.checks.length).toBeGreaterThan(0);
+    });
+  });
+
+  it("doctor still exits 0 and reports warn (not fail) when framework detection can't confirm the config", async () => {
+    await withTempDir("a11yst-doctor-warn-", async (dir) => {
+      await writeFile(
+        join(dir, "a11yst.config.mjs"),
+        `export default {
+  projects: [{
+    name: "website",
+    platform: "web",
+    framework: "html",
+    baseUrl: "http://127.0.0.1:65530",
+    routes: ["/"],
+    profiles: ["default"],
+    viewports: [{ name: "desktop", width: 1440, height: 900 }],
+  }],
+};
+`,
+        "utf8",
+      );
+      const result = await runCli(["doctor", "--json"], { cwd: dir });
+      expect(result.code).toBe(0);
+      const payload = JSON.parse(result.stdout) as { status: string };
+      expect(["ok", "warn"]).toContain(payload.status);
     });
   });
 });
