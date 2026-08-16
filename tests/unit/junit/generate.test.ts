@@ -17,7 +17,7 @@ import {
   resolvedFindingEntry,
   SECRET_PASSWORD,
   SECRET_TOKEN,
-  skippedExpoRun,
+  skippedUnreachableRun,
 } from "./fixtures.js";
 import { validateJunitXml } from "./xml-helper.js";
 
@@ -65,7 +65,7 @@ describe("run testcases", () => {
   it("represents completed, skipped, and failed route runs", () => {
     const result = generateJunit(
       baseInput({
-        runs: [completedRouteRun(), skippedExpoRun(), failedRouteRun()],
+        runs: [completedRouteRun(), skippedUnreachableRun(), failedRouteRun()],
       }),
     );
     expect(result.document.tests).toBe(3);
@@ -124,7 +124,7 @@ describe("run testcases", () => {
 
   it("omits skipped runs when includeSkippedRunCases is false", () => {
     const result = generateJunit(
-      baseInput({ runs: [skippedExpoRun(), completedRouteRun()] }),
+      baseInput({ runs: [skippedUnreachableRun(), completedRouteRun()] }),
       { includeSkippedRunCases: false },
     );
     expect(result.document.skipped).toBe(0);

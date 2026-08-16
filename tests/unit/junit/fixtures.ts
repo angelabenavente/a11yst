@@ -8,7 +8,7 @@ import type {
 import type { JunitGenerationInput } from "@a11yst/junit";
 import { run as baselineRun, flowRun } from "../baseline/fixtures.js";
 
-export const SECRET_TOKEN = "sk_live_allyst_fixture_token_9c";
+export const SECRET_TOKEN = "sk_live_a11yst_fixture_token_9c";
 export const SECRET_PASSWORD = "P@ssw0rd-fixture-9c";
 
 export function completedRouteRun(overrides: Partial<AuditRunResult> = {}): AuditRunResult {
@@ -22,14 +22,14 @@ export function completedRouteRun(overrides: Partial<AuditRunResult> = {}): Audi
   });
 }
 
-export function skippedExpoRun(overrides: Partial<AuditRunResult> = {}): AuditRunResult {
+export function skippedUnreachableRun(overrides: Partial<AuditRunResult> = {}): AuditRunResult {
   return baselineRun({
     projectName: "mobile",
-    framework: "expo",
+    framework: "html",
     route: "/home",
     profile: "default",
     status: "skipped",
-    skipReason: "Expo dev server was not reachable.",
+    skipReason: "Dev server was not reachable.",
     durationMs: 0,
     ...overrides,
   });
