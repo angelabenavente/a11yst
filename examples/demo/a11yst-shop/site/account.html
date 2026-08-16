@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>a11yst Demo Store — Account</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>a11yst Demo Store</h1>
+      <nav aria-label="Store sections">
+        <ul>
+          <li><a href="/account">Account</a></li>
+          <li><a href="/checkout">Checkout</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <section aria-labelledby="account-heading">
+        <h2 id="account-heading">Your account</h2>
+        <p>Review profile details before checkout.</p>
+        <div class="card">
+          <h3>Profile</h3>
+          <!-- Intentional accessibility issue for the a11yst demo: informative image without alt text. -->
+          <img id="account-avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='64' height='64' fill='%23666'/%3E%3C/svg%3E" width="64" height="64" />
+          <p>Signed in as <strong>demo@a11yst.example</strong></p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

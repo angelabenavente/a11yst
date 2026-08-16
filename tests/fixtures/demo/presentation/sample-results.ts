@@ -1,0 +1,266 @@
+import type { AuditExecutionResult } from "@a11yst/types";
+
+/**
+ * Realistic a11yst Shop-like stored results for presentation tests.
+ */
+export function createPresentationFixture(
+  overrides: Partial<AuditExecutionResult> = {},
+): AuditExecutionResult {
+  const base = {
+    schemaVersion: "1",
+    status: "completed",
+    summary: {
+      status: "completed",
+      startedAt: "2026-08-07T12:00:00.000Z",
+      durationMs: 1000,
+      plannedRuns: 4,
+      completedRuns: 4,
+      skippedRuns: 0,
+      failedRuns: 0,
+      findingCount: 4,
+      findingsBySeverity: {
+        critical: 2,
+        high: 1,        medium: 1,
+        minor: 0,
+      },
+    },
+    plan: {
+      projects: [],
+      runs: [],
+      totalRuns: 4,
+      diagnostics: [],
+      createdAt: "2026-08-07T12:00:00.000Z",
+    },
+    runs: [],
+    findings: [
+      {
+        id: "known-image-alt",
+        fingerprint: "image-alt|a11yst-shop|/account|default|desktop|#account-avatar",
+        source: "axe",
+        ruleId: "image-alt",
+        title: "Images must have alternative text",
+        severity: "critical",
+        route: "/account",
+        projectName: "a11yst-shop",
+        profile: "default",
+        viewport: "desktop",
+        target: ["#account-avatar"],
+        standards: ["wcag2a"],
+        baseline: {
+          status: "known",
+          baselineFingerprint:
+            "image-alt|a11yst-shop|/account|default|desktop|#account-avatar",
+          currentSeverity: "critical",
+        },
+        sourceMapping: {
+          status: "mapped",
+          candidates: [],
+          diagnostics: [],
+          selected: {
+            adapter: "html-static",
+            confidence: "high",
+            location: {
+              uri: "site/account.html",
+              language: "html",
+              region: {
+                start: { line: 26, column: 11 },
+                end: { line: 26, column: 11 },
+              },
+            },
+            provenance: "selector-match",
+            signals: [],
+          },
+        },
+        recommendations: {
+          version: 1,
+          status: "recommended",
+          recommendations: [],
+          diagnostics: [],
+        },
+      },
+      {
+        id: "new-button-name",
+        fingerprint: "button-name|a11yst-shop|/checkout|default|desktop|#open-help",
+        source: "axe",
+        ruleId: "button-name",
+        title: "Buttons must have discernible text",
+        severity: "critical",
+        route: "/checkout",
+        projectName: "a11yst-shop",
+        profile: "default",
+        viewport: "desktop",
+        target: ["#open-help"],
+        standards: ["wcag2a"],
+        baseline: {
+          status: "new",
+          baselineFingerprint:
+            "button-name|a11yst-shop|/checkout|default|desktop|#open-help",
+          currentSeverity: "critical",
+        },
+        sourceMapping: {
+          status: "mapped",
+          candidates: [],
+          diagnostics: [],
+          selected: {
+            adapter: "html-static",
+            confidence: "high",
+            location: {
+              uri: "site/checkout.html",
+              language: "html",
+              region: {
+                start: { line: 33, column: 13 },
+                end: { line: 33, column: 13 },
+              },
+            },
+            provenance: "selector-match",
+            signals: [],
+          },
+        },
+        recommendations: {
+          version: 1,
+          status: "recommended",
+          recommendations: [],
+          diagnostics: [],
+        },
+      },
+      {
+        id: "interactive-dialog",
+        fingerprint:
+          "aria-dialog-name::a11yst-shop::checkout-help::help-dialog-open::default::desktop::#help-dialog",
+        source: "axe",
+        ruleId: "aria-dialog-name",
+        title: "Dialog must have accessible name",
+        severity: "high",
+        route: "/checkout",
+        flowId: "checkout-help",
+        checkpointId: "help-dialog-open",
+        projectName: "a11yst-shop",
+        profile: "default",
+        viewport: "desktop",
+        target: ["#help-dialog"],
+        standards: ["wcag2a"],
+        baseline: {
+          status: "new",
+          baselineFingerprint:
+            "aria-dialog-name::a11yst-shop::checkout-help::help-dialog-open::default::desktop::#help-dialog",
+          currentSeverity: "high",
+        },
+        sourceMapping: {
+          status: "mapped",
+          candidates: [],
+          diagnostics: [],
+        },
+      },
+      {
+        id: "unmapped-keyboard",
+        fingerprint: "keyboard-focus-lost::a11yst-shop::/checkout::keyboard::desktop::document",
+        source: "a11yst",
+        ruleId: "keyboard-focus-lost",
+        title: "Keyboard focus lost",
+        severity: "high",
+        route: "/checkout",
+        projectName: "a11yst-shop",
+        profile: "keyboard",
+        viewport: "desktop",
+        target: ["document"],
+        standards: [],
+        baseline: {
+          status: "new",
+          baselineFingerprint:
+            "keyboard-focus-lost::a11yst-shop::/checkout::keyboard::desktop::document",
+          currentSeverity: "high",
+        },
+        sourceMapping: {
+          status: "unmapped",
+          candidates: [],
+          diagnostics: [],
+        },
+      },
+    ],
+    diagnostics: [],
+    limitations: [],
+    baselineSummary: {
+      baselineUsed: true,
+      baselinePath: ".a11yst/baseline.json",
+      currentFindings: 4,
+      newFindings: 3,
+      knownFindings: 1,
+      regressedFindings: 0,
+      resolvedFindings: 0,
+      notComparedFindings: 0,
+      expiredClassifications: 0,
+      dispositions: {
+        falsePositive: 0,
+        acceptedRisk: 0,
+        thirdParty: 0,
+        notApplicable: 0,
+        manualReview: 0,
+      },
+    },
+    sourceAnalysis: {
+      version: 1,
+      status: "complete",
+      projects: 1,
+      indexedFiles: 4,
+      analyzedFindings: 4,
+      mappedFindings: 3,
+      ambiguousFindings: 0,
+      unmappedFindings: 1,
+      invalidFindings: 0,
+      rankedFindings: 3,
+      resolvedByRanking: 3,
+      recommendedFindings: 2,
+      manualReviewFindings: 0,
+      unsupportedRecommendationFindings: 0,
+      diagnostics: [],
+    },
+    policyEvaluation: {
+      status: "failed",
+      policyEnabled: true,
+      baselineRequired: true,
+      baselineUsed: true,
+      breaches: [],
+      summary: {
+        evaluatedFindings: 3,
+        ignoredBySeverity: 0,
+        excludedByDisposition: 0,
+        newBreaches: 2,
+        regressionBreaches: 0,
+        expiredClassificationBreaches: 0,
+        totalBreaches: 2,
+      },
+      diagnostics: [],
+    },
+    artifacts: {
+      outputDirectory: ".",
+      manifestPath: "manifest.json",
+      resultsPath: "results.json",
+      reportPath: "report/index.html",
+      sarifPath: "reports/a11yst.sarif",
+      junitPath: "reports/a11yst.junit.xml",
+      markdownPath: "reports/a11yst.md",
+      githubAnnotationsPath: "reports/github-annotations.txt",
+      latestPath: "../../latest.json",
+    },
+    environment: {
+      product: "a11yst",
+      productVersion: "0.1.0",
+      nodeVersion: "v20.20.2",
+      browser: "chromium",
+      headed: false,
+    },
+  } as AuditExecutionResult;
+
+  return {
+    ...base,
+    ...overrides,
+    findings: overrides.findings ?? base.findings,
+    baselineSummary:
+      "baselineSummary" in overrides ? overrides.baselineSummary : base.baselineSummary,
+    sourceAnalysis:
+      "sourceAnalysis" in overrides ? overrides.sourceAnalysis : base.sourceAnalysis,
+    policyEvaluation:
+      "policyEvaluation" in overrides ? overrides.policyEvaluation : base.policyEvaluation,
+    artifacts: overrides.artifacts ?? base.artifacts,
+  };
+}

@@ -34,6 +34,6 @@
       "@a11yst/source-analysis": ["./packages/source-analysis/src/index.ts"]
     }
   },
-  "include": ["tests/**/*.ts", "vitest.config.ts"],
+  "include": ["tests/**/*.ts", "vitest.config.ts", "examples/demo/a11yst-shop/scripts/presentation/index.d.mts"],
   "exclude": ["tests/fixtures/**"]
 }
