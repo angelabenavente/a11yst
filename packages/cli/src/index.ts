@@ -7,6 +7,39 @@ import { productMetadata } from "@a11yst/types";
 import { parseCiPolicyCliOptions } from "./ci-policy-options.js";
 import { formatAuditHuman, formatAuditJson } from "./commands/audit.js";
 import {
+  formatBaselineCreateHuman,
+  formatBaselineCreateJson,
+  formatBaselineMigrateHuman,
+  formatBaselineMigrateJson,
+  formatBaselineStatusHuman,
+  formatBaselineStatusJson,
+  formatBaselineUpdateHuman,
+  formatBaselineUpdateJson,
+  runBaselineCreate,
+  runBaselineMigrate,
+  runBaselineStatus,
+  runBaselineUpdate,
+} from "./commands/baseline.js";
+import {
+  formatClassifyHuman,
+  formatClassifyJson,
+  formatClassifyPreviewFromError,
+  runClassify,
+} from "./commands/classify.js";
+import {
+  formatFindingsHuman,
+  formatFindingsJson,
+  parseFindingsDisposition,
+  parseFindingsStatus,
+  runFindings,
+} from "./commands/findings.js";
+import {
+  formatUnclassifyHuman,
+  formatUnclassifyJson,
+  formatUnclassifyPreviewFromError,
+  runUnclassify,
+} from "./commands/unclassify.js";
+import {
   formatReportHuman,
   formatReportJson,
   runReport,
@@ -16,6 +49,12 @@ import {
   formatDetectJson,
   runDetect,
 } from "./commands/detect.js";
+import {
+  formatDoctorHuman,
+  formatDoctorJson,
+  runDoctor,
+} from "./commands/doctor.js";
+import { formatInitHuman, formatInitJson, parseInitFramework, parseInitPlatform, runInit } from "./commands/init.js";
 import {
   formatFlowsHuman,
   formatFlowsJson,
@@ -44,6 +83,39 @@ import {
 export interface RunCliOptions {
   argv?: string[];
   cwd?: string;
+}
+
+function exitCodeFromDoctorStatus(status: "ok" | "warn" | "fail"): number {
+  if (status === "fail") return 1;
+  return 0;
+}
+
+function exitCodeFromError(error: unknown): number {
+  if (
+    error &&
+    typeof error === "object" &&
+    "exitCode" in error &&
+    typeof (error as { exitCode: unknown }).exitCode === "number"
+  ) {
+    return (error as { exitCode: number }).exitCode;
+  }
+  return 1;
+}
+
+function collectCheckpointNames(value: string, previous: string[]): string[] {
+  return [...previous, value];
+}
+
+function collectRuleNames(value: string, previous: string[]): string[] {
+  return [...previous, value];
+}
+
+function collectFindingStatus(value: string, previous: string[]): string[] {
+  return [...previous, parseFindingsStatus(value)];
+}
+
+function collectFindingDisposition(value: string, previous: string[]): string[] {
+  return [...previous, parseFindingsDisposition(value)];
 }
 
 /** Commander "collect" helper for repeatable `--project <name>` flags. */
@@ -159,6 +231,71 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
         progress.stop();
       }
     });
+
+  program
+    .command("init")
+    .description("Create a starter configuration file")
+    .option("--force", "Overwrite an existing configuration file", false)
+    .option(
+      "--platform <platform>",
+      'Target platform: "web". Detected when omitted.',
+    )
+    .option(
+      "--framework <framework>",
+      "Framework hint (e.g. html, react, next). Detected when omitted.",
+    )
+    .option("--base-url <url>", "Base URL for web projects (e.g. http://localhost:3000)")
+    .option("--dev-command <command>", "Command used to start the development server")
+    .option("--cwd <path>", "Directory to initialize (defaults to the current working directory)")
+    .option("--json", "Emit machine-readable JSON on stdout", false)
+    .action(
+      async function (
+        this: Command,
+        opts: {
+        force: boolean;
+        platform?: string;
+        framework?: string;
+        baseUrl?: string;
+        devCommand?: string;
+        cwd?: string;
+        json?: boolean;
+      }) {
+        const progress = createCommandProgress(this, opts);
+        try {
+          progress.start("Initializing project…");
+          const platform = opts.platform !== undefined ? parseInitPlatform(opts.platform) : undefined;
+          const framework = opts.framework !== undefined ? parseInitFramework(opts.framework) : undefined;
+
+          const result = await runInit({
+            cwd: resolveCwd(opts.cwd),
+            force: opts.force,
+            platform,
+            framework,
+            baseUrl: opts.baseUrl,
+            devCommand: opts.devCommand,
+            json: opts.json,
+          });
+          progress.succeed("Initialization complete");
+
+          if (opts.json) {
+            writeJson(formatInitJson(result));
+          } else {
+            writeStdout(prependHumanBrandHeader(formatInitHuman(result)));
+          }
+          process.exitCode = 0;
+        } catch (error) {
+          progress.fail("Initialization failed");
+          const message = error instanceof Error ? error.message : String(error);
+          if (opts.json) {
+            writeJson({ status: "error", message }, process.stdout);
+          }
+          writeStderr(message);
+          process.exitCode = 1;
+        } finally {
+          progress.stop();
+        }
+      },
+    );
 
   program
     .command("flows")
@@ -655,6 +792,433 @@ No browser, server, baseline comparison, or policy re-evaluation runs.`,
       process.exitCode = 0;
     });
 
+  program
+    .command("doctor")
+    .description("Check environment readiness for a11yst")
+    .option("--json", "Emit machine-readable JSON on stdout", false)
+    .option("--cwd <path>", "Directory to check")
+    .action(async function (this: Command, opts: { json?: boolean; cwd?: string }) {
+      const progress = createCommandProgress(this, opts);
+      try {
+        progress.start("Running diagnostics…");
+        const report = await runDoctor(resolveCwd(opts.cwd));
+        progress.succeed("Diagnostics complete");
+        if (opts.json) {
+          writeJson(formatDoctorJson(report));
+        } else {
+          writeStdout(prependHumanBrandHeader(formatDoctorHuman(report)));
+        }
+        process.exitCode = exitCodeFromDoctorStatus(report.status);
+      } catch (error) {
+        progress.fail("Diagnostics failed");
+        writeStderr(error instanceof Error ? error.message : String(error));
+        process.exitCode = 1;
+      } finally {
+        progress.stop();
+      }
+    });
+
+  program
+    .command("baseline")
+    .description("Manage versioned accessibility baselines")
+    .addCommand(
+      new Command("create")
+        .description("Create a baseline from audit results")
+        .option("--from <path>", "Results JSON path (defaults to latest results)")
+        .option("--force", "Overwrite an existing baseline file", false)
+        .option("--json", "Emit machine-readable JSON on stdout", false)
+        .option("--config <path>", "Path to a configuration file")
+        .option("--cwd <path>", "Directory to load configuration from")
+        .action(
+          async (opts: {
+            from?: string;
+            force?: boolean;
+            json?: boolean;
+            config?: string;
+            cwd?: string;
+          }) => {
+            try {
+              const result = await runBaselineCreate({
+                cwd: resolveCwd(opts.cwd),
+                configPath: opts.config,
+                from: opts.from,
+                force: opts.force,
+              });
+              if (opts.json) {
+                writeJson(formatBaselineCreateJson(result));
+              } else {
+                writeStdout(formatBaselineCreateHuman(result));
+              }
+              process.exitCode = 0;
+            } catch (error) {
+              const message = error instanceof Error ? error.message : String(error);
+              if (opts.json) {
+                writeJson({ status: "error", message }, process.stdout);
+              }
+              writeStderr(message);
+              process.exitCode = exitCodeFromError(error);
+            }
+          },
+        ),
+    )
+    .addCommand(
+      new Command("status")
+        .description("Show baseline file status and latest comparison")
+        .option("--json", "Emit machine-readable JSON on stdout", false)
+        .option("--config <path>", "Path to a configuration file")
+        .option("--cwd <path>", "Directory to load configuration from")
+        .option("--baseline <path>", "Baseline file path override")
+        .action(
+          async (opts: {
+            json?: boolean;
+            config?: string;
+            cwd?: string;
+            baseline?: string;
+          }) => {
+            try {
+              const result = await runBaselineStatus({
+                cwd: resolveCwd(opts.cwd),
+                configPath: opts.config,
+                baselineOverride: opts.baseline,
+              });
+              if (opts.json) {
+                writeJson(formatBaselineStatusJson(result));
+              } else {
+                writeStdout(formatBaselineStatusHuman(result));
+              }
+              process.exitCode = 0;
+            } catch (error) {
+              const message = error instanceof Error ? error.message : String(error);
+              if (opts.json) {
+                writeJson({ status: "error", message }, process.stdout);
+              }
+              writeStderr(message);
+              process.exitCode = 1;
+            }
+          },
+        ),
+    )
+    .addCommand(
+      new Command("update")
+        .description("Preview or apply baseline updates from audit results")
+        .option("--from <path>", "Results JSON path (defaults to latest results)")
+        .option("--dry-run", "Preview changes without writing", false)
+        .option("--accept-new", "Add new findings to the baseline", false)
+        .option("--remove-resolved", "Remove resolved findings from the baseline", false)
+        .option("--yes", "Apply changes without interactive confirmation", false)
+        .option("--json", "Emit machine-readable JSON on stdout", false)
+        .option("--config <path>", "Path to a configuration file")
+        .option("--cwd <path>", "Directory to load configuration from")
+        .action(
+          async (opts: {
+            from?: string;
+            dryRun?: boolean;
+            acceptNew?: boolean;
+            removeResolved?: boolean;
+            yes?: boolean;
+            json?: boolean;
+            config?: string;
+            cwd?: string;
+          }) => {
+            try {
+              const result = await runBaselineUpdate({
+                cwd: resolveCwd(opts.cwd),
+                configPath: opts.config,
+                from: opts.from,
+                dryRun: opts.dryRun,
+                acceptNew: opts.acceptNew,
+                removeResolved: opts.removeResolved,
+                yes: opts.yes,
+              });
+              if (opts.json) {
+                writeJson(formatBaselineUpdateJson(result));
+              } else {
+                writeStdout(formatBaselineUpdateHuman(result));
+              }
+              process.exitCode = 0;
+            } catch (error) {
+              const pending = error as Error & {
+                preview?: Parameters<typeof formatBaselineUpdateJson>[0];
+              };
+              if (pending.preview) {
+                if (opts.json) {
+                  writeJson(formatBaselineUpdateJson(pending.preview));
+                } else {
+                  writeStdout(formatBaselineUpdateHuman(pending.preview));
+                }
+                writeStderr(error instanceof Error ? error.message : String(error));
+                process.exitCode = 2;
+                return;
+              }
+              const message = error instanceof Error ? error.message : String(error);
+              if (opts.json) {
+                writeJson({ status: "error", message }, process.stdout);
+              }
+              writeStderr(message);
+              process.exitCode = exitCodeFromError(error);
+            }
+          },
+        ),
+    )
+    .addCommand(
+      new Command("migrate")
+        .description("Migrate a baseline file to the current schema version")
+        .option("--dry-run", "Preview migration without writing", false)
+        .option("--yes", "Apply migration without interactive confirmation", false)
+        .option("--json", "Emit machine-readable JSON on stdout", false)
+        .option("--config <path>", "Path to a configuration file")
+        .option("--cwd <path>", "Directory to load configuration from")
+        .option("--baseline <path>", "Baseline file path override")
+        .action(
+          async (opts: {
+            dryRun?: boolean;
+            yes?: boolean;
+            json?: boolean;
+            config?: string;
+            cwd?: string;
+            baseline?: string;
+          }) => {
+            try {
+              const result = await runBaselineMigrate({
+                cwd: resolveCwd(opts.cwd),
+                configPath: opts.config,
+                baselineOverride: opts.baseline,
+                dryRun: opts.dryRun,
+                yes: opts.yes,
+              });
+              if (opts.json) {
+                writeJson(formatBaselineMigrateJson(result));
+              } else {
+                writeStdout(formatBaselineMigrateHuman(result));
+              }
+              process.exitCode = 0;
+            } catch (error) {
+              const message = error instanceof Error ? error.message : String(error);
+              if (opts.json) {
+                writeJson({ status: "error", message }, process.stdout);
+              }
+              writeStderr(message);
+              process.exitCode = exitCodeFromError(error);
+            }
+          },
+        ),
+    );
+
+  program
+    .command("findings")
+    .description("List findings from the latest audit results or a results file")
+    .option("--json", "Emit machine-readable JSON on stdout", false)
+    .option("--from <path>", "Results JSON path (defaults to latest results)")
+    .option("--config <path>", "Path to a configuration file")
+    .option("--cwd <path>", "Directory to load configuration from")
+    .option(
+      "--status <status>",
+      "Filter by lifecycle status (repeatable)",
+      collectFindingStatus,
+      [] as string[],
+    )
+    .option(
+      "--disposition <disposition>",
+      "Filter by classification disposition (repeatable)",
+      collectFindingDisposition,
+      [] as string[],
+    )
+    .option("--project <name>", "Filter by project (repeatable)", collectProjectNames, [] as string[])
+    .option("--rule <ruleId>", "Filter by rule id (repeatable)", collectRuleNames, [] as string[])
+    .option(
+      "--profile <id>",
+      "Filter by accessibility profile (repeatable)",
+      collectProfileNames,
+      [] as string[],
+    )
+    .option("--flow <id>", "Filter by flow id (repeatable)", collectFlowNames, [] as string[])
+    .option(
+      "--checkpoint <id>",
+      "Filter by checkpoint id (repeatable)",
+      collectCheckpointNames,
+      [] as string[],
+    )
+    .action(
+      async (opts: {
+        json?: boolean;
+        from?: string;
+        config?: string;
+        cwd?: string;
+        status?: string[];
+        disposition?: string[];
+        project?: string[];
+        rule?: string[];
+        profile?: string[];
+        flow?: string[];
+        checkpoint?: string[];
+      }) => {
+        try {
+          const result = await runFindings({
+            cwd: resolveCwd(opts.cwd),
+            configPath: opts.config,
+            from: opts.from,
+            filters: {
+              status: opts.status,
+              disposition: opts.disposition,
+              project: opts.project,
+              rule: opts.rule,
+              profile: opts.profile,
+              flow: opts.flow,
+              checkpoint: opts.checkpoint,
+            },
+          });
+          if (opts.json) {
+            writeJson(formatFindingsJson(result));
+          } else {
+            writeStdout(formatFindingsHuman(result));
+          }
+          process.exitCode = 0;
+        } catch (error) {
+          const message = error instanceof Error ? error.message : String(error);
+          if (opts.json) {
+            writeJson({ status: "error", message }, process.stdout);
+          }
+          writeStderr(message);
+          process.exitCode = 1;
+        }
+      },
+    );
+
+  program
+    .command("classify <finding-id>")
+    .description("Classify a finding in the baseline")
+    .requiredOption("--disposition <disposition>", "Classification disposition")
+    .requiredOption("--reason <text>", "Classification reason")
+    .option("--owner <name>", "Classification owner")
+    .option("--ticket <id>", "Tracking ticket id")
+    .option("--expires <date>", "Expiry date (YYYY-MM-DD)")
+    .option("--review <date>", "Review date (YYYY-MM-DD)")
+    .option("--notes <text>", "Additional notes")
+    .option("--from <path>", "Results JSON path (defaults to latest results)")
+    .option("--yes", "Apply without interactive confirmation", false)
+    .option("--json", "Emit machine-readable JSON on stdout", false)
+    .option("--config <path>", "Path to a configuration file")
+    .option("--cwd <path>", "Directory to load configuration from")
+    .action(
+      async (
+        findingId: string,
+        opts: {
+          disposition: string;
+          reason: string;
+          owner?: string;
+          ticket?: string;
+          expires?: string;
+          review?: string;
+          notes?: string;
+          from?: string;
+          yes?: boolean;
+          json?: boolean;
+          config?: string;
+          cwd?: string;
+        },
+      ) => {
+        try {
+          const result = await runClassify({
+            cwd: resolveCwd(opts.cwd),
+            configPath: opts.config,
+            findingId,
+            from: opts.from,
+            disposition: parseFindingsDisposition(opts.disposition),
+            reason: opts.reason,
+            owner: opts.owner,
+            ticket: opts.ticket,
+            expires: opts.expires,
+            review: opts.review,
+            notes: opts.notes,
+            yes: opts.yes,
+          });
+          if (opts.json) {
+            writeJson(formatClassifyJson(result));
+          } else {
+            writeStdout(formatClassifyHuman(result));
+          }
+          process.exitCode = 0;
+        } catch (error) {
+          const preview = formatClassifyPreviewFromError(
+            error as Error & { preview?: Parameters<typeof formatClassifyJson>[0] },
+          );
+          if (preview) {
+            if (opts.json) {
+              writeJson(formatClassifyJson(preview));
+            } else {
+              writeStdout(formatClassifyHuman(preview));
+            }
+            writeStderr(error instanceof Error ? error.message : String(error));
+            process.exitCode = 2;
+            return;
+          }
+          const message = error instanceof Error ? error.message : String(error);
+          if (opts.json) {
+            writeJson({ status: "error", message }, process.stdout);
+          }
+          writeStderr(message);
+          process.exitCode = 1;
+        }
+      },
+    );
+
+  program
+    .command("unclassify <finding-id>")
+    .description("Remove a finding classification from the baseline")
+    .option("--from <path>", "Results JSON path (defaults to latest results)")
+    .option("--yes", "Apply without interactive confirmation", false)
+    .option("--json", "Emit machine-readable JSON on stdout", false)
+    .option("--config <path>", "Path to a configuration file")
+    .option("--cwd <path>", "Directory to load configuration from")
+    .action(
+      async (
+        findingId: string,
+        opts: {
+          from?: string;
+          yes?: boolean;
+          json?: boolean;
+          config?: string;
+          cwd?: string;
+        },
+      ) => {
+        try {
+          const result = await runUnclassify({
+            cwd: resolveCwd(opts.cwd),
+            configPath: opts.config,
+            findingId,
+            from: opts.from,
+            yes: opts.yes,
+          });
+          if (opts.json) {
+            writeJson(formatUnclassifyJson(result));
+          } else {
+            writeStdout(formatUnclassifyHuman(result));
+          }
+          process.exitCode = 0;
+        } catch (error) {
+          const preview = formatUnclassifyPreviewFromError(
+            error as Error & { preview?: Parameters<typeof formatUnclassifyJson>[0] },
+          );
+          if (preview) {
+            if (opts.json) {
+              writeJson(formatUnclassifyJson(preview));
+            } else {
+              writeStdout(formatUnclassifyHuman(preview));
+            }
+            writeStderr(error instanceof Error ? error.message : String(error));
+            process.exitCode = 2;
+            return;
+          }
+          const message = error instanceof Error ? error.message : String(error);
+          if (opts.json) {
+            writeJson({ status: "error", message }, process.stdout);
+          }
+          writeStderr(message);
+          process.exitCode = 1;
+        }
+      },
+    );
+
   try {
     await program.parseAsync(argv);
   } catch (error) {
@@ -691,3 +1255,16 @@ export {
   formatProfilesJson,
   runProfiles,
 } from "./commands/profiles.js";
+export {
+  formatDoctorHuman,
+  formatDoctorJson,
+  runDoctor,
+} from "./commands/doctor.js";
+export {
+  assertCanWriteConfig,
+  buildInitConfigSource,
+  configFilePath,
+  formatInitHuman,
+  formatInitJson,
+  runInit,
+} from "./commands/init.js";

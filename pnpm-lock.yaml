@@ -215,6 +215,9 @@ importers:
       '@a11yst/artifacts':
         specifier: workspace:*
         version: link:../artifacts
+      '@a11yst/baseline':
+        specifier: workspace:*
+        version: link:../baseline
       '@a11yst/config':
         specifier: workspace:*
         version: link:../config

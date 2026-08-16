@@ -41,6 +41,7 @@
   "dependencies": {
     "@a11yst/adapters": "workspace:*",
     "@a11yst/artifacts": "workspace:*",
+    "@a11yst/baseline": "workspace:*",
     "@a11yst/config": "workspace:*",
     "@a11yst/core": "workspace:*",
     "@a11yst/detect": "workspace:*",
