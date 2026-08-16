@@ -1,0 +1,76 @@
+/**
+ * a11yst design tokens — CSS custom properties for website/docs (P4 foundation).
+ * Source: assets/brand/tokens.json
+ */
+:root {
+  color-scheme: light;
+
+  --a11yst-color-background: #f8f9fb;
+  --a11yst-color-surface: #ffffff;
+  --a11yst-color-surface-elevated: #ffffff;
+  --a11yst-color-text: #111827;
+  --a11yst-color-text-muted: #4b5563;
+  --a11yst-color-border: #d1d5db;
+  --a11yst-color-accent: #0b6e4f;
+  --a11yst-color-accent-contrast: #ffffff;
+  --a11yst-color-focus: #2563eb;
+  --a11yst-color-success: #047857;
+  --a11yst-color-warning: #b45309;
+
+  --a11yst-color-severity-minor: #4b5563;
+  --a11yst-color-severity-medium: #b45309;
+  --a11yst-color-severity-high: #c2410c;
+  --a11yst-color-severity-critical: #991b1b;
+
+  --a11yst-font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --a11yst-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+
+  --a11yst-radius-sm: 0.25rem;
+  --a11yst-radius-md: 0.5rem;
+  --a11yst-radius-lg: 0.75rem;
+
+  --a11yst-header-height: 3.5rem;
+  --a11yst-docs-sidebar-width: 280px;
+  --a11yst-docs-content-max-width: 780px;
+  --a11yst-docs-toc-width: 220px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    --a11yst-color-background: #0b0f14;
+    --a11yst-color-surface: #111827;
+    --a11yst-color-surface-elevated: #1f2937;
+    --a11yst-color-text: #f3f4f6;
+    --a11yst-color-text-muted: #9ca3af;
+    --a11yst-color-border: #374151;
+    --a11yst-color-accent: #34d399;
+    --a11yst-color-accent-contrast: #052e1f;
+    --a11yst-color-focus: #60a5fa;
+    --a11yst-color-success: #34d399;
+    --a11yst-color-warning: #fbbf24;
+
+    --a11yst-color-severity-minor: #9ca3af;
+    --a11yst-color-severity-medium: #fbbf24;
+    --a11yst-color-severity-high: #fb923c;
+    --a11yst-color-severity-critical: #f87171;
+  }
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --a11yst-color-background: #0b0f14;
+  --a11yst-color-surface: #111827;
+  --a11yst-color-surface-elevated: #1f2937;
+  --a11yst-color-text: #f3f4f6;
+  --a11yst-color-text-muted: #9ca3af;
+  --a11yst-color-border: #374151;
+  --a11yst-color-accent: #34d399;
+  --a11yst-color-accent-contrast: #052e1f;
+  --a11yst-color-focus: #60a5fa;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+}
