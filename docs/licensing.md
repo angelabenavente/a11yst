@@ -49,4 +49,4 @@ MPL-2.0 governs downstream rights in Community code. It does **not**, by itself,
 
 The project is preparing contributor agreements that may define additional rights needed to maintain Community releases and potential future separately licensed offerings. Draft agreements are **not active** and are not published in this repository.
 
-External code contributions are **not currently accepted for merge** until the contributor process is activated.
+External pull requests are welcome. External code cannot be merged until the contributor process is activated. See [CONTRIBUTING.md](../CONTRIBUTING.md).
