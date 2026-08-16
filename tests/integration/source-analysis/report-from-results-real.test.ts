@@ -50,11 +50,13 @@ describe("report from stored enriched results", () => {
       const htmlOut = join(root, "report-html");
       const sarifOut = join(root, "report.sarif");
       const markdownOut = join(root, "report.md");
+      const annotationsOut = join(root, "annotations.txt");
       const junitOut = join(root, "report.junit.xml");
 
       await runReport({ cwd: root, resultsPath, format: "html", output: htmlOut });
       await runReport({ cwd: root, resultsPath, format: "sarif", output: sarifOut });
       await runReport({ cwd: root, resultsPath, format: "markdown", output: markdownOut });
+      await runReport({ cwd: root, resultsPath, format: "github-annotations", output: annotationsOut });
       await runReport({ cwd: root, resultsPath, format: "junit", output: junitOut });
 
       expect(indexSpy).not.toHaveBeenCalled();
@@ -66,10 +68,12 @@ describe("report from stored enriched results", () => {
       const html = await readFile(join(htmlOut, "report", "index.html"), "utf8");
       const sarif = await readFile(sarifOut, "utf8");
       const markdown = await readFile(markdownOut, "utf8");
+      const annotations = await readFile(annotationsOut, "utf8");
       const junit = await readFile(junitOut, "utf8");
       serializedSafe(html);
       serializedSafe(sarif);
       serializedSafe(markdown);
+      serializedSafe(annotations);
       serializedSafe(junit);
 
       const stored = JSON.parse(await readFile(resultsPath, "utf8"));
