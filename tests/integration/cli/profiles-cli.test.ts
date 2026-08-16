@@ -20,6 +20,7 @@ describe.sequential("profiles CLI integration", () => {
     expect(result.stdout).toContain("LARGE-TEXT");
     expect(result.stdout).toContain("REDUCED-MOTION");
     expect(result.stdout).toContain("a11yst does not certify WCAG conformance.");
+    expect(result.stdout).not.toMatch(/React Native|reactNativeStatus|expo/i);
     expect(() => JSON.parse(result.stdout)).toThrow();
   });
 
@@ -50,6 +51,8 @@ describe.sequential("profiles CLI integration", () => {
       "reduced-motion",
     ]);
     expect(payload.profiles.every((profile) => profile.webImplemented)).toBe(true);
+    expect(payload.profiles.every((profile) => !("reactNativeStatus" in profile))).toBe(true);
+    expect(JSON.stringify(payload)).not.toMatch(/React Native|react-native|expo/i);
     expect(payload.profiles.find((profile) => profile.id === "keyboard")?.capabilities).toContain(
       "keyboard-navigation",
     );

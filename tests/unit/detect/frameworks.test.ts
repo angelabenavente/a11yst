@@ -111,7 +111,6 @@ describe("@a11yst/detect detectFramework (via detectProject)", () => {
       "first-class",
       "preview",
       "runtime-compatible",
-      "beta",
       "unknown",
     ]);
     for (const level of Object.values(SUPPORT_LEVELS)) {

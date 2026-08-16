@@ -6,7 +6,6 @@ export function formatProfilesHuman(profiles: AccessibilityProfileDefinition[]):
   for (const profile of profiles) {
     lines.push(profile.id.toUpperCase());
     lines.push(`  Web implementation: ${profile.webImplemented ? "yes" : "no"}`);
-    lines.push(`  React Native: ${profile.reactNativeStatus}`);
     lines.push(`  Capabilities: ${profile.capabilities.join(", ")}`);
     lines.push("  Automated checks:");
     for (const check of profile.coverage.automatedChecks) {

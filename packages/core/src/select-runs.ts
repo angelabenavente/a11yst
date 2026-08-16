@@ -2,7 +2,6 @@ import type { AccessibilityProfile, AuditPlan, PlannedRun } from "@a11yst/types"
 
 /**
  * Web accessibility profiles are executable for web platform runs.
- * React Native profile runs remain skipped in this phase.
  */
 export function isExecutableRun(run: PlannedRun): boolean {
   return run.platform === "web";

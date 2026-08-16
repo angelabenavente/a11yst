@@ -12,6 +12,7 @@ describe("@a11yst/profiles registry", () => {
 
     expect(ids).toEqual(["default", "keyboard", "large-text", "reduced-motion"]);
     expect(profiles.every((profile) => profile.webImplemented)).toBe(true);
+    expect(profiles.every((profile) => !("reactNativeStatus" in profile))).toBe(true);
     expect(new Set(ids).size).toBe(ids.length);
   });
 

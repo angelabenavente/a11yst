@@ -53,6 +53,12 @@ describe("CLI foundation", () => {
     const auditHelp = await runCli(["audit", "--help"]);
     expect(auditHelp.code).toBe(0);
     expect(auditHelp.stdout).toMatch(/--color/);
+
+    const initHelp = await runCli(["init", "--help"]);
+    expect(initHelp.code).toBe(0);
+    expect(initHelp.stdout).toContain('"web"');
+    expect(initHelp.stdout).not.toMatch(/react-native|expo/i);
+    expect(result.stdout).not.toMatch(/react-native|expo/i);
   });
 
   it("prints version", async () => {

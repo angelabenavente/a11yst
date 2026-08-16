@@ -66,7 +66,6 @@ export type SupportLevel =
   | "first-class"
   | "preview"
   | "runtime-compatible"
-  | "beta"
   | "unknown";
 
 /**

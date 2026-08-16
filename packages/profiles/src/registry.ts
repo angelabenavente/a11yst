@@ -18,7 +18,6 @@ export interface AccessibilityProfileDefinition {
   capabilities: ProfileCapability[];
   coverage: ProfileCoverage;
   webImplemented: boolean;
-  reactNativeStatus: "skipped-beta";
 }
 
 const DEFINITIONS: AccessibilityProfileDefinition[] = [
@@ -27,28 +26,24 @@ const DEFINITIONS: AccessibilityProfileDefinition[] = [
     capabilities: PROFILE_COVERAGE.default.capabilities,
     coverage: PROFILE_COVERAGE.default,
     webImplemented: true,
-    reactNativeStatus: "skipped-beta",
   },
   {
     id: "keyboard",
     capabilities: PROFILE_COVERAGE.keyboard.capabilities,
     coverage: PROFILE_COVERAGE.keyboard,
     webImplemented: true,
-    reactNativeStatus: "skipped-beta",
   },
   {
     id: "large-text",
     capabilities: PROFILE_COVERAGE["large-text"].capabilities,
     coverage: PROFILE_COVERAGE["large-text"],
     webImplemented: true,
-    reactNativeStatus: "skipped-beta",
   },
   {
     id: "reduced-motion",
     capabilities: PROFILE_COVERAGE["reduced-motion"].capabilities,
     coverage: PROFILE_COVERAGE["reduced-motion"],
     webImplemented: true,
-    reactNativeStatus: "skipped-beta",
   },
 ];
 
