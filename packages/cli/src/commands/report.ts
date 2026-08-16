@@ -1,7 +1,8 @@
 import { readFile } from "node:fs/promises";
 import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
-import { writeExternalJunitArtifact, writeExternalMarkdownArtifact, writeExternalSarifArtifact } from "@a11yst/artifacts";
+import { writeExternalGitHubAnnotationsArtifact, writeExternalJunitArtifact, writeExternalMarkdownArtifact, writeExternalSarifArtifact } from "@a11yst/artifacts";
 import {
+  createGitHubAnnotationsInputFromAuditResult,
   createJunitInputFromAuditResult,
   createMarkdownInputFromAuditResult,
   createSarifInputFromAuditResult,
@@ -12,6 +13,7 @@ import {
   DEFAULT_OUTPUT_DIR,
 } from "@a11yst/config";
 import {
+  generateGitHubAnnotations,
   generateHtmlReport,
   generateMarkdownReport,
   readAuditResult,
@@ -19,7 +21,7 @@ import {
 import { generateJunit, serializeJunit } from "@a11yst/junit";
 import { generateSarif, serializeSarif } from "@a11yst/sarif";
 
-export type ReportFormat = "html" | "sarif" | "junit" | "markdown";
+export type ReportFormat = "html" | "sarif" | "junit" | "markdown" | "github-annotations";
 
 export interface RunReportOptions {
   cwd: string;
@@ -78,11 +80,27 @@ export interface MarkdownReportResult {
   };
 }
 
+export interface GitHubAnnotationsReportResult {
+  format: "github-annotations";
+  status: "generated";
+  resultsPath: string;
+  githubAnnotationsPath: string;
+  auditId?: string;
+  summary: {
+    annotations: number;
+    errors: number;
+    warnings: number;
+    notices: number;
+    truncated: number;
+  };
+}
+
 export type ReportResult =
   | HtmlReportResult
   | SarifReportResult
   | JunitReportResult
-  | MarkdownReportResult;
+  | MarkdownReportResult
+  | GitHubAnnotationsReportResult;
 
 interface LatestDescriptor {
   auditId?: string;
@@ -208,6 +226,17 @@ function resolveMarkdownOutputPath(cwd: string, output: string | undefined, resu
   return resolve(dirname(resultsPath), "a11yst.md");
 }
 
+function resolveGitHubAnnotationsOutputPath(
+  cwd: string,
+  output: string | undefined,
+  resultsPath: string,
+): string {
+  if (output) {
+    return resolve(cwd, output);
+  }
+  return resolve(dirname(resultsPath), "github-annotations.txt");
+}
+
 export async function runReport(options: RunReportOptions): Promise<ReportResult> {
   const cwd = resolve(options.cwd);
   const format = options.format ?? "html";
@@ -305,6 +334,37 @@ export async function runReport(options: RunReportOptions): Promise<ReportResult
     };
   }
 
+  if (format === "github-annotations") {
+    const githubAnnotationsPath = resolveGitHubAnnotationsOutputPath(
+      cwd,
+      options.output,
+      resultsPath,
+    );
+    const input = createGitHubAnnotationsInputFromAuditResult(auditResult);
+    const generation = generateGitHubAnnotations(input);
+    const writtenPath = await writeExternalGitHubAnnotationsArtifact({
+      targetPath: githubAnnotationsPath,
+      serializedCommands: generation.commands,
+    });
+
+    return {
+      format: "github-annotations",
+      status: "generated",
+      resultsPath,
+      githubAnnotationsPath: writtenPath,
+      ...(auditResult.auditId ?? latest?.auditId
+        ? { auditId: auditResult.auditId ?? latest?.auditId }
+        : {}),
+      summary: {
+        annotations: generation.summary.annotations,
+        errors: generation.summary.errors,
+        warnings: generation.summary.warnings,
+        notices: generation.summary.notices,
+        truncated: generation.summary.truncated,
+      },
+    };
+  }
+
   const outputDirectory = options.output
     ? resolve(cwd, options.output)
     : dirname(resultsPath);
@@ -353,6 +413,16 @@ export function formatReportHuman(result: ReportResult): string {
     }
     lines.push(`JSON report: ${result.resultsPath}`);
     lines.push(`Markdown report: ${result.markdownPath}`);
+    return lines.join("\n");
+  }
+
+  if (result.format === "github-annotations") {
+    const lines = ["GitHub annotations generated", ""];
+    if (result.auditId) {
+      lines.push(`Audit ID: ${result.auditId}`);
+    }
+    lines.push(`JSON report: ${result.resultsPath}`);
+    lines.push(`GitHub annotations: ${result.githubAnnotationsPath}`);
     return lines.join("\n");
   }
 

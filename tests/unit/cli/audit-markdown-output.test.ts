@@ -63,3 +63,50 @@ describe("formatAuditHuman Markdown output", () => {
     expect(output).toContain("Bundle copy: reports/a11yst.md");
   });
 });
+
+describe("formatAuditHuman GitHub annotations output", () => {
+  it("prints bundle GitHub annotations path by default", () => {
+    const output = formatAuditHuman(
+      minimalResult({
+        outputDirectory: "/tmp/bundle",
+        manifestPath: "/tmp/bundle/manifest.json",
+        resultsPath: "/tmp/bundle/results.json",
+        latestPath: "/tmp/latest.json",
+        githubAnnotationsPath: "reports/github-annotations.txt",
+      }),
+    );
+    expect(output).toContain("GitHub annotations: reports/github-annotations.txt");
+    expect(output).not.toContain("Bundle copy:");
+  });
+
+  it("prints custom and bundle paths when both exist", () => {
+    const output = formatAuditHuman(
+      minimalResult({
+        outputDirectory: "/tmp/bundle",
+        manifestPath: "/tmp/bundle/manifest.json",
+        resultsPath: "/tmp/bundle/results.json",
+        latestPath: "/tmp/latest.json",
+        githubAnnotationsPath: "reports/github-annotations.txt",
+      }),
+      { githubAnnotationsExternalPath: "./artifacts/github-annotations.txt" },
+    );
+    expect(output).toContain("GitHub annotations: ./artifacts/github-annotations.txt");
+    expect(output).toContain("Bundle copy: reports/github-annotations.txt");
+  });
+});
+
+describe("formatAuditHuman GitHub step summary output", () => {
+  it("prints step summary confirmation when written", () => {
+    const output = formatAuditHuman(
+      minimalResult({
+        outputDirectory: "/tmp/bundle",
+        manifestPath: "/tmp/bundle/manifest.json",
+        resultsPath: "/tmp/bundle/results.json",
+        latestPath: "/tmp/latest.json",
+        markdownPath: "reports/a11yst.md",
+      }),
+      { githubStepSummaryWritten: true },
+    );
+    expect(output).toContain("GitHub step summary: written");
+  });
+});

@@ -24,8 +24,13 @@ export {
   type WriteJunitArtifactOptions,
 } from "./junit-artifact.js";
 export {
+  appendGitHubStepSummary,
+  writeExternalGitHubAnnotationsArtifact,
   writeExternalMarkdownArtifact,
+  writeGitHubAnnotationsArtifact,
   writeMarkdownArtifact,
+  type WriteExternalGitHubAnnotationsArtifactOptions,
   type WriteExternalMarkdownArtifactOptions,
+  type WriteGitHubAnnotationsArtifactOptions,
   type WriteMarkdownArtifactOptions,
 } from "./markdown-artifact.js";

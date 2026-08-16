@@ -51,6 +51,8 @@ export {
   buildReportsManifest,
   buildJunitReportReference,
   buildMarkdownReportReference,
+  buildGitHubAnnotationsReportReference,
+  buildGitHubStepSummaryReference,
   buildSarifReportReference,
   mergeReportReferences,
 } from "./report-manifest.js";
@@ -64,10 +66,23 @@ export {
   type GenerateMarkdownReportOutput,
 } from "./generate-markdown-report.js";
 export {
+  generateGitHubAnnotationsReport,
+  shouldGenerateGitHubAnnotationsForAuditResult,
+  type GenerateGitHubAnnotationsReportOptions,
+  type GenerateGitHubAnnotationsReportOutput,
+} from "./generate-github-annotations-report.js";
+export {
   resolveMarkdownReportOptions,
   type ResolvedMarkdownReportOptions,
   type MarkdownReportCliOptions,
 } from "./resolve-markdown-report-options.js";
+export {
+  resolveGitHubAnnotationsOptions,
+  resolveGitHubStepSummaryOptions,
+  type ResolvedGitHubAnnotationsOptions,
+  type GitHubAnnotationsCliOptions,
+  type GitHubStepSummaryCliOptions,
+} from "./resolve-github-report-options.js";
 export { createJunitInputFromAuditResult } from "./create-junit-input.js";
 export {
   generateJunitReport,

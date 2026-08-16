@@ -17,6 +17,8 @@ function formatReportsSection(
     sarifExternalPath?: string;
     junitExternalPath?: string;
     markdownExternalPath?: string;
+    githubAnnotationsExternalPath?: string;
+    githubStepSummaryWritten?: boolean;
   },
 ): string[] {
   if (!result.auditId && !result.artifacts?.resultsPath) {
@@ -55,6 +57,17 @@ function formatReportsSection(
       lines.push(`JUnit report: ${result.artifacts.junitPath}`);
     }
   }
+  if (result.artifacts?.githubAnnotationsPath) {
+    if (options?.githubAnnotationsExternalPath) {
+      lines.push(`GitHub annotations: ${options.githubAnnotationsExternalPath}`);
+      lines.push(`Bundle copy: ${result.artifacts.githubAnnotationsPath}`);
+    } else {
+      lines.push(`GitHub annotations: ${result.artifacts.githubAnnotationsPath}`);
+    }
+  }
+  if (options?.githubStepSummaryWritten) {
+    lines.push("GitHub step summary: written");
+  }
   lines.push("");
   return lines;
 }
@@ -65,6 +78,8 @@ export type FormatAuditHumanOptions = AuditPresentationOptions & {
   sarifExternalPath?: string;
   junitExternalPath?: string;
   markdownExternalPath?: string;
+  githubAnnotationsExternalPath?: string;
+  githubStepSummaryWritten?: boolean;
 };
 
 export function formatAuditHuman(

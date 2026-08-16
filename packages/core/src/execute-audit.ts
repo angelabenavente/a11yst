@@ -1,5 +1,5 @@
 import { basename, isAbsolute, resolve } from "node:path";
-import { createArtifactWriter, type ArtifactWriter } from "@a11yst/artifacts";
+import { createArtifactWriter, type ArtifactWriter, appendGitHubStepSummary } from "@a11yst/artifacts";
 import {
   runWebAudit,
   runFlowAudit,
@@ -19,6 +19,7 @@ import type {
   FlowTrace,
   JunitReportManifestEntry,
   MarkdownReportManifestEntry,
+  GitHubAnnotationsReportManifestEntry,
   PlannedRun,
   ProgressReporter,
   ResolvedCiPolicyConfig,
@@ -42,18 +43,28 @@ import {
 } from "./generate-junit-report.js";
 import {
   generateMarkdownReportArtifact,
+  generateMarkdownContentFromAuditResult,
   shouldGenerateMarkdownForAuditResult,
 } from "./generate-markdown-report.js";
+import {
+  generateGitHubAnnotationsReport,
+  shouldGenerateGitHubAnnotationsForAuditResult,
+} from "./generate-github-annotations-report.js";
 import {
   buildReportManifestEntry,
   buildJunitReportReference,
   buildMarkdownReportReference,
+  buildGitHubAnnotationsReportReference,
+  buildGitHubStepSummaryReference,
   buildSarifReportReference,
   mergeReportReferences,
 } from "./report-manifest.js";
 import type { ResolvedSarifReportOptions } from "./resolve-sarif-report-options.js";
 import type { ResolvedJunitReportOptions } from "./resolve-junit-report-options.js";
 import type { ResolvedMarkdownReportOptions } from "./resolve-markdown-report-options.js";
+import type {
+  ResolvedGitHubAnnotationsOptions,
+} from "./resolve-github-report-options.js";
 import { selectRuns, skipReasonForRun, UnknownProfileError, UnknownProjectError, UnknownFlowError, isRouteRun, isFlowCheckpointRun } from "./select-runs.js";
 
 export interface ExecuteAuditOptions {
@@ -111,6 +122,14 @@ export interface ExecuteAuditOptions {
   markdown?: ResolvedMarkdownReportOptions;
   /** Absolute path for an additional Markdown copy resolved by the CLI. */
   markdownExternalOutputPath?: string;
+  /** Resolved GitHub annotations options from config and CLI. */
+  githubAnnotations?: ResolvedGitHubAnnotationsOptions;
+  /** Absolute path for an additional GitHub annotations copy resolved by the CLI. */
+  githubAnnotationsExternalOutputPath?: string;
+  /** Write Markdown to GITHUB_STEP_SUMMARY when enabled and path is provided. */
+  githubStepSummary?: boolean;
+  /** Absolute path from GITHUB_STEP_SUMMARY resolved by the CLI. */
+  githubStepSummaryPath?: string;
   /** Optional CLI progress reporter for long-running phases. */
   progress?: ProgressReporter;
 }
@@ -282,6 +301,8 @@ function buildManifest(
   sarifEntry?: SarifReportManifestEntry,
   junitEntry?: JunitReportManifestEntry,
   markdownEntry?: MarkdownReportManifestEntry,
+  githubAnnotationsEntry?: GitHubAnnotationsReportManifestEntry,
+  githubStepSummaryWritten?: boolean,
 ): AuditManifest {
   const manifest: AuditManifest = {
     schemaVersion: "1",
@@ -312,6 +333,8 @@ function buildManifest(
     sarifEntry,
     junitEntry,
     markdownEntry,
+    githubAnnotationsEntry,
+    githubStepSummaryWritten,
   );
   if (reports) {
     manifest.reports = reports;
@@ -334,6 +357,7 @@ function relativeArtifactReferences(
   sarifBundlePath?: string,
   junitBundlePath?: string,
   markdownBundlePath?: string,
+  githubAnnotationsBundlePath?: string,
 ): NonNullable<AuditExecutionResult["artifacts"]> {
   return {
     outputDirectory: ".",
@@ -345,6 +369,7 @@ function relativeArtifactReferences(
     ...(sarifBundlePath ? { sarifPath: sarifBundlePath } : {}),
     ...(junitBundlePath ? { junitPath: junitBundlePath } : {}),
     ...(markdownBundlePath ? { markdownPath: markdownBundlePath } : {}),
+    ...(githubAnnotationsBundlePath ? { githubAnnotationsPath: githubAnnotationsBundlePath } : {}),
   };
 }
 
@@ -616,6 +641,11 @@ export async function executeAudit(
   let markdownBundlePath: string | undefined;
   let markdownManifestEntry: MarkdownReportManifestEntry | undefined;
   let markdownExternalPath: string | undefined;
+  let githubAnnotationsBundlePath: string | undefined;
+  let githubAnnotationsManifestEntry: GitHubAnnotationsReportManifestEntry | undefined;
+  let githubAnnotationsExternalPath: string | undefined;
+  let githubStepSummaryWritten = false;
+  let markdownContentForSummary: string | undefined;
 
   const sarifEnabled = options.sarif?.enabled ?? false;
   const shouldGenerateSarif =
@@ -629,11 +659,21 @@ export async function executeAudit(
   const shouldGenerateMarkdown =
     markdownEnabled && shouldGenerateMarkdownForAuditResult(result);
 
+  const githubAnnotationsEnabled = options.githubAnnotations?.enabled ?? false;
+  const shouldGenerateGitHubAnnotations =
+    githubAnnotationsEnabled && shouldGenerateGitHubAnnotationsForAuditResult(result);
+
+  const githubStepSummaryEnabled = options.githubStepSummary ?? false;
+  const shouldWriteStepSummary =
+    githubStepSummaryEnabled && shouldGenerateMarkdownForAuditResult(result);
+
   const willGenerateReports =
     (options.html ?? true) ||
     shouldGenerateSarif ||
     shouldGenerateJunit ||
-    shouldGenerateMarkdown;
+    shouldGenerateMarkdown ||
+    shouldGenerateGitHubAnnotations ||
+    shouldWriteStepSummary;
 
   if (willGenerateReports) {
     progress?.start("Generating reports…");
@@ -737,6 +777,7 @@ export async function executeAudit(
       markdownBundlePath = markdownReport.bundlePath;
       markdownManifestEntry = markdownReport.manifestEntry;
       markdownExternalPath = markdownReport.externalPath;
+      markdownContentForSummary = markdownReport.serialized;
       result.reports = mergeReportReferences(
         result.reports,
         buildMarkdownReportReference(markdownReport.resultReference),
@@ -745,6 +786,54 @@ export async function executeAudit(
       await writer.cleanupPartial().catch(() => {});
       const message = error instanceof Error ? error.message : String(error);
       throw new Error(`Failed to generate Markdown report: ${message}`, { cause: error });
+    }
+  }
+
+  if (shouldGenerateGitHubAnnotations) {
+    try {
+      const externalPath = options.githubAnnotationsExternalOutputPath
+        ?? (options.githubAnnotations?.outputPath
+          ? resolve(config.configDir, options.githubAnnotations.outputPath)
+          : undefined);
+      const githubReport = await generateGitHubAnnotationsReport({
+        result,
+        bundleDirectory: writer.runDirectory,
+        ...(externalPath ? { externalOutputPath: externalPath } : {}),
+        policy: resolvedPolicy,
+      });
+      githubAnnotationsBundlePath = githubReport.bundlePath;
+      githubAnnotationsManifestEntry = githubReport.manifestEntry;
+      githubAnnotationsExternalPath = githubReport.externalPath;
+      result.reports = mergeReportReferences(
+        result.reports,
+        buildGitHubAnnotationsReportReference(githubReport.resultReference),
+      );
+    } catch (error) {
+      await writer.cleanupPartial().catch(() => {});
+      const message = error instanceof Error ? error.message : String(error);
+      throw new Error(`Failed to generate GitHub annotations: ${message}`, { cause: error });
+    }
+  }
+
+  if (shouldWriteStepSummary) {
+    const stepSummaryPath = options.githubStepSummaryPath?.trim();
+    if (!stepSummaryPath) {
+      await writer.cleanupPartial().catch(() => {});
+      throw new Error(
+        "GITHUB_STEP_SUMMARY is not set. Export GITHUB_STEP_SUMMARY in the GitHub Actions runner or omit --github-step-summary.",
+      );
+    }
+    try {
+      const markdown =
+        markdownContentForSummary ??
+        generateMarkdownContentFromAuditResult(result, resolvedPolicy);
+      await appendGitHubStepSummary(stepSummaryPath, markdown);
+      githubStepSummaryWritten = true;
+      result.reports = mergeReportReferences(result.reports, buildGitHubStepSummaryReference());
+    } catch (error) {
+      await writer.cleanupPartial().catch(() => {});
+      const message = error instanceof Error ? error.message : String(error);
+      throw new Error(`Failed to write GitHub step summary: ${message}`, { cause: error });
     }
   }
 
@@ -772,10 +861,12 @@ export async function executeAudit(
     sarifBundlePath,
     junitBundlePath,
     markdownBundlePath,
+    githubAnnotationsBundlePath,
   );
   const sarifExternalPathForOutput = sarifExternalPath;
   const junitExternalPathForOutput = junitExternalPath;
   const markdownExternalPathForOutput = markdownExternalPath;
+  const githubAnnotationsExternalPathForOutput = githubAnnotationsExternalPath;
   const persistedResult = structuredClone(result);
   removeUndefinedProperties(persistedResult);
   const manifest = buildManifest(
@@ -786,6 +877,8 @@ export async function executeAudit(
     sarifManifestEntry,
     junitManifestEntry,
     markdownManifestEntry,
+    githubAnnotationsManifestEntry,
+    githubStepSummaryWritten,
   );
 
   try {
@@ -806,6 +899,15 @@ export async function executeAudit(
     if (markdownExternalPathForOutput) {
       (result as AuditExecutionResult & { markdownExternalPath?: string }).markdownExternalPath =
         markdownExternalPathForOutput;
+    }
+    if (githubAnnotationsExternalPathForOutput) {
+      (
+        result as AuditExecutionResult & { githubAnnotationsExternalPath?: string }
+      ).githubAnnotationsExternalPath = githubAnnotationsExternalPathForOutput;
+    }
+    if (githubStepSummaryWritten) {
+      (result as AuditExecutionResult & { githubStepSummaryWritten?: boolean }).githubStepSummaryWritten =
+        true;
     }
     return result;
   } catch (error) {
