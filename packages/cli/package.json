@@ -26,7 +26,9 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "NOTICE.md",
+    "TRADEMARKS.md"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
