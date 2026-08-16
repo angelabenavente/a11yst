@@ -1,0 +1,52 @@
+# Include from .gitlab-ci.yml in your repository, for example:
+#   include:
+#     - local: path/to/a11yst.gitlab-ci.yml
+# This file is an inert example under examples/ci/ and does not run in the a11yst repo.
+
+a11yst:
+  stage: test
+  image: node:20-bookworm
+
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "web"
+      when: manual
+
+  before_script:
+    - corepack enable
+    - pnpm install --frozen-lockfile
+    - pnpm exec playwright install --with-deps chromium
+
+  script:
+    - mkdir -p .a11yst/ci
+    - |
+      set +e
+
+      pnpm exec a11yst audit \
+        --fail-on-new \
+        --fail-on-regression \
+        --fail-on-expired-classification \
+        --minimum-severity high \
+        --sarif-output .a11yst/ci/a11yst.sarif \
+        --junit-output .a11yst/ci/a11yst.junit.xml \
+        --markdown-output .a11yst/ci/a11yst.md \
+        --json > .a11yst/ci/a11yst-results.json
+
+      status=$?
+      set -e
+
+      if [ -f .a11yst/ci/a11yst.md ]; then
+        cat .a11yst/ci/a11yst.md
+      fi
+
+      exit "$status"
+
+  artifacts:
+    when: always
+    expire_in: 14 days
+    paths:
+      - .a11yst/ci/
+      - .a11yst/results/
+    reports:
+      junit: .a11yst/ci/a11yst.junit.xml

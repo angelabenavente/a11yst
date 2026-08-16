@@ -3,3 +3,6 @@ packages:
   - "examples/audit/*"
   - "examples/profiles/*"
   - "examples/flows/*"
+  - "examples/frameworks/*"
+  - "examples/html-basic"
+  - "examples/react-basic"

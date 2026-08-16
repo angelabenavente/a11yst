@@ -16,3 +16,7 @@ playwright-report/
 test-results/
 examples/**/dist/
 examples/**/.vite/
+.next
+.nuxt
+.output
+.angular

@@ -1,0 +1,124 @@
+# Copy to .github/workflows/a11yst-code-scanning.yml in your repository to activate.
+# This file is an inert example under examples/ci/ and does not run in the a11yst repo.
+
+name: a11yst accessibility audit with Code Scanning
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+concurrency:
+  group: a11yst-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  a11yst:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Prepare a11yst CI output directory
+        run: mkdir -p .a11yst/ci
+
+      - name: Run a11yst
+        id: a11yst
+        shell: bash
+        run: |
+          set +e
+
+          pnpm exec a11yst audit \
+            --fail-on-new \
+            --fail-on-regression \
+            --fail-on-expired-classification \
+            --minimum-severity high \
+            --sarif-output .a11yst/ci/a11yst.sarif \
+            --junit-output .a11yst/ci/a11yst.junit.xml \
+            --markdown-output .a11yst/ci/a11yst.md \
+            --github-annotations-output .a11yst/ci/github-annotations.txt \
+            --github-step-summary \
+            --json > .a11yst/ci/a11yst-results.json
+
+          status=$?
+          set -e
+
+          printf 'exit_code=%s\n' "$status" >> "$GITHUB_OUTPUT"
+
+      - name: Emit a11yst annotations
+        if: always()
+        shell: bash
+        run: |
+          if [ -f .a11yst/ci/github-annotations.txt ]; then
+            cat .a11yst/ci/github-annotations.txt
+          fi
+
+      - name: Upload a11yst artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: a11yst-accessibility-results
+          path: |
+            .a11yst/ci/
+            .a11yst/results/
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload a11yst SARIF to GitHub Code Scanning
+        id: upload_sarif
+        if: >-
+          always() &&
+          hashFiles('.a11yst/ci/a11yst.sarif') != '' &&
+          (
+            github.event_name != 'pull_request' ||
+            github.event.pull_request.head.repo.full_name == github.repository
+          )
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: .a11yst/ci/a11yst.sarif
+          category: a11yst
+
+      - name: Apply a11yst result
+        if: always()
+        shell: bash
+        env:
+          A11YST_EXIT_CODE: ${{ steps.a11yst.outputs.exit_code }}
+          SARIF_UPLOAD_OUTCOME: ${{ steps.upload_sarif.outcome }}
+        run: |
+          if [ "$SARIF_UPLOAD_OUTCOME" = "failure" ]; then
+            echo "SARIF upload to GitHub Code Scanning failed." >&2
+            exit 1
+          fi
+
+          case "$A11YST_EXIT_CODE" in
+            0) exit 0 ;;
+            1) exit 1 ;;
+            2) exit 2 ;;
+            *)
+              echo "Invalid or missing a11yst exit code." >&2
+              exit 1
+              ;;
+          esac
