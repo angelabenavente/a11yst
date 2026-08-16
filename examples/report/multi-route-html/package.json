@@ -1,0 +1,12 @@
+{
+  "name": "@a11yst/example-report-multi-route-html",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "start": "node serve.mjs"
+  },
+  "devDependencies": {
+    "@a11yst/config": "workspace:*"
+  }
+}

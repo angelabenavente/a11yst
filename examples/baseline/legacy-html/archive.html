@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Baseline legacy HTML — Archive</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 40rem;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Archive</h1>
+      <p>
+        This route is intentionally excluded from a11yst.config.ts to exercise
+        partial baseline coverage. The baseline still records its image-alt
+        finding, but current audits should not compare it.
+      </p>
+      <!-- AXE VIOLATION (image-alt): baseline entry outside current route coverage -->
+      <img id="archive-logo" src="logo.svg" width="48" height="48" />
+    </main>
+  </body>
+</html>

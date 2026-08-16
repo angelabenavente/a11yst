@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Baseline classification expiry</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 44rem;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        line-height: 1.5;
+      }
+      section {
+        margin-top: 1.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid #ddd;
+      }
+      input,
+      button {
+        display: block;
+        margin-top: 0.35rem;
+      }
+      dl {
+        display: grid;
+        grid-template-columns: 8rem 1fr;
+        gap: 0.35rem 1rem;
+        font-size: 0.95rem;
+      }
+      dt {
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Classification expiry fixture</h1>
+      <p>
+        Each section maps to a seeded baseline entry with a different
+        classification disposition and expiry schedule for injectable clock
+        tests.
+      </p>
+    </header>
+    <main>
+      <section id="false-positive">
+        <h2>False positive</h2>
+        <dl>
+          <dt>Disposition</dt>
+          <dd>false-positive (no expiry)</dd>
+        </dl>
+        <!-- AXE VIOLATION (image-alt): #fp-logo -->
+        <img id="fp-logo" src="logo.svg" width="40" height="40" />
+      </section>
+
+      <section id="accepted-risk-valid">
+        <h2>Accepted risk (valid)</h2>
+        <dl>
+          <dt>Disposition</dt>
+          <dd>accepted-risk, expires 2099-12-31</dd>
+        </dl>
+        <!-- AXE VIOLATION (button-name): #ar-valid-btn -->
+        <button type="button" id="ar-valid-btn">
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <rect x="2" y="2" width="12" height="12" fill="currentColor" />
+          </svg>
+        </button>
+      </section>
+
+      <section id="accepted-risk-expired">
+        <h2>Accepted risk (expired)</h2>
+        <dl>
+          <dt>Disposition</dt>
+          <dd>accepted-risk, expired 2020-01-01</dd>
+        </dl>
+        <!-- AXE VIOLATION (button-name): #ar-expired-btn -->
+        <button type="button" id="ar-expired-btn">
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <circle cx="8" cy="8" r="7" fill="currentColor" />
+          </svg>
+        </button>
+      </section>
+
+      <section id="third-party">
+        <h2>Third party</h2>
+        <dl>
+          <dt>Disposition</dt>
+          <dd>third-party, reviewAt 2099-06-01</dd>
+        </dl>
+        <!-- AXE VIOLATION (label): #tp-input -->
+        <input type="text" id="tp-input" name="third-party-widget" />
+      </section>
+
+      <section id="not-applicable">
+        <h2>Not applicable</h2>
+        <dl>
+          <dt>Disposition</dt>
+          <dd>not-applicable (no expiry)</dd>
+        </dl>
+        <!-- AXE VIOLATION (label): #na-input -->
+        <input type="email" id="na-input" name="legacy-email" />
+      </section>
+
+      <section id="manual-review">
+        <h2>Manual review</h2>
+        <dl>
+          <dt>Disposition</dt>
+          <dd>manual-review (no expiry)</dd>
+        </dl>
+        <!-- AXE VIOLATION (label): #mr-input -->
+        <input type="text" id="mr-input" name="manual-field" />
+      </section>
+    </main>
+  </body>
+</html>

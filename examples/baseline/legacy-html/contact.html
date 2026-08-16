@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Baseline legacy HTML — Contact</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 40rem;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        line-height: 1.5;
+      }
+      nav ul {
+        display: flex;
+        gap: 1rem;
+        list-style: none;
+        padding: 0;
+        flex-wrap: wrap;
+      }
+      input {
+        display: block;
+        margin-top: 0.25rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Contact</h1>
+      <nav aria-label="Fixture pages">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/fixed">Fixed</a></li>
+          <li><a href="/review">Review</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <p>
+        This route introduces a label violation that is not present in the
+        seeded baseline, so audits should report it as a new finding.
+      </p>
+      <form>
+        <!-- AXE VIOLATION (label): no associated label or aria-* name -->
+        <input type="email" id="email-input" name="email" />
+        <button type="submit">Subscribe</button>
+      </form>
+    </main>
+  </body>
+</html>

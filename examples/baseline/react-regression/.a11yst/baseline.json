@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "1",
+  "fingerprintVersion": "1",
+  "createdAt": "2026-02-01T10:00:00.000Z",
+  "updatedAt": "2026-02-01T10:00:00.000Z",
+  "productVersion": "0.1.0",
+  "sourceAudit": {
+    "coverage": {
+      "projects": ["baseline-react-regression"],
+      "profiles": ["default"],
+      "viewports": ["desktop"],
+      "routeRuns": 4,
+      "flowCheckpointRuns": 0,
+      "skippedRuns": 0
+    }
+  },
+  "entries": [
+    {
+      "fingerprint": "button-name|baseline-react-regression|/v/baseline|default|desktop|#regression-action",
+      "fingerprintVersion": "1",
+      "ruleId": "button-name",
+      "source": "axe",
+      "projectName": "baseline-react-regression",
+      "location": {
+        "kind": "route",
+        "route": "/v/baseline",
+        "routeId": "baseline",
+        "profile": "default",
+        "viewport": "desktop"
+      },
+      "severity": "critical",
+      "firstSeenAt": "2026-02-01T10:00:00.000Z",
+      "lastSeenAt": "2026-02-01T10:00:00.000Z",
+      "snapshot": {
+        "title": "Buttons must have discernible text",
+        "target": ["#regression-action"],
+        "route": "/v/baseline",
+        "routeId": "baseline",
+        "profile": "default",
+        "viewport": "desktop",
+        "framework": "react"
+      },
+      "history": [{ "at": "2026-02-01T10:00:00.000Z", "action": "created" }]
+    },
+    {
+      "fingerprint": "button-name|baseline-react-regression|/v/new|default|desktop|#regression-action",
+      "fingerprintVersion": "1",
+      "ruleId": "button-name",
+      "source": "axe",
+      "projectName": "baseline-react-regression",
+      "location": {
+        "kind": "route",
+        "route": "/v/new",
+        "routeId": "new",
+        "profile": "default",
+        "viewport": "desktop"
+      },
+      "severity": "critical",
+      "firstSeenAt": "2026-02-01T10:00:00.000Z",
+      "lastSeenAt": "2026-02-01T10:00:00.000Z",
+      "snapshot": {
+        "title": "Buttons must have discernible text",
+        "target": ["#regression-action"],
+        "route": "/v/new",
+        "routeId": "new",
+        "profile": "default",
+        "viewport": "desktop",
+        "framework": "react"
+      },
+      "history": [{ "at": "2026-02-01T10:00:00.000Z", "action": "created" }]
+    },
+    {
+      "fingerprint": "button-name|baseline-react-regression|/v/resolved|default|desktop|#regression-action",
+      "fingerprintVersion": "1",
+      "ruleId": "button-name",
+      "source": "axe",
+      "projectName": "baseline-react-regression",
+      "location": {
+        "kind": "route",
+        "route": "/v/resolved",
+        "routeId": "resolved",
+        "profile": "default",
+        "viewport": "desktop"
+      },
+      "severity": "critical",
+      "firstSeenAt": "2026-02-01T10:00:00.000Z",
+      "lastSeenAt": "2026-02-01T10:00:00.000Z",
+      "snapshot": {
+        "title": "Buttons must have discernible text",
+        "target": ["#regression-action"],
+        "route": "/v/resolved",
+        "routeId": "resolved",
+        "profile": "default",
+        "viewport": "desktop",
+        "framework": "react"
+      },
+      "history": [{ "at": "2026-02-01T10:00:00.000Z", "action": "created" }]
+    },
+    {
+      "fingerprint": "button-name|baseline-react-regression|/v/severity|default|desktop|#regression-action",
+      "fingerprintVersion": "1",
+      "ruleId": "button-name",
+      "source": "axe",
+      "projectName": "baseline-react-regression",
+      "location": {
+        "kind": "route",
+        "route": "/v/severity",
+        "routeId": "severity",
+        "profile": "default",
+        "viewport": "desktop"
+      },
+      "severity": "minor",
+      "firstSeenAt": "2026-02-01T10:00:00.000Z",
+      "lastSeenAt": "2026-02-01T10:00:00.000Z",
+      "snapshot": {
+        "title": "Buttons must have discernible text",
+        "target": ["#regression-action"],
+        "route": "/v/severity",
+        "routeId": "severity",
+        "profile": "default",
+        "viewport": "desktop",
+        "framework": "react"
+      },
+      "history": [{ "at": "2026-02-01T10:00:00.000Z", "action": "created" }]
+    }
+  ]
+}

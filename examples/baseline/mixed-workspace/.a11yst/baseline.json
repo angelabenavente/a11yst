@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "1",
+  "fingerprintVersion": "1",
+  "createdAt": "2026-02-20T10:00:00.000Z",
+  "updatedAt": "2026-02-20T10:00:00.000Z",
+  "productVersion": "0.1.0",
+  "sourceAudit": {
+    "coverage": {
+      "projects": ["baseline-mixed-web"],
+      "profiles": ["default"],
+      "viewports": ["desktop"],
+      "routeRuns": 1,
+      "flowCheckpointRuns": 0,
+      "skippedRuns": 0
+    }
+  },
+  "entries": [
+    {
+      "fingerprint": "button-name|baseline-mixed-web|/|default|desktop|#web-icon-action",
+      "fingerprintVersion": "1",
+      "ruleId": "button-name",
+      "source": "axe",
+      "projectName": "baseline-mixed-web",
+      "location": {
+        "kind": "route",
+        "route": "/",
+        "routeId": "home",
+        "profile": "default",
+        "viewport": "desktop"
+      },
+      "severity": "critical",
+      "firstSeenAt": "2026-02-20T10:00:00.000Z",
+      "lastSeenAt": "2026-02-20T10:00:00.000Z",
+      "snapshot": {
+        "title": "Buttons must have discernible text",
+        "target": ["#web-icon-action"],
+        "route": "/",
+        "routeId": "home",
+        "profile": "default",
+        "viewport": "desktop",
+        "framework": "html"
+      },
+      "history": [{ "at": "2026-02-20T10:00:00.000Z", "action": "created" }]
+    }
+  ]
+}

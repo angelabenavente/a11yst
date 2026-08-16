@@ -88,11 +88,100 @@ importers:
         specifier: ^5.4.11
         version: 5.4.21(@types/node@22.20.1)
 
+  examples/baseline/classification-expiry:
+    devDependencies:
+      '@a11yst/config':
+        specifier: workspace:*
+        version: link:../../../packages/config
+
+  examples/baseline/flow-regression:
+    devDependencies:
+      '@a11yst/config':
+        specifier: workspace:*
+        version: link:../../../packages/config
+
+  examples/baseline/legacy-html:
+    devDependencies:
+      '@a11yst/config':
+        specifier: workspace:*
+        version: link:../../../packages/config
+
+  examples/baseline/mixed-workspace:
+    devDependencies:
+      '@a11yst/config':
+        specifier: workspace:*
+        version: link:../../../packages/config
+
+  examples/baseline/react-regression:
+    dependencies:
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+      react-router-dom:
+        specifier: ^6.28.0
+        version: 6.30.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+    devDependencies:
+      '@a11yst/config':
+        specifier: workspace:*
+        version: link:../../../packages/config
+      '@types/react':
+        specifier: ^18.3.12
+        version: 18.3.31
+      '@types/react-dom':
+        specifier: ^18.3.1
+        version: 18.3.7(@types/react@18.3.31)
+      '@vitejs/plugin-react':
+        specifier: ^4.3.4
+        version: 4.7.0(vite@5.4.21(@types/node@22.20.1))
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
+      vite:
+        specifier: ^5.4.11
+        version: 5.4.21(@types/node@22.20.1)
+
   examples/flows/html-dialog:
     devDependencies:
       '@a11yst/config':
         specifier: workspace:*
         version: link:../../../packages/config
+
+  examples/flows/mixed-workspace:
+    devDependencies:
+      '@a11yst/config':
+        specifier: workspace:*
+        version: link:../../../packages/config
+
+  examples/flows/next-navigation:
+    dependencies:
+      next:
+        specifier: ^15.1.0
+        version: 15.5.22(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.6)
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      '@a11yst/config':
+        specifier: workspace:*
+        version: link:../../../packages/config
+      '@types/node':
+        specifier: ^22.10.2
+        version: 22.20.1
+      '@types/react':
+        specifier: ^18.3.12
+        version: 18.3.31
+      '@types/react-dom':
+        specifier: ^18.3.1
+        version: 18.3.7(@types/react@18.3.31)
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
 
   examples/flows/react-checkout:
     dependencies:
@@ -121,6 +210,31 @@ importers:
       vite:
         specifier: ^5.4.11
         version: 5.4.21(@types/node@22.20.1)
+
+  examples/flows/vue-menu:
+    dependencies:
+      vue:
+        specifier: ^3.5.13
+        version: 3.5.40(typescript@5.9.3)
+      vue-router:
+        specifier: ^4.5.0
+        version: 4.6.4(vue@3.5.40(typescript@5.9.3))
+    devDependencies:
+      '@a11yst/config':
+        specifier: workspace:*
+        version: link:../../../packages/config
+      '@vitejs/plugin-vue':
+        specifier: ^5.2.1
+        version: 5.2.4(vite@5.4.21(@types/node@24.13.3)(less@4.2.0)(sass@1.77.6)(terser@5.49.0))(vue@3.5.40(typescript@5.9.3))
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
+      vite:
+        specifier: ^5.4.11
+        version: 5.4.21(@types/node@24.13.3)(less@4.2.0)(sass@1.77.6)(terser@5.49.0)
+      vue-tsc:
+        specifier: ^2.2.0
+        version: 2.2.12(typescript@5.9.3)
 
   examples/frameworks/angular-app:
     dependencies:
@@ -283,6 +397,43 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/config
 
+  examples/profiles/mixed-workspace:
+    devDependencies:
+      '@a11yst/config':
+        specifier: workspace:*
+        version: link:../../../packages/config
+
+  examples/profiles/multi-profile-react:
+    dependencies:
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+      react-router-dom:
+        specifier: ^6.28.0
+        version: 6.30.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+    devDependencies:
+      '@a11yst/config':
+        specifier: workspace:*
+        version: link:../../../packages/config
+      '@types/react':
+        specifier: ^18.3.12
+        version: 18.3.31
+      '@types/react-dom':
+        specifier: ^18.3.1
+        version: 18.3.7(@types/react@18.3.31)
+      '@vitejs/plugin-react':
+        specifier: ^4.3.4
+        version: 4.7.0(vite@5.4.21(@types/node@22.20.1))
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
+      vite:
+        specifier: ^5.4.11
+        version: 5.4.21(@types/node@22.20.1)
+
   examples/profiles/reduced-motion:
     devDependencies:
       '@a11yst/config':
@@ -304,6 +455,46 @@ importers:
       '@a11yst/config':
         specifier: workspace:*
         version: link:../../packages/config
+      '@types/react':
+        specifier: ^18.3.12
+        version: 18.3.31
+      '@types/react-dom':
+        specifier: ^18.3.1
+        version: 18.3.7(@types/react@18.3.31)
+      '@vitejs/plugin-react':
+        specifier: ^4.3.4
+        version: 4.7.0(vite@5.4.21(@types/node@22.20.1))
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
+      vite:
+        specifier: ^5.4.11
+        version: 5.4.21(@types/node@22.20.1)
+
+  examples/report/mixed-workspace:
+    devDependencies:
+      '@a11yst/config':
+        specifier: workspace:*
+        version: link:../../../packages/config
+
+  examples/report/multi-route-html:
+    devDependencies:
+      '@a11yst/config':
+        specifier: workspace:*
+        version: link:../../../packages/config
+
+  examples/report/responsive-react:
+    dependencies:
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      '@a11yst/config':
+        specifier: workspace:*
+        version: link:../../../packages/config
       '@types/react':
         specifier: ^18.3.12
         version: 18.3.31

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Baseline legacy HTML — Review</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 40rem;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        line-height: 1.5;
+      }
+      nav ul {
+        display: flex;
+        gap: 1rem;
+        list-style: none;
+        padding: 0;
+        flex-wrap: wrap;
+      }
+      input {
+        display: block;
+        margin-top: 0.25rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Review</h1>
+      <nav aria-label="Fixture pages">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/fixed">Fixed</a></li>
+          <li><a href="/review">Review</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <p>
+        The label violation below remains in the page but is classified as
+        accepted risk in the seeded baseline.
+      </p>
+      <form>
+        <!-- AXE VIOLATION (label): accepted-risk classification in baseline -->
+        <input type="email" id="newsletter-input" name="newsletter" />
+        <button type="submit">Join waitlist</button>
+      </form>
+    </main>
+  </body>
+</html>

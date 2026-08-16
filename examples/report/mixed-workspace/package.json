@@ -1,0 +1,10 @@
+{
+  "name": "@a11yst/example-report-mixed-workspace",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "workspaces": ["apps/*"],
+  "devDependencies": {
+    "@a11yst/config": "workspace:*"
+  }
+}

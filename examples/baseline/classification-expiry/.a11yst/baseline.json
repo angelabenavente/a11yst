@@ -1,0 +1,289 @@
+{
+  "schemaVersion": "1",
+  "fingerprintVersion": "1",
+  "createdAt": "2026-02-15T10:00:00.000Z",
+  "updatedAt": "2026-02-15T10:00:00.000Z",
+  "productVersion": "0.1.0",
+  "sourceAudit": {
+    "coverage": {
+      "projects": ["baseline-classification-expiry"],
+      "profiles": ["default"],
+      "viewports": ["desktop"],
+      "routeRuns": 1,
+      "flowCheckpointRuns": 0,
+      "skippedRuns": 0
+    }
+  },
+  "entries": [
+    {
+      "fingerprint": "image-alt|baseline-classification-expiry|/|default|desktop|#fp-logo",
+      "fingerprintVersion": "1",
+      "ruleId": "image-alt",
+      "source": "axe",
+      "projectName": "baseline-classification-expiry",
+      "location": {
+        "kind": "route",
+        "route": "/",
+        "routeId": "home",
+        "profile": "default",
+        "viewport": "desktop"
+      },
+      "severity": "critical",
+      "firstSeenAt": "2026-02-15T10:00:00.000Z",
+      "lastSeenAt": "2026-02-15T10:00:00.000Z",
+      "snapshot": {
+        "title": "Images must have alternate text",
+        "target": ["#fp-logo"],
+        "route": "/",
+        "routeId": "home",
+        "profile": "default",
+        "viewport": "desktop",
+        "framework": "html"
+      },
+      "classification": {
+        "disposition": "false-positive",
+        "reason": "Decorative badge confirmed by design review.",
+        "createdAt": "2026-02-15T10:05:00.000Z",
+        "createdBy": "fixture",
+        "scope": {
+          "type": "finding",
+          "fingerprint": "image-alt|baseline-classification-expiry|/|default|desktop|#fp-logo"
+        }
+      },
+      "history": [
+        { "at": "2026-02-15T10:00:00.000Z", "action": "created" },
+        {
+          "at": "2026-02-15T10:05:00.000Z",
+          "action": "classification-added",
+          "details": { "disposition": "false-positive" }
+        }
+      ]
+    },
+    {
+      "fingerprint": "button-name|baseline-classification-expiry|/|default|desktop|#ar-valid-btn",
+      "fingerprintVersion": "1",
+      "ruleId": "button-name",
+      "source": "axe",
+      "projectName": "baseline-classification-expiry",
+      "location": {
+        "kind": "route",
+        "route": "/",
+        "routeId": "home",
+        "profile": "default",
+        "viewport": "desktop"
+      },
+      "severity": "critical",
+      "firstSeenAt": "2026-02-15T10:00:00.000Z",
+      "lastSeenAt": "2026-02-15T10:00:00.000Z",
+      "snapshot": {
+        "title": "Buttons must have discernible text",
+        "target": ["#ar-valid-btn"],
+        "route": "/",
+        "routeId": "home",
+        "profile": "default",
+        "viewport": "desktop",
+        "framework": "html"
+      },
+      "classification": {
+        "disposition": "accepted-risk",
+        "reason": "Legacy toolbar icon retained until toolbar redesign ships.",
+        "owner": "design-system",
+        "expiresAt": "2099-12-31",
+        "createdAt": "2026-02-15T10:05:00.000Z",
+        "createdBy": "fixture",
+        "scope": {
+          "type": "finding",
+          "fingerprint": "button-name|baseline-classification-expiry|/|default|desktop|#ar-valid-btn"
+        }
+      },
+      "history": [
+        { "at": "2026-02-15T10:00:00.000Z", "action": "created" },
+        {
+          "at": "2026-02-15T10:05:00.000Z",
+          "action": "classification-added",
+          "details": { "disposition": "accepted-risk" }
+        }
+      ]
+    },
+    {
+      "fingerprint": "button-name|baseline-classification-expiry|/|default|desktop|#ar-expired-btn",
+      "fingerprintVersion": "1",
+      "ruleId": "button-name",
+      "source": "axe",
+      "projectName": "baseline-classification-expiry",
+      "location": {
+        "kind": "route",
+        "route": "/",
+        "routeId": "home",
+        "profile": "default",
+        "viewport": "desktop"
+      },
+      "severity": "critical",
+      "firstSeenAt": "2026-02-15T10:00:00.000Z",
+      "lastSeenAt": "2026-02-15T10:00:00.000Z",
+      "snapshot": {
+        "title": "Buttons must have discernible text",
+        "target": ["#ar-expired-btn"],
+        "route": "/",
+        "routeId": "home",
+        "profile": "default",
+        "viewport": "desktop",
+        "framework": "html"
+      },
+      "classification": {
+        "disposition": "accepted-risk",
+        "reason": "Temporary waiver that should trigger classification-expired regression.",
+        "owner": "platform-team",
+        "expiresAt": "2020-01-01",
+        "createdAt": "2026-02-15T10:05:00.000Z",
+        "createdBy": "fixture",
+        "scope": {
+          "type": "finding",
+          "fingerprint": "button-name|baseline-classification-expiry|/|default|desktop|#ar-expired-btn"
+        }
+      },
+      "history": [
+        { "at": "2026-02-15T10:00:00.000Z", "action": "created" },
+        {
+          "at": "2026-02-15T10:05:00.000Z",
+          "action": "classification-added",
+          "details": { "disposition": "accepted-risk" }
+        }
+      ]
+    },
+    {
+      "fingerprint": "label|baseline-classification-expiry|/|default|desktop|#tp-input",
+      "fingerprintVersion": "1",
+      "ruleId": "label",
+      "source": "axe",
+      "projectName": "baseline-classification-expiry",
+      "location": {
+        "kind": "route",
+        "route": "/",
+        "routeId": "home",
+        "profile": "default",
+        "viewport": "desktop"
+      },
+      "severity": "critical",
+      "firstSeenAt": "2026-02-15T10:00:00.000Z",
+      "lastSeenAt": "2026-02-15T10:00:00.000Z",
+      "snapshot": {
+        "title": "Form elements must have labels",
+        "target": ["#tp-input"],
+        "route": "/",
+        "routeId": "home",
+        "profile": "default",
+        "viewport": "desktop",
+        "framework": "html"
+      },
+      "classification": {
+        "disposition": "third-party",
+        "reason": "Embedded widget owned by vendor; review quarterly.",
+        "owner": "vendor-support",
+        "reviewAt": "2099-06-01",
+        "createdAt": "2026-02-15T10:05:00.000Z",
+        "createdBy": "fixture",
+        "scope": {
+          "type": "finding",
+          "fingerprint": "label|baseline-classification-expiry|/|default|desktop|#tp-input"
+        }
+      },
+      "history": [
+        { "at": "2026-02-15T10:00:00.000Z", "action": "created" },
+        {
+          "at": "2026-02-15T10:05:00.000Z",
+          "action": "classification-added",
+          "details": { "disposition": "third-party" }
+        }
+      ]
+    },
+    {
+      "fingerprint": "label|baseline-classification-expiry|/|default|desktop|#na-input",
+      "fingerprintVersion": "1",
+      "ruleId": "label",
+      "source": "axe",
+      "projectName": "baseline-classification-expiry",
+      "location": {
+        "kind": "route",
+        "route": "/",
+        "routeId": "home",
+        "profile": "default",
+        "viewport": "desktop"
+      },
+      "severity": "critical",
+      "firstSeenAt": "2026-02-15T10:00:00.000Z",
+      "lastSeenAt": "2026-02-15T10:00:00.000Z",
+      "snapshot": {
+        "title": "Form elements must have labels",
+        "target": ["#na-input"],
+        "route": "/",
+        "routeId": "home",
+        "profile": "default",
+        "viewport": "desktop",
+        "framework": "html"
+      },
+      "classification": {
+        "disposition": "not-applicable",
+        "reason": "Field removed from customer-facing flows; kept for admin-only export.",
+        "createdAt": "2026-02-15T10:05:00.000Z",
+        "createdBy": "fixture",
+        "scope": {
+          "type": "finding",
+          "fingerprint": "label|baseline-classification-expiry|/|default|desktop|#na-input"
+        }
+      },
+      "history": [
+        { "at": "2026-02-15T10:00:00.000Z", "action": "created" },
+        {
+          "at": "2026-02-15T10:05:00.000Z",
+          "action": "classification-added",
+          "details": { "disposition": "not-applicable" }
+        }
+      ]
+    },
+    {
+      "fingerprint": "label|baseline-classification-expiry|/|default|desktop|#mr-input",
+      "fingerprintVersion": "1",
+      "ruleId": "label",
+      "source": "axe",
+      "projectName": "baseline-classification-expiry",
+      "location": {
+        "kind": "route",
+        "route": "/",
+        "routeId": "home",
+        "profile": "default",
+        "viewport": "desktop"
+      },
+      "severity": "critical",
+      "firstSeenAt": "2026-02-15T10:00:00.000Z",
+      "lastSeenAt": "2026-02-15T10:00:00.000Z",
+      "snapshot": {
+        "title": "Form elements must have labels",
+        "target": ["#mr-input"],
+        "route": "/",
+        "routeId": "home",
+        "profile": "default",
+        "viewport": "desktop",
+        "framework": "html"
+      },
+      "classification": {
+        "disposition": "manual-review",
+        "reason": "Needs product confirmation before remediation.",
+        "createdAt": "2026-02-15T10:05:00.000Z",
+        "createdBy": "fixture",
+        "scope": {
+          "type": "finding",
+          "fingerprint": "label|baseline-classification-expiry|/|default|desktop|#mr-input"
+        }
+      },
+      "history": [
+        { "at": "2026-02-15T10:00:00.000Z", "action": "created" },
+        {
+          "at": "2026-02-15T10:05:00.000Z",
+          "action": "classification-added",
+          "details": { "disposition": "manual-review" }
+        }
+      ]
+    }
+  ]
+}

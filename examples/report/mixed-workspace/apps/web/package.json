@@ -1,0 +1,9 @@
+{
+  "name": "@a11yst/example-report-mixed-web",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "start": "node serve.mjs"
+  }
+}

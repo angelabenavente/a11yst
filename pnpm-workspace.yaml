@@ -1,8 +1,10 @@
 packages:
   - "packages/*"
   - "examples/audit/*"
+  - "examples/baseline/*"
   - "examples/profiles/*"
   - "examples/flows/*"
   - "examples/frameworks/*"
+  - "examples/report/*"
   - "examples/html-basic"
   - "examples/react-basic"

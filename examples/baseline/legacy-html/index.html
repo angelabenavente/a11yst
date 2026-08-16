@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Baseline legacy HTML — Home</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 40rem;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        line-height: 1.5;
+      }
+      nav ul {
+        display: flex;
+        gap: 1rem;
+        list-style: none;
+        padding: 0;
+        flex-wrap: wrap;
+      }
+      button {
+        margin-top: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <!-- AXE VIOLATION (image-alt): logo missing alt — known baseline entry -->
+      <img id="site-logo" src="logo.svg" width="48" height="48" />
+      <h1>Baseline legacy HTML</h1>
+      <nav aria-label="Fixture pages">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/fixed">Fixed</a></li>
+          <li><a href="/review">Review</a></li>
+          <li><a href="/archive">Archive (not audited)</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <p>
+        Home route keeps two intentional axe violations that match the seeded
+        baseline: one known finding and one classified as a false positive.
+      </p>
+      <!-- AXE VIOLATION (button-name): icon-only button — false-positive in baseline -->
+      <button type="button" id="icon-action">
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          <circle cx="8" cy="8" r="7" fill="currentColor" />
+        </svg>
+      </button>
+    </main>
+  </body>
+</html>

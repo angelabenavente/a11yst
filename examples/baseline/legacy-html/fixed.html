@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Baseline legacy HTML — Fixed</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 40rem;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        line-height: 1.5;
+      }
+      nav ul {
+        display: flex;
+        gap: 1rem;
+        list-style: none;
+        padding: 0;
+        flex-wrap: wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Fixed</h1>
+      <nav aria-label="Fixture pages">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/fixed">Fixed</a></li>
+          <li><a href="/review">Review</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <p>
+        The button-name violation that existed when the baseline was captured
+        has been fixed here. Audits should mark the baseline entry as resolved.
+      </p>
+      <button type="button" id="fixed-action" aria-label="Save changes">
+        Save
+      </button>
+    </main>
+  </body>
+</html>

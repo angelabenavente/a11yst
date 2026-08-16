@@ -1,0 +1,10 @@
+{
+  "name": "@a11yst/example-baseline-mixed-web",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "start": "node serve.mjs",
+    "serve": "node serve.mjs"
+  }
+}
