@@ -107,7 +107,7 @@ describe.sequential("html-dialog flow example", () => {
     "writes artifacts with flow trace and redacts secrets from trace when configured",
     async () => {
       await withFlowExamplePort(async () => {
-        const { mkdtemp, readFile } = await import("node:fs/promises");
+        const { access, mkdtemp, readFile } = await import("node:fs/promises");
         const { join } = await import("node:path");
         const { tmpdir } = await import("node:os");
         const outputDir = await mkdtemp(join(tmpdir(), "a11yst-html-dialog-"));
@@ -122,7 +122,9 @@ describe.sequential("html-dialog flow example", () => {
         });
 
         expect(result.artifacts?.resultsPath).toBeTruthy();
-        expect(result.artifacts?.reportPath).toBeUndefined();
+        expect(result.artifacts?.reportPath).toBeTruthy();
+        expect(result.artifacts!.reportPath!.endsWith("report/index.html")).toBe(true);
+        await access(result.artifacts!.reportPath!);
 
         const payload = JSON.parse(
           await readFile(result.artifacts!.resultsPath, "utf8"),

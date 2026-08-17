@@ -108,7 +108,8 @@ describe.sequential("browser artifacts and evidence (real Chromium)", () => {
       expect(rules.some((rule) => rule === "label" || rule === "image-alt")).toBe(true);
 
       const runDir = result.artifacts!.outputDirectory;
-      expect(result.artifacts?.reportPath).toBeUndefined();
+      expect(result.artifacts?.reportPath).toBeTruthy();
+      expect(result.artifacts!.reportPath!.endsWith("report/index.html")).toBe(true);
       for (const run of result.runs) {
         expect(run.status).toBe("completed");
         expect(run.evidence?.screenshot).toBeTruthy();
@@ -127,8 +128,11 @@ describe.sequential("browser artifacts and evidence (real Chromium)", () => {
       for (const path of [
         result.artifacts!.manifestPath,
         result.artifacts!.resultsPath,
+        result.artifacts!.reportPath!,
         result.artifacts!.latestPath,
         result.artifacts!.evidenceDirectory!,
+        join(runDir, "report/styles.css"),
+        join(runDir, "report/report.js"),
       ]) {
         await access(path);
       }
@@ -145,7 +149,7 @@ describe.sequential("browser artifacts and evidence (real Chromium)", () => {
       };
       expect(manifest.auditId).toBe(auditId);
       expect(manifest.createdAt).toBe("2026-08-03T12:34:56.000Z");
-      expect(manifest.reportPath).toBeUndefined();
+      expect(manifest.reportPath).toBe("report/index.html");
       expect(manifest.artifactCounts).toEqual({
         screenshots: (await filesBelow(join(runDir, "evidence"))).filter((path) =>
           path.endsWith(".png"),
