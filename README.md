@@ -181,7 +181,7 @@ CI integration guide: **[docs/ci.md](./docs/ci.md)** (GitHub Actions and GitLab 
 | Exit code | Meaning |
 | --- | --- |
 | `0` | Audit completed; CI policy disabled or passed |
-| `1` | Operational or configuration error, or policy could not be evaluated |
+| `1` | Operational/configuration error, partial or failed audit, or policy could not be evaluated |
 | `2` | Audit completed; configured CI policy failed |
 
 Accessibility findings alone do not force exit `1`. Policy breaches exit `2` when CI policy flags or config enable them.

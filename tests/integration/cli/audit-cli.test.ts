@@ -50,6 +50,39 @@ function downWebConfig(port: number): string {
 `;
 }
 
+function partialWebConfig(workingPort: number, failingPort: number): string {
+  return `export default {
+  projects: [
+    {
+      name: "working-site",
+      platform: "web",
+      framework: "html",
+      baseUrl: "http://127.0.0.1:${workingPort}",
+      rootDir: ".",
+      routes: ["/"],
+      profiles: ["default"],
+      viewports: [{ name: "desktop", width: 1440, height: 900 }],
+      devServer: {
+        command: "node serve.mjs",
+        url: "http://127.0.0.1:${workingPort}",
+        startupTimeout: 10_000,
+      },
+    },
+    {
+      name: "failing-site",
+      platform: "web",
+      framework: "html",
+      baseUrl: "http://127.0.0.1:${failingPort}",
+      rootDir: ".",
+      routes: ["/"],
+      profiles: ["default"],
+      viewports: [{ name: "desktop", width: 1440, height: 900 }],
+    },
+  ],
+};
+`;
+}
+
 async function runExampleAudit(
   example: string,
   args: string[],
@@ -161,6 +194,53 @@ describe.sequential("CLI audit integration (real Chromium + axe-core)", () => {
         expect(result.code).toBe(1);
         const payload = JSON.parse(result.stdout) as { status: string };
         expect(payload.status).toBe("failed");
+      });
+    },
+    TEST_TIMEOUT_MS,
+  );
+
+  it(
+    "partial audit exits 1 even when policy evaluation passes",
+    async () => {
+      await withTempDir("a11yst-audit-cli-partial-", async (dir) => {
+        const workingPort = await getFreePort();
+        const failingPort = await getFreePort();
+        await writeFile(
+          join(dir, "serve.mjs"),
+          `import { createServer } from "node:http";
+
+const server = createServer((_request, response) => {
+  response.writeHead(200, { "content-type": "text/html; charset=utf-8" });
+  response.end("<!doctype html><html lang=\\"en\\"><title>Working</title><main>OK</main></html>");
+});
+server.listen(${workingPort}, "127.0.0.1");
+const close = () => server.close(() => process.exit(0));
+process.on("SIGINT", close);
+process.on("SIGTERM", close);
+`,
+          "utf8",
+        );
+        await writeFile(
+          join(dir, "a11yst.config.mjs"),
+          partialWebConfig(workingPort, failingPort),
+          "utf8",
+        );
+
+        const result = await runCli(
+          ["audit", "--json", "--no-html", "--no-screenshots"],
+          { cwd: dir },
+        );
+
+        expect(result.code).toBe(1);
+        const payload = JSON.parse(result.stdout) as {
+          status: string;
+          summary: { completedRuns: number; failedRuns: number };
+          policyEvaluation: { status: string };
+        };
+        expect(payload.status).toBe("completed-with-errors");
+        expect(payload.summary.completedRuns).toBe(1);
+        expect(payload.summary.failedRuns).toBe(1);
+        expect(payload.policyEvaluation.status).toBe("passed");
       });
     },
     TEST_TIMEOUT_MS,

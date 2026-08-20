@@ -101,7 +101,7 @@ Inspect `.a11yst/ci/` for generated reports. Exit codes:
 | Code | Meaning |
 | --- | --- |
 | `0` | Audit completed; policy disabled or passed |
-| `1` | Operational/configuration error, or policy not evaluated |
+| `1` | Operational/configuration error, partial or failed audit, or policy not evaluated |
 | `2` | Audit completed; configured CI policy failed |
 
 ## Action version pinning

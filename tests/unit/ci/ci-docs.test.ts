@@ -58,11 +58,17 @@ describe("CI documentation", () => {
 
   it("documents exit codes consistently", () => {
     expect(ciDocs).toContain("| `0` | Audit completed; CI policy disabled or passed |");
+    expect(ciDocs).toContain("**`completed-with-errors`**");
+    expect(ciDocs).toContain("`completed-with-errors` always exits **`1`**");
+    expect(ciDocs).toContain(
+      "audit incompleteness takes precedence over a failed policy evaluation",
+    );
     expect(examplesReadme).toContain("| `0` | Audit completed; policy disabled or passed |");
     expect(readme).toContain("| `0` | Audit completed; CI policy disabled or passed |");
     for (const doc of [ciDocs, examplesReadme, readme]) {
       expect(doc).toContain("| `1` |");
       expect(doc).toContain("| `2` |");
+      expect(doc).toContain("partial or failed audit");
     }
   });
 

@@ -88,12 +88,23 @@ CLI flags override config for that run. The templates pass explicit flags so pip
 | Exit code | Meaning |
 | --- | --- |
 | `0` | Audit completed; CI policy disabled or passed |
-| `1` | Operational/configuration error, or policy not evaluated |
+| `1` | Operational/configuration error, partial or failed audit, or policy not evaluated |
 | `2` | Audit completed; configured CI policy failed |
 
 **Exit `2` is not a crash.** It means the audit finished and the configured policy detected breaches at or above `--minimum-severity`.
 
 **Exit `1` must not be converted to `2`.** Operational failures and "policy not evaluated" (for example, baseline missing when required) are exit `1`.
+
+### Partial audits
+
+An audit result has status **`completed-with-errors`** when useful audit work completed but an operational part of the audit did not—for example, one planned run completed while another failed, or default HTML report generation failed after execution. Completed runs can still produce findings and available report artifacts, but the audit did not finish cleanly across its planned work. Therefore:
+
+- `completed-with-errors` always exits **`1`**
+- audit incompleteness takes precedence over a failed policy evaluation, so it never exits `2`
+- findings from completed runs remain useful, but they must not be interpreted as a complete pass
+- CI should publish available artifacts and then preserve exit `1` at the final gate
+
+A result with status **`failed`** also exits `1`; it means no planned run completed or a global operational error prevented execution. Skipped runs, coverage-aware `not-compared` baseline entries, and partial source mapping do not by themselves make an audit `completed-with-errors`.
 
 **Artifacts publish before the gate.** Upload steps use `if: always()` (GitHub) or `artifacts.when: always` (GitLab) so reports remain available when policy fails.
 
