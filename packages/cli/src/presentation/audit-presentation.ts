@@ -7,13 +7,11 @@ import type {
 import {
   buildFindingGroupKey,
   countUniqueIssues,
-  groupFindings,
-  type FindingGroup,
-} from "./finding-groups.js";
-import {
   formatReportSourceLocation,
+  groupFindings,
   resolveFindingReportSource,
-} from "./finding-source-report.js";
+  type FindingGroup,
+} from "@a11yst/reporters";
 
 export {
   buildFindingGroupKey,
