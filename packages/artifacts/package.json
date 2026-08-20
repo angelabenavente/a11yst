@@ -1,6 +1,6 @@
 {
   "name": "@a11yst/artifacts",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Safe artifact bundle writing for a11yst audits",
   "type": "module",
   "exports": {

@@ -2,11 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project follows semantic versioning in principle while remaining in pre-release `0.x` development.
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project follows semantic versioning.
 
 ## Unreleased
 
-No public release has been published yet. Package version `0.1.0` in manifests is provisional.
+No public release has been published yet. Package manifests are prepared at version `1.0.0`.
 
 ### Added
 

@@ -40,7 +40,7 @@ function baseResult(overrides: Partial<AuditExecutionResult> = {}): AuditExecuti
     limitations: [],
     environment: {
       product: "a11yst",
-      productVersion: "0.1.0",
+      productVersion: "1.0.0",
       nodeVersion: "20.0.0",
       browser: "chromium",
       headed: false,
@@ -102,7 +102,7 @@ describe("createSarifInputFromAuditResult", () => {
     expect(input.policyEvaluation).toBe(result.policyEvaluation);
     expect(input.baselineSummary).toBe(result.baselineSummary);
     expect(input.comparisonCoverage).toBeDefined();
-    expect(input.product).toEqual({ name: "a11yst", version: "0.1.0" });
+    expect(input.product).toEqual({ name: "a11yst", version: "1.0.0" });
   });
 
   it("accepts legacy results without optional metadata", () => {

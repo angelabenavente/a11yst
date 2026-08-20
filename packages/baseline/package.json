@@ -1,6 +1,6 @@
 {
   "name": "@a11yst/baseline",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Versioned accessibility baselines, comparison, and classifications for a11yst",
   "type": "module",
   "exports": {

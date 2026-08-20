@@ -278,7 +278,7 @@ describe.sequential("CLI baseline coverage (8c)", () => {
             fingerprintVersion: "1",
             createdAt: "2026-01-01T00:00:00.000Z",
             updatedAt: "2026-01-01T00:00:00.000Z",
-            productVersion: "0.1.0",
+            productVersion: "1.0.0",
             entries: [],
           }),
           "utf8",

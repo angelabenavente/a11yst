@@ -194,7 +194,7 @@ function result(
     limitations: [],
     environment: {
       product: "a11yst",
-      productVersion: "0.1.0",
+      productVersion: "1.0.0",
       nodeVersion: "20.0.0",
       browser: "Chromium",
       headed: false,

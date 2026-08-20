@@ -52,9 +52,9 @@ describe("consumer project manifest generation", () => {
     const consumerDir = "/tmp/a11yst-13h/consumer";
     const packsDir = "/tmp/a11yst-13h/packs";
     const tarballByPackage = new Map([
-      ["@a11yst/cli", join(packsDir, "a11yst-cli-0.1.0.tgz")],
-      ["@a11yst/core", join(packsDir, "a11yst-core-0.1.0.tgz")],
-      ["@a11yst/types", join(packsDir, "a11yst-types-0.1.0.tgz")],
+      ["@a11yst/cli", join(packsDir, "a11yst-cli-1.0.0.tgz")],
+      ["@a11yst/core", join(packsDir, "a11yst-core-1.0.0.tgz")],
+      ["@a11yst/types", join(packsDir, "a11yst-types-1.0.0.tgz")],
     ]);
 
     const manifest = buildConsumerProjectManifest({
@@ -69,8 +69,8 @@ describe("consumer project manifest generation", () => {
       "@a11yst/core",
       "@a11yst/types",
     ]);
-    expect(manifest.pnpm.overrides["@a11yst/core"]).toBe("file:../packs/a11yst-core-0.1.0.tgz");
-    expect(manifest.dependencies["@a11yst/cli"]).toBe("0.1.0");
+    expect(manifest.pnpm.overrides["@a11yst/core"]).toBe("file:../packs/a11yst-core-1.0.0.tgz");
+    expect(manifest.dependencies["@a11yst/cli"]).toBe("1.0.0");
   });
 
   it("detects missing tarball and monorepo path issues", () => {
@@ -79,12 +79,12 @@ describe("consumer project manifest generation", () => {
       cliPackageName: CONSUMER_ENTRY_PACKAGE,
       publishableClosure: ["@a11yst/types", CONSUMER_ENTRY_PACKAGE],
       tarballByPackage: new Map([
-        [CONSUMER_ENTRY_PACKAGE, "/tmp/packs/a11yst-cli-0.1.0.tgz"],
-        ["@a11yst/types", "/tmp/packs/a11yst-types-0.1.0.tgz"],
+        [CONSUMER_ENTRY_PACKAGE, "/tmp/packs/a11yst-cli-1.0.0.tgz"],
+        ["@a11yst/types", "/tmp/packs/a11yst-types-1.0.0.tgz"],
       ]),
     });
 
-    manifest.dependencies["@a11yst/config"] = "0.1.0";
+    manifest.dependencies["@a11yst/config"] = "1.0.0";
     manifest.pnpm.overrides["@a11yst/config"] = "workspace:*";
 
     const issues = validateConsumerProjectManifest(manifest);
@@ -97,9 +97,9 @@ describe("consumer project manifest generation", () => {
   });
 
   it("derives tarball names from package names and version", () => {
-    expect(tarballFileName("@a11yst/cli")).toBe("a11yst-cli-0.1.0.tgz");
+    expect(tarballFileName("@a11yst/cli")).toBe("a11yst-cli-1.0.0.tgz");
     expect(tarballFileName("@a11yst/source-analysis", CONSUMER_PACKAGE_VERSION)).toBe(
-      "a11yst-source-analysis-0.1.0.tgz",
+      "a11yst-source-analysis-1.0.0.tgz",
     );
   });
 
@@ -113,18 +113,18 @@ describe("consumer project manifest generation", () => {
         dependencies: {
           "@a11yst/cli": {
             from: "@a11yst/cli",
-            version: "0.1.0",
+            version: "1.0.0",
             path: "/tmp/consumer/node_modules/@a11yst/cli",
             dependencies: {
               "@a11yst/core": {
                 from: "@a11yst/core",
-                version: "0.1.0",
-                path: "/tmp/consumer/node_modules/.pnpm/@a11yst+core@0.1.0/node_modules/@a11yst/core",
+                version: "1.0.0",
+                path: "/tmp/consumer/node_modules/.pnpm/@a11yst+core@1.0.0/node_modules/@a11yst/core",
                 dependencies: {
                   "@a11yst/types": {
                     from: "@a11yst/types",
-                    version: "0.1.0",
-                    path: "/tmp/consumer/node_modules/.pnpm/@a11yst+types@0.1.0/node_modules/@a11yst/types",
+                    version: "1.0.0",
+                    path: "/tmp/consumer/node_modules/.pnpm/@a11yst+types@1.0.0/node_modules/@a11yst/types",
                   },
                 },
               },

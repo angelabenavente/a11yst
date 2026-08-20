@@ -244,7 +244,7 @@ export function createPresentationFixture(
     },
     environment: {
       product: "a11yst",
-      productVersion: "0.1.0",
+      productVersion: "1.0.0",
       nodeVersion: "v20.20.2",
       browser: "chromium",
       headed: false,

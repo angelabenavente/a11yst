@@ -1,6 +1,6 @@
 {
   "name": "@a11yst/recommendations",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Deterministic accessibility recommendation engine for a11yst",
   "type": "module",
   "exports": {

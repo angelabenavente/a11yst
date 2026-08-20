@@ -136,7 +136,7 @@ function auditResult(overrides: Partial<AuditExecutionResult> = {}): AuditExecut
     limitations: [],
     environment: {
       product: "a11yst",
-      productVersion: "0.1.0",
+      productVersion: "1.0.0",
       nodeVersion: "20.0.0",
       browser: "chromium",
       headed: false,
@@ -152,7 +152,7 @@ const baselineFile: BaselineFile = {
   fingerprintVersion: "1",
   createdAt: "2026-01-15T10:00:00.000Z",
   updatedAt: "2026-01-15T10:00:00.000Z",
-  productVersion: "0.1.0",
+  productVersion: "1.0.0",
   entries: [
     {
       fingerprint: "known-fingerprint",

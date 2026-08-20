@@ -193,7 +193,7 @@ export function resolvedFindingEntry(): ResolvedFinding {
 
 export function baseInput(overrides: Partial<MarkdownReportInput> = {}): MarkdownReportInput {
   return {
-    product: { name: "a11yst", version: "0.1.0" },
+    product: { name: "a11yst", version: "1.0.0" },
     audit: { successful: true },
     findings: [],
     ...overrides,

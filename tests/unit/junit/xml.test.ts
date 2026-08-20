@@ -51,7 +51,7 @@ describe("escaping through serialized output", () => {
   it("round-trips escaped attribute values in generated XML", () => {
     const xml = serializeJunit(
       generateJunit({
-        product: { name: "a11yst", version: "0.1.0" },
+        product: { name: "a11yst", version: "1.0.0" },
         audit: { successful: false, durationMs: 1 },
         findings: [],
         runs: [

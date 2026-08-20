@@ -13,10 +13,10 @@ import {
 import type { WorkspacePackageManifest } from "../../helpers/release/workspace-packages.js";
 
 const SAMPLE_MANIFESTS: WorkspacePackageManifest[] = [
-  { name: "@a11yst/types", version: "0.1.0", license: "MPL-2.0", files: ["dist", "LICENSE"] },
+  { name: "@a11yst/types", version: "1.0.0", license: "MPL-2.0", files: ["dist", "LICENSE"] },
   {
     name: "@a11yst/cli",
-    version: "0.1.0",
+    version: "1.0.0",
     license: "MPL-2.0",
     files: ["dist", "README.md", "LICENSE", "NOTICE.md", "TRADEMARKS.md"],
   },
@@ -97,14 +97,14 @@ describe("release readiness evaluator", () => {
   it("requires MPL-2.0 specifically when license metadata is present", () => {
     expect(
       evaluateLicenseReadiness(
-        [{ name: "@a11yst/types", version: "0.1.0", license: "MIT" }],
+        [{ name: "@a11yst/types", version: "1.0.0", license: "MIT" }],
         true,
         "Mozilla Public License Version 2.0",
       ).ready,
     ).toBe(false);
     expect(
       evaluateLicenseReadiness(
-        [{ name: "@a11yst/types", version: "0.1.0", license: "MPL-2.0" }],
+        [{ name: "@a11yst/types", version: "1.0.0", license: "MPL-2.0" }],
         true,
         "Mozilla Public License Version 2.0",
       ).ready,
@@ -122,7 +122,7 @@ describe("release readiness evaluator", () => {
   it("detects version mismatch fixture blocker", () => {
     expect(
       evaluateVersionConsistency([
-        { name: "@a11yst/types", version: "0.1.0" },
+        { name: "@a11yst/types", version: "1.0.0" },
         { name: "@a11yst/cli", version: "0.2.0" },
       ]),
     ).toBe(false);

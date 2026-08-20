@@ -224,7 +224,7 @@ export function notComparedFinding(overrides: Partial<Finding> = {}): Finding {
 
 export function baseInput(overrides: Partial<JunitGenerationInput> = {}): JunitGenerationInput {
   return {
-    product: { name: "a11yst", version: "0.1.0" },
+    product: { name: "a11yst", version: "1.0.0" },
     audit: { successful: true, durationMs: 1000 },
     findings: [],
     ...overrides,

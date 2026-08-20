@@ -6,7 +6,7 @@ a11yst is a local CLI for accessibility testing and regression of **web** applic
 
 Automated testing does not establish WCAG conformance and does not replace manual accessibility testing.
 
-**Status:** Pre-release development (version `0.1.0` provisional). Packaging and external consumer installation are validated from local tarballs. The package is **not published** to npm yet.
+**Version:** `1.0.0`. Packaging and external consumer installation are validated from local tarballs. The package is **not published** to npm yet.
 
 Repository: [github.com/WeekendGarage/a11yst](https://github.com/WeekendGarage/a11yst)
 

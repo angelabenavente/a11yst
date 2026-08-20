@@ -74,7 +74,7 @@ function fixture(): AuditExecutionResult {
     limitations: ["Automated checks do not establish conformance."],
     environment: {
       product: "a11yst",
-      productVersion: "0.1.0",
+      productVersion: "1.0.0",
       nodeVersion: "20.0.0",
       browser: "chromium",
       headed: false,

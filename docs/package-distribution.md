@@ -5,7 +5,7 @@ Internal release documentation for a11yst workspace packaging. This document des
 ## Consumer entry package
 
 - Package: `@a11yst/cli`
-- Version: `0.1.0` (provisional)
+- Version: `1.0.0`
 - Bin: `a11yst` → `./dist/bin.js`
 
 A consumer should install `@a11yst/cli` to obtain the `a11yst` command. Runtime behavior depends on the full publishable workspace closure below, not on the CLI package alone.
@@ -16,33 +16,33 @@ a11yst currently distributes as a multi-package workspace. The CLI runtime closu
 
 | Package | Version | Role | Runtime dependency of | Private | Pack status |
 | --- | ---: | --- | --- | --- | --- |
-| `@a11yst/types` | 0.1.0 | Shared contracts | all packages | no | pack OK |
-| `@a11yst/adapters` | 0.1.0 | Framework adapters | CLI, core, browser | no | pack OK |
-| `@a11yst/artifacts` | 0.1.0 | Artifact writing | CLI, core | no | pack OK |
-| `@a11yst/baseline` | 0.1.0 | Baseline comparison | CLI, core | no | pack OK |
-| `@a11yst/rules` | 0.1.0 | Rule definitions | browser, profiles | no | pack OK |
-| `@a11yst/flows` | 0.1.0 | Flow execution | CLI, core, browser, config | no | pack OK |
-| `@a11yst/profiles` | 0.1.0 | Profile execution | CLI, browser | no | pack OK |
-| `@a11yst/policy` | 0.1.0 | CI policy evaluation | CLI, core | no | pack OK |
-| `@a11yst/junit` | 0.1.0 | JUnit generation | CLI, core | no | pack OK |
-| `@a11yst/sarif` | 0.1.0 | SARIF generation | CLI, core, reporters | no | pack OK |
-| `@a11yst/detect` | 0.1.0 | Project detection | CLI | no | pack OK |
-| `@a11yst/config` | 0.1.0 | Config loading/validation | CLI | no | pack OK |
-| `@a11yst/source-mapping` | 0.1.0 | Mapping domain model | source stack | no | pack OK |
-| `@a11yst/source-ranking` | 0.1.0 | Candidate ranking | recommendations, source-analysis | no | pack OK |
-| `@a11yst/recommendations` | 0.1.0 | Recommendation engine | source-analysis | no | pack OK |
-| `@a11yst/source-index` | 0.1.0 | Source indexing | source-analysis, mappers | no | pack OK |
-| `@a11yst/source-mapping-html` | 0.1.0 | HTML mapper | source-analysis, react/vue/angular | no | pack OK |
-| `@a11yst/source-mapping-react` | 0.1.0 | React mapper | source-analysis, next | no | pack OK |
-| `@a11yst/source-mapping-next` | 0.1.0 | Next.js mapper | source-analysis | no | pack OK |
-| `@a11yst/source-mapping-vue` | 0.1.0 | Vue mapper | source-analysis, nuxt | no | pack OK |
-| `@a11yst/source-mapping-nuxt` | 0.1.0 | Nuxt mapper | source-analysis | no | pack OK |
-| `@a11yst/source-mapping-angular` | 0.1.0 | Angular mapper | source-analysis | no | pack OK |
-| `@a11yst/source-analysis` | 0.1.0 | Source analysis orchestrator | core | no | pack OK |
-| `@a11yst/reporters` | 0.1.0 | Report generation | CLI, core | no | pack OK |
-| `@a11yst/browser` | 0.1.0 | Playwright audit engine | core | no | pack OK |
-| `@a11yst/core` | 0.1.0 | Audit orchestrator | CLI | no | pack OK |
-| `@a11yst/cli` | 0.1.0 | Consumer CLI entry | consumer install | no | pack OK |
+| `@a11yst/types` | 1.0.0 | Shared contracts | all packages | no | pack OK |
+| `@a11yst/adapters` | 1.0.0 | Framework adapters | CLI, core, browser | no | pack OK |
+| `@a11yst/artifacts` | 1.0.0 | Artifact writing | CLI, core | no | pack OK |
+| `@a11yst/baseline` | 1.0.0 | Baseline comparison | CLI, core | no | pack OK |
+| `@a11yst/rules` | 1.0.0 | Rule definitions | browser, profiles | no | pack OK |
+| `@a11yst/flows` | 1.0.0 | Flow execution | CLI, core, browser, config | no | pack OK |
+| `@a11yst/profiles` | 1.0.0 | Profile execution | CLI, browser | no | pack OK |
+| `@a11yst/policy` | 1.0.0 | CI policy evaluation | CLI, core | no | pack OK |
+| `@a11yst/junit` | 1.0.0 | JUnit generation | CLI, core | no | pack OK |
+| `@a11yst/sarif` | 1.0.0 | SARIF generation | CLI, core, reporters | no | pack OK |
+| `@a11yst/detect` | 1.0.0 | Project detection | CLI | no | pack OK |
+| `@a11yst/config` | 1.0.0 | Config loading/validation | CLI | no | pack OK |
+| `@a11yst/source-mapping` | 1.0.0 | Mapping domain model | source stack | no | pack OK |
+| `@a11yst/source-ranking` | 1.0.0 | Candidate ranking | recommendations, source-analysis | no | pack OK |
+| `@a11yst/recommendations` | 1.0.0 | Recommendation engine | source-analysis | no | pack OK |
+| `@a11yst/source-index` | 1.0.0 | Source indexing | source-analysis, mappers | no | pack OK |
+| `@a11yst/source-mapping-html` | 1.0.0 | HTML mapper | source-analysis, react/vue/angular | no | pack OK |
+| `@a11yst/source-mapping-react` | 1.0.0 | React mapper | source-analysis, next | no | pack OK |
+| `@a11yst/source-mapping-next` | 1.0.0 | Next.js mapper | source-analysis | no | pack OK |
+| `@a11yst/source-mapping-vue` | 1.0.0 | Vue mapper | source-analysis, nuxt | no | pack OK |
+| `@a11yst/source-mapping-nuxt` | 1.0.0 | Nuxt mapper | source-analysis | no | pack OK |
+| `@a11yst/source-mapping-angular` | 1.0.0 | Angular mapper | source-analysis | no | pack OK |
+| `@a11yst/source-analysis` | 1.0.0 | Source analysis orchestrator | core | no | pack OK |
+| `@a11yst/reporters` | 1.0.0 | Report generation | CLI, core | no | pack OK |
+| `@a11yst/browser` | 1.0.0 | Playwright audit engine | core | no | pack OK |
+| `@a11yst/core` | 1.0.0 | Audit orchestrator | CLI | no | pack OK |
+| `@a11yst/cli` | 1.0.0 | Consumer CLI entry | consumer install | no | pack OK |
 
 Closure size: 27 packages.
 
@@ -62,7 +62,7 @@ No workspace runtime package is currently marked `private`.
 4. Keep the dependency graph unchanged unless a real packaging defect requires a manifest fix.
 5. Do not commit generated `.tgz` files.
 6. Each publishable package uses `"files": ["dist", "LICENSE"]` (CLI adds README, NOTICE, TRADEMARKS).
-7. `pnpm pack` rewrites `workspace:*` dependencies to the local package version (`0.1.0`).
+7. `pnpm pack` rewrites `workspace:*` dependencies to the local package version (`1.0.0`).
 
 ## Pack procedure
 
@@ -146,9 +146,9 @@ The definitive undeclared-dependency test remains the external consumer install 
 Documented in [release.md](./release.md):
 
 - Semantic Versioning format.
-- Synchronized `0.x` versions across the 27-package closure during pre-release.
+- Synchronized versions across the 27-package closure.
 - Internal packages publish in dependency order; `@a11yst/cli` last.
-- First public release version: **decision pending** (current manifest version `0.1.0` is provisional).
+- First public release version: `1.0.0`.
 
 ## CLI package README
 
@@ -181,7 +181,7 @@ This is a local registry simulation only. It is not a public installation guide.
 
 ### Consumer package
 
-- Direct dependency: `@a11yst/cli@0.1.0` (resolved through temporary `pnpm.overrides` to `file:../packs/a11yst-cli-0.1.0.tgz`)
+- Direct dependency: `@a11yst/cli@1.0.0` (resolved through temporary `pnpm.overrides` to `file:../packs/a11yst-cli-1.0.0.tgz`)
 - Internal packages: resolved through temporary `pnpm.overrides` for the full runtime closure
 - Fixture app: `tests/fixtures/release/consumer-app/`
 

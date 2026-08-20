@@ -27,8 +27,8 @@ describe("generateSarif structure", () => {
     expect(result.log.version).toBe("2.1.0");
     expect(result.log.runs).toHaveLength(1);
     expect(result.log.runs[0]?.tool.driver.name).toBe("a11yst");
-    expect(result.log.runs[0]?.tool.driver.version).toBe("0.1.0");
-    expect(result.log.runs[0]?.tool.driver.semanticVersion).toBe("0.1.0");
+    expect(result.log.runs[0]?.tool.driver.version).toBe("1.0.0");
+    expect(result.log.runs[0]?.tool.driver.semanticVersion).toBe("1.0.0");
     expect(result.log.runs[0]?.results).toEqual([]);
     validateAgainstOfficialSchema(result.log);
   });

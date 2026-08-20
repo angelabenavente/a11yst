@@ -87,7 +87,7 @@ export function baselineFile(overrides: Partial<BaselineFile> = {}): BaselineFil
     fingerprintVersion: "1",
     createdAt: FIXED_NOW,
     updatedAt: FIXED_NOW,
-    productVersion: "0.1.0",
+    productVersion: "1.0.0",
     entries: [],
     ...overrides,
   };
@@ -198,7 +198,7 @@ export function auditResult(overrides: Partial<AuditExecutionResult> = {}): Audi
     limitations: [],
     environment: {
       product: "a11yst",
-      productVersion: "0.1.0",
+      productVersion: "1.0.0",
       nodeVersion: "20.0.0",
       headed: false,
     },

@@ -69,8 +69,8 @@ describe.sequential("release consumer install", () => {
           publishableClosure,
         });
         expect(validateConsumerProjectManifest(manifest)).toEqual([]);
-        expect(manifest.pnpm.overrides["@a11yst/cli"]).toContain("a11yst-cli-0.1.0.tgz");
-        expect(manifest.pnpm.overrides["@a11yst/adapters"]).toContain("a11yst-adapters-0.1.0.tgz");
+        expect(manifest.pnpm.overrides["@a11yst/cli"]).toContain("a11yst-cli-1.0.0.tgz");
+        expect(manifest.pnpm.overrides["@a11yst/adapters"]).toContain("a11yst-adapters-1.0.0.tgz");
 
         const install = await installConsumerProjectWithFallback(consumerDir);
         if (install.result.code !== 0 || !(await consumerBinExists(consumerDir))) {

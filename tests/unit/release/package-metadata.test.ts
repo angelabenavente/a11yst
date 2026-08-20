@@ -87,7 +87,7 @@ describe("release package metadata", () => {
     const versions = closure.map(
       (name) => packages.find((entry) => entry.manifest.name === name)!.manifest.version,
     );
-    expect(new Set(versions)).toEqual(new Set(["0.1.0"]));
+    expect(new Set(versions)).toEqual(new Set(["1.0.0"]));
   });
 
   it("ships a self-contained CLI package README", async () => {

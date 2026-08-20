@@ -17,7 +17,7 @@ describe("release package manifests", () => {
 
     for (const name of closure) {
       const pkg = packages.find((entry) => entry.manifest.name === name);
-      expect(pkg?.manifest.version).toBe("0.1.0");
+      expect(pkg?.manifest.version).toBe("1.0.0");
       expect(pkg?.manifest.private).not.toBe(true);
     }
   });

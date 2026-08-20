@@ -1,6 +1,6 @@
 {
   "name": "@a11yst/rules",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "a11yst accessibility rule definitions and evaluation utilities",
   "type": "module",
   "exports": {

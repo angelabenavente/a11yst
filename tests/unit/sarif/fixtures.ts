@@ -132,7 +132,7 @@ export function baseInput(
   overrides: Partial<SarifGenerationInput> = {},
 ): SarifGenerationInput {
   return {
-    product: { name: "a11yst", version: "0.1.0" },
+    product: { name: "a11yst", version: "1.0.0" },
     findings: [],
     ...overrides,
   };

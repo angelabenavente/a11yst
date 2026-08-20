@@ -46,7 +46,7 @@ describe("policyEvaluation serialisation", () => {
       limitations: [],
       environment: {
         product: "a11yst",
-        productVersion: "0.1.0",
+        productVersion: "1.0.0",
         nodeVersion: "v20.0.0",
         headed: false,
       },

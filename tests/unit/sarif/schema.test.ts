@@ -6,7 +6,7 @@ import { validateAgainstOfficialSchema, expectInvalidAgainstSchema } from "./sch
 describe("official SARIF schema validation", () => {
   it("validates empty and populated logs", () => {
     const empty = generateSarif({
-      product: { name: "a11yst", version: "0.1.0" },
+      product: { name: "a11yst", version: "1.0.0" },
       findings: [],
     });
     validateAgainstOfficialSchema(empty.log);
@@ -25,7 +25,7 @@ describe("official SARIF schema validation", () => {
       version: "2.1.0",
       runs: [
         {
-          tool: { driver: { name: "a11yst", version: "0.1.0", rules: [] } },
+          tool: { driver: { name: "a11yst", version: "1.0.0", rules: [] } },
           results: [
             {
               ruleId: "x",
@@ -41,7 +41,7 @@ describe("official SARIF schema validation", () => {
       version: "2.1.0",
       runs: [
         {
-          tool: { driver: { name: "a11yst", version: "0.1.0", rules: [] } },
+          tool: { driver: { name: "a11yst", version: "1.0.0", rules: [] } },
           results: [
             {
               ruleId: "x",

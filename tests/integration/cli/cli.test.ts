@@ -64,7 +64,7 @@ describe("CLI foundation", () => {
   it("prints version", async () => {
     const result = await runCli(["--version"]);
     expect(result.code).toBe(0);
-    expect(result.stdout.trim()).toBe("0.1.0");
+    expect(result.stdout.trim()).toBe("1.0.0");
   });
 
   it("lists configured flows without a browser", async () => {

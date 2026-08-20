@@ -16,7 +16,7 @@ import {
 } from "./workspace-packages.js";
 
 export const CONSUMER_ENTRY_PACKAGE = "@a11yst/cli";
-export const CONSUMER_PACKAGE_VERSION = "0.1.0";
+export const CONSUMER_PACKAGE_VERSION = "1.0.0";
 export const CONSUMER_FIXTURE_NAME = "a11yst-consumer-fixture";
 export const A11YST_REGISTRY_GUARD = "@a11yst:registry=http://127.0.0.1:9/\n";
 export const CONSUMER_SECRET = "A11YST_CONSUMER_SECRET_13H";

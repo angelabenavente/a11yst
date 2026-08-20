@@ -62,7 +62,7 @@ function makeResult(): AuditExecutionResult {
     limitations: [],
     environment: {
       product: "a11yst",
-      productVersion: "0.1.0",
+      productVersion: "1.0.0",
       nodeVersion: process.version,
       headed: false,
     },
@@ -75,7 +75,7 @@ function makeManifest(auditId: string): AuditManifest {
     auditId,
     createdAt: now.toISOString(),
     status: "passed",
-    productVersion: "0.1.0",
+    productVersion: "1.0.0",
     projectRoot: ".",
     resultsPath: "results.json",
     reportPath: "report/index.html",

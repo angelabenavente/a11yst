@@ -2,11 +2,11 @@
 
 ## Supported versions
 
-a11yst is in pre-release development. Only the latest development line in this repository is evaluated for security fixes. No long-term support commitment exists for provisional `0.x` versions.
+Only the latest development line in this repository is evaluated for security fixes. No long-term support commitment exists yet.
 
 | Version | Supported |
 | --- | --- |
-| Current development (`0.1.0` provisional) | yes |
+| Current development (`1.0.0`) | yes |
 | Earlier unpublished snapshots | no |
 
 ## Reporting a vulnerability

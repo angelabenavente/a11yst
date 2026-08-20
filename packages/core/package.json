@@ -1,6 +1,6 @@
 {
   "name": "@a11yst/core",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Audit planning orchestrator for a11yst",
   "type": "module",
   "exports": {
