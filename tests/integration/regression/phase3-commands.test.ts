@@ -114,8 +114,8 @@ describe("Phase 3/5 regression: detect/init/doctor/routes never touch a browser 
       resolve(here, "../../../packages/cli/src/commands/report.ts"),
       "utf8",
     );
-    const cliSource = await readFile(
-      resolve(here, "../../../packages/cli/src/index.ts"),
+    const commandProgramSource = await readFile(
+      resolve(here, "../../../packages/cli/src/command-program.ts"),
       "utf8",
     );
 
@@ -136,6 +136,6 @@ describe("Phase 3/5 regression: detect/init/doctor/routes never touch a browser 
     expect(reportSource).not.toMatch(/@a11yst\/artifacts/);
     expect(reportSource).toMatch(/@a11yst\/core/);
     expect(reportSource).not.toMatch(/@a11yst\/browser|playwright/i);
-    expect(cliSource).not.toMatch(/^import .*["']@a11yst\/core["'];?$/m);
+    expect(commandProgramSource).not.toMatch(/^import .*["']@a11yst\/core["'];?$/m);
   });
 });
