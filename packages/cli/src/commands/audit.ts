@@ -1,4 +1,10 @@
-import type { AuditExecutionResult, Severity } from "@a11yst/types";
+import type {
+  AuditExecutionResult,
+  BaselineSummary,
+  Finding,
+  ResolvedFinding,
+  Severity,
+} from "@a11yst/types";
 import { checkingMessage, formatLabelValue } from "../output.js";
 import {
   formatAuditExecutionHeader,
@@ -9,7 +15,69 @@ import {
   type AuditPresentationOptions,
 } from "../presentation/audit-presentation.js";
 import { formatFlowExecutionsHuman, hasFlowExecutions } from "./audit-flow-output.js";
+import { formatBaselineComparisonArtifact } from "./baseline.js";
 import { formatPolicyEvaluationSection } from "./audit-policy-output.js";
+
+function formatBaselineFindingLine(finding: Finding): string[] {
+  const status = finding.baseline?.status?.toUpperCase() ?? "NEW";
+  const lines = [
+    `${finding.severity.toUpperCase()}  ${status}`,
+    `${finding.ruleId}`,
+    finding.title,
+  ];
+  const classification = finding.baseline?.classification;
+  if (classification) {
+    lines.push(classification.reason);
+    if (classification.owner) {
+      lines.push(`Owner: ${classification.owner}`);
+    }
+    if (classification.ticket) {
+      lines.push(`Ticket: ${classification.ticket}`);
+    }
+    if (classification.expiresAt) {
+      lines.push(`Expires: ${classification.expiresAt}`);
+    }
+    if (finding.baseline?.classificationExpired) {
+      lines.push("Classification expired.");
+    }
+    if (finding.baseline?.regressionReason) {
+      lines.push(`Regression: ${finding.baseline.regressionReason}`);
+    }
+  }
+  return lines;
+}
+
+function formatResolvedFindingLine(finding: ResolvedFinding): string[] {
+  const location =
+    finding.location.kind === "flow-checkpoint"
+      ? `${finding.location.flowId}/${finding.location.checkpointId}`
+      : finding.location.route;
+  return [
+    `${finding.previousSeverity.toUpperCase()}  RESOLVED`,
+    `${finding.ruleId}`,
+    finding.snapshot?.title ?? location,
+  ];
+}
+
+function formatBaselineSummaryHuman(
+  summary: BaselineSummary,
+  resolvedFindings: ResolvedFinding[] = [],
+): string[] {
+  const lines = [...formatBaselineComparisonArtifact(summary)];
+
+  const regressed = summary.regressedFindings;
+  const newCount = summary.newFindings;
+  if (newCount === 0 && regressed === 0 && resolvedFindings.length === 0) {
+    return lines;
+  }
+
+  for (const finding of resolvedFindings.slice(0, 5)) {
+    lines.push(...formatResolvedFindingLine(finding));
+    lines.push("");
+  }
+
+  return lines;
+}
 
 function formatReportsSection(
   result: AuditExecutionResult,
@@ -109,6 +177,29 @@ export function formatAuditHuman(
       skipFlowCheckpoints: hasFlowExecutions(result),
     }),
   );
+
+  if (result.baselineSummary?.baselineUsed) {
+    blocks.push(
+      ...formatBaselineSummaryHuman(
+        result.baselineSummary,
+        result.resolvedFindings ?? [],
+      ),
+    );
+    for (const finding of result.findings) {
+      const status = finding.baseline?.status;
+      if (status === "new" || status === "regressed") {
+        blocks.push(...formatBaselineFindingLine(finding));
+        blocks.push("");
+      }
+    }
+    if (result.baselineSummary.baselinePath) {
+      blocks.push(formatLabelValue("Baseline", result.baselineSummary.baselinePath));
+      blocks.push("");
+    }
+    blocks.push("A baseline records known accessibility debt.");
+    blocks.push("It does not make that debt accessible or compliant.");
+    blocks.push("");
+  }
 
   if (result.policyEvaluation) {
     const minimumSeverity = options?.minimumSeverity ?? "high";

@@ -77,8 +77,6 @@ export default defineConfig({
 
 This config is validated by the repository test suite (see `tests/unit/docs/getting-started-config.test.ts`).
 
-Write an `a11yst.config.ts` (or `.mts` / `.js` / `.mjs`) in your own project using `defineConfig` from `@a11yst/config`. This checkout does not include an `init` command.
-
 ## 3. Run your first audit
 
 ```bash
@@ -123,7 +121,7 @@ examples/audit/html-accessible/.a11yst/results/
 - **`reports/a11yst.md`** — Markdown report (unless disabled)
 - **`evidence/`** — screenshots when capture is enabled
 
-Optional formats (SARIF, JUnit) are not generated unless enabled in configuration or requested with audit flags such as `--sarif` or `--junit`.
+Optional formats (SARIF, JUnit, GitHub annotations) are not generated unless enabled in configuration or requested with audit flags such as `--sarif`, `--junit`, or `--github-annotations`.
 
 ### Reading a finding
 
@@ -141,7 +139,23 @@ recommendation: contextual guidance — not an automatic fix
 
 Exact field names and shapes depend on the finding and framework. Source mapping can remain unmapped when evidence is insufficient.
 
-## 5. Regenerate reports
+## 5. Initialize a new project
+
+To create a starter configuration in an empty web project directory:
+
+```bash
+mkdir my-site && cd my-site
+# add at least a minimal index.html or app files
+pnpm a11yst init --cwd .
+```
+
+`init` writes `a11yst.config.ts` in the target directory. It does not modify other project files. Re-run with `--force` to overwrite an existing config.
+
+Detection fills platform, framework, routes or route discovery, profiles, and viewports when signals are available. Review generated values before auditing production apps.
+
+Generated configs include `outputDir: ".a11yst/results"` by default.
+
+## 6. Regenerate reports
 
 `report` reads persisted JSON and does not launch Chromium:
 
@@ -153,20 +167,42 @@ pnpm a11yst report --cwd examples/audit/html-accessible \
 
 Without a positional path, a11yst follows `latest.json` under the configured `outputDir`.
 
-Supported formats: `html`, `sarif`, `junit`, `markdown`.
+## 7. Create a baseline
 
-## 6. Baseline comparison (optional)
+Baselines record known findings so later audits can label lifecycle status.
 
-When a baseline file exists and `baseline.compare` is enabled, `audit` labels findings `new`, `known`, `regressed`, `resolved`, or `not-compared`.
+After you have at least one completed audit bundle:
 
 ```bash
-pnpm a11yst audit --cwd examples/audit/html-accessible --no-baseline
-pnpm a11yst audit --baseline .a11yst/baseline.json
+pnpm a11yst baseline create --cwd examples/audit/html-accessible
+pnpm a11yst baseline status --cwd examples/audit/html-accessible
 ```
 
-This checkout does not include `baseline create`, `findings`, `classify`, or `doctor` commands. See [Baselines & governance](./baselines-and-governance.md).
+Lifecycle labels on findings:
 
-## 7. Next steps
+| Status | Meaning |
+| --- | --- |
+| `new` | Present now, absent from baseline |
+| `known` | Present in both with unchanged severity |
+| `regressed` | Known finding worsened or classification expired |
+| `resolved` | In baseline but not found in current audit |
+| `not-compared` | In baseline but outside current audit coverage |
+
+Fingerprints match findings deterministically; changing routes, flows, profiles, or viewports affects comparison coverage.
+
+Classification workflows (`classify`, `unclassify`, migrations, and advanced baseline updates) are covered in [Baselines & governance](./baselines-and-governance.md).
+
+## 8. Check your environment
+
+```bash
+pnpm a11yst doctor --cwd examples/audit/html-accessible
+```
+
+Doctor verifies Node version, configuration validity, writable artifact paths, and related readiness checks without starting a browser.
+
+## 9. Next steps
+
+Advanced guides:
 
 - [Configuration](./configuration.md) — full configuration reference
 - [Profiles](./profiles.md) — accessibility profile behavior
@@ -174,13 +210,13 @@ This checkout does not include `baseline create`, `findings`, `classify`, or `do
 - [Baselines & governance](./baselines-and-governance.md) — regression and classifications
 - [Source analysis](./source-analysis.md) — mapping and recommendations
 - [Reports](./reports.md) — output formats and regeneration
-- [CI guide](./ci.md) — policy and exit codes
 
-Examples:
+Examples and CI:
 
-- [Audit examples](../examples/audit/) — HTML and React fixtures
+- [CI guide](./ci.md) — policy, exit codes, and workflow templates
+- [Framework examples](../examples/frameworks/) — React, Next.js, Vue, Nuxt, Angular, and HTML fixtures
+- [Baseline examples](../examples/baseline/) — regression, classifications, and flow checkpoints
 - [Flow examples](../examples/flows/) — interactive checkpoint audits
-- [Profile examples](../examples/profiles/) — keyboard, large-text, reduced-motion
 
 For product positioning and capability overview, see the [README](../README.md).
 

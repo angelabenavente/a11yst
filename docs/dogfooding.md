@@ -139,11 +139,10 @@ Re-run the audit and confirm new findings appear with canonical severities (`min
 
 ### 13. Baseline workflow (optional)
 
-When tracking known debt, create a baseline from audit results, then compare later audits against it:
+When tracking known debt:
 
 ```bash
-pnpm a11yst audit --cwd /path/to/project
-pnpm a11yst baseline create --cwd /path/to/project
+pnpm a11yst audit --cwd /path/to/project --create-baseline
 # later
 pnpm a11yst audit --cwd /path/to/project --baseline .a11yst/baseline.json
 ```

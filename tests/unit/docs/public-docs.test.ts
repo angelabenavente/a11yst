@@ -3,7 +3,19 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { getRepoRoot } from "../../helpers/release/workspace-packages.js";
 
-const REAL_CLI_COMMANDS = ["detect", "routes", "profiles", "flows", "audit", "report"] as const;
+const REAL_CLI_COMMANDS = [
+  "init",
+  "detect",
+  "routes",
+  "profiles",
+  "flows",
+  "audit",
+  "doctor",
+  "report",
+  "baseline",
+  "findings",
+  "classify",
+] as const;
 const LEGACY_IDENTITY = ["Allyst", "allyst", "Ally", "Always by your side."] as const;
 
 async function readPublicDocs(): Promise<string> {
@@ -26,19 +38,18 @@ async function readPublicDocs(): Promise<string> {
 }
 
 describe("public project documentation", () => {
-  it("describes the current CLI surface without unpublished commands", async () => {
+  it("describes the current CLI surface including restored commands", async () => {
     const readme = await readFile(join(getRepoRoot(), "README.md"), "utf8");
     for (const command of REAL_CLI_COMMANDS) {
       expect(readme).toContain(`\`${command}\``);
     }
-    expect(readme).not.toMatch(/^\| `init` /m);
-    expect(readme).not.toMatch(/^\| `doctor` /m);
-    expect(readme).not.toMatch(/^\| `baseline` /m);
-    expect(readme).not.toMatch(/^\| `findings` /m);
-    expect(readme).not.toMatch(/^\| `classify` /m);
-    expect(readme).not.toMatch(/pnpm a11yst init\b/);
-    expect(readme).not.toMatch(/pnpm a11yst doctor\b/);
-    expect(readme).not.toMatch(/pnpm a11yst baseline create\b/);
+    expect(readme).toMatch(/^\| `init` /m);
+    expect(readme).toMatch(/^\| `doctor` /m);
+    expect(readme).toMatch(/^\| `baseline` /m);
+    expect(readme).toMatch(/^\| `findings` /m);
+    expect(readme).toMatch(/^\| `classify` \/ `unclassify` /m);
+    expect(readme).toContain("examples/ci/");
+    expect(readme).toContain("github-annotations");
   });
 
   it("avoids false product and publish claims", async () => {

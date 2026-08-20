@@ -112,7 +112,10 @@ See [docs/contributing-ip.md](./docs/contributing-ip.md) and [docs/contribution-
 
 a11yst Community is licensed under MPL-2.0. Contributors retain applicable copyright in their contributions.
 
-The project intends to use a contributor license agreement (CLA) for external code contributions. Draft agreements are being prepared but are **not yet legally active** and are not published in this repository.
+The project intends to use a contributor license agreement (CLA) for external code contributions. Draft agreements are prepared but **not yet legally active**:
+
+- [docs/legal/CLA-DRAFT.md](./docs/legal/CLA-DRAFT.md)
+- [docs/legal/CCLA-DRAFT.md](./docs/legal/CCLA-DRAFT.md)
 
 - Pull requests may be opened now.
 - The CLA signing workflow is not yet active.

@@ -12,7 +12,13 @@ const DOCUMENTED_DISPOSITIONS: FindingDisposition[] = [
   "manual-review",
 ];
 
-const DOCUMENTED_REPORT_FORMATS = ["html", "sarif", "junit", "markdown"] as const;
+const DOCUMENTED_REPORT_FORMATS = [
+  "html",
+  "sarif",
+  "junit",
+  "markdown",
+  "github-annotations",
+] as const;
 
 const DOCUMENTED_SOURCE_STATUSES = ["mapped", "ambiguous", "unmapped", "invalid"] as const;
 
@@ -34,7 +40,7 @@ describe("documentation contracts", () => {
   it("documents report formats supported by the report command", () => {
     expect(DOCUMENTED_REPORT_FORMATS).toContain("html");
     expect(DOCUMENTED_REPORT_FORMATS).toContain("sarif");
-    expect(DOCUMENTED_REPORT_FORMATS).toHaveLength(4);
+    expect(DOCUMENTED_REPORT_FORMATS.length).toBe(5);
   });
 
   it("documents source mapping status and confidence enums", () => {

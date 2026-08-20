@@ -58,12 +58,22 @@ Enable with `reports.junit: true` or `--junit`.
 
 ## Markdown
 
-- Human-readable summary suitable for issues, merge requests, or archival.
+- Human-readable summary suitable for GitHub issues, merge requests, GitLab review, or archival.
 - Generated from the same stored `results.json` as HTML — no re-audit.
 - Includes audit metadata, severity summary, grouped findings, source locations, recommendations, baseline lifecycle, and coverage sections when present.
 - Relative links to `report/index.html` and `results.json` inside the bundle.
 
 Enabled by default (`reports.markdown: true`). Disable with `--no-markdown` or `reports.markdown: false`.
+
+## GitHub annotations
+
+- Emits GitHub Actions workflow annotation commands.
+- **Exact** and **high** confidence mappings may reference file and line when policy allows.
+- **Medium**, **low**, and **ambiguous** mappings use conservative messaging without arbitrary first-candidate locations.
+
+Enable with `reports.githubAnnotations: true` or `--github-annotations`. Pipe the generated file to stdout in GitHub Actions; a11yst does not upload results automatically.
+
+`githubStepSummary` appends the Markdown report to `GITHUB_STEP_SUMMARY` when set.
 
 ## Regenerate reports from stored results
 
@@ -80,18 +90,19 @@ pnpm a11yst report .a11yst/results/runs/<auditId>/results.json
 pnpm a11yst report .a11yst/results/runs/<auditId>/results.json --format sarif
 pnpm a11yst report .a11yst/results/runs/<auditId>/results.json --format junit
 pnpm a11yst report .a11yst/results/runs/<auditId>/results.json --format markdown
+pnpm a11yst report .a11yst/results/runs/<auditId>/results.json --format github-annotations
 
 # Custom output location
 pnpm a11yst report --output ./review-copy
 ```
 
-Supported `--format` values: `html`, `sarif`, `junit`, `markdown`.
+Supported `--format` values: `html`, `sarif`, `junit`, `markdown`, `github-annotations`.
 
 Without `--output`, HTML writes `report/` next to `results.json`.
 
 ## Audit flags (summary)
 
-Report-related audit flags include `--no-html`, `--sarif`, `--junit`, `--no-markdown`, and matching `*-*-output` variants. CLI values override configuration for that run.
+Report-related audit flags include `--no-html`, `--sarif`, `--junit`, `--markdown`, `--github-annotations`, and matching `--no-*` / `-*-output` variants. CLI values override configuration for that run.
 
 See `pnpm a11yst audit --help` for the complete list.
 

@@ -7,6 +7,7 @@ import { productMetadata } from "@a11yst/types";
 import { parseCiPolicyCliOptions } from "./ci-policy-options.js";
 import { formatAuditHuman, formatAuditJson } from "./commands/audit.js";
 import {
+  createBaselineAfterAudit,
   formatBaselineCreateHuman,
   formatBaselineCreateJson,
   formatBaselineMigrateHuman,
@@ -467,6 +468,8 @@ export async function runCli(options: RunCliOptions = {}): Promise<number> {
     .option("--full-page-screenshots", "Capture full-page screenshots", false)
     .option("--no-baseline", "Do not compare against a baseline file")
     .option("--baseline <path>", "Compare against this baseline file")
+    .option("--create-baseline", "Create a baseline from this audit result", false)
+    .option("--force", "Overwrite an existing baseline when used with --create-baseline", false)
     .option("--fail-on-new", "Fail CI policy when new findings meet the severity threshold", false)
     .option("--no-fail-on-new", "Do not fail CI policy on new findings")
     .option(
@@ -502,7 +505,9 @@ precedence over configuration. Setting --minimum-severity alone does not enable
 the policy; at least one fail-on flag must be enabled.
 
 Enabled CI policy requires baseline comparison. Use a baseline file or remove
---no-baseline.
+--no-baseline. With --create-baseline, policy evaluation compares against any
+baseline that existed before this run; a baseline created during the same run is
+not used for policy evaluation.
 
 Exit codes:
   0  Audit completed; CI policy disabled or passed
@@ -568,6 +573,8 @@ ${AUDIT_HELP_DISCLAIMER}
         screenshots?: boolean;
         fullPageScreenshots?: boolean;
         baseline?: string | boolean;
+        createBaseline?: boolean;
+        force?: boolean;
         failOnNew?: boolean;
         noFailOnNew?: boolean;
         failOnRegression?: boolean;
@@ -709,6 +716,18 @@ ${AUDIT_HELP_DISCLAIMER}
             githubStepSummaryPath,
             progress,
           });
+
+          if (opts.createBaseline) {
+            if (result.status === "failed") {
+              throw new Error("Cannot create a baseline from a failed audit.");
+            }
+            await createBaselineAfterAudit({
+              cwd: resolveCwd(opts.cwd),
+              configPath: opts.config,
+              result,
+              force: opts.force,
+            });
+          }
 
           if (opts.json) {
             writeJson(formatAuditJson(result));

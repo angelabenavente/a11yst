@@ -61,32 +61,22 @@ describe("contribution policy documentation contracts", () => {
     expect(governance).toMatch(/do \*\*not\*\* block the first public package release|do not block the first public package release/i);
   });
 
-  it("does not publish internal CLA drafts or legal-review checklists", async () => {
-    const { access } = await import("node:fs/promises");
-    const repoRoot = getRepoRoot();
-    const unpublished = [
-      "docs/legal/CLA-DRAFT.md",
-      "docs/legal/CCLA-DRAFT.md",
-      "docs/legal/CLA-REVIEW-CHECKLIST.md",
-      "docs/ip-provenance.md",
-    ];
+  it("includes draft CLA and CCLA marked NOT ACTIVE with legal review markers", async () => {
+    const icla = await readDoc("docs/legal/CLA-DRAFT.md");
+    const ccla = await readDoc("docs/legal/CCLA-DRAFT.md");
+    const checklist = await readDoc("docs/legal/CLA-REVIEW-CHECKLIST.md");
 
-    for (const relativePath of unpublished) {
-      await expect(access(join(repoRoot, relativePath))).rejects.toMatchObject({
-        code: "ENOENT",
-      });
+    for (const draft of [icla, ccla]) {
+      expect(draft).toMatch(/DRAFT.*NOT ACTIVE|NOT ACTIVE/i);
+      expect(draft).toMatch(/LEGAL REVIEW REQUIRED/i);
+      expect(draft).toContain("[RECEIVING PARTY TO BE CONFIRMED BEFORE ACTIVATION]");
+      expect(draft).not.toMatch(/By submitting a pull request you agree/i);
     }
 
-    const publicDocs = [
-      await readRootDoc("CONTRIBUTING.md"),
-      await readDoc("docs/contributing-ip.md"),
-      await readDoc("docs/contribution-governance.md"),
-      await readDoc("docs/licensing.md"),
-    ].join("\n");
-
-    expect(publicDocs).not.toMatch(/CLA-DRAFT|CCLA-DRAFT|CLA-REVIEW-CHECKLIST|LEGAL REVIEW REQUIRED/i);
-    expect(publicDocs).not.toContain("[RECEIVING PARTY TO BE CONFIRMED BEFORE ACTIVATION]");
-    expect(publicDocs).not.toMatch(/CLA Assistant is active|branch protection/i);
+    expect(checklist).toContain("Receiving party legal identity");
+    expect(checklist).toMatch(/Pull requests may be opened before activation/i);
+    expect(checklist).toMatch(/CLA check must become a required merge gate/i);
+    expect(checklist).toMatch(/NOT ACTIVE/i);
   });
 
   it("updates licensing doc to distinguish MPL from future CLA rights", async () => {

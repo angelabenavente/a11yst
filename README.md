@@ -27,7 +27,7 @@ routes × flows × profiles × viewports
   → findings
   → baseline / regression (new, known, regressed, resolved, not-compared)
   → source analysis (when mappable)
-  → CI outputs (JSON, HTML, SARIF, JUnit, Markdown)
+  → CI outputs (JSON, HTML, SARIF, JUnit, Markdown, GitHub annotations)
   → contextual recommendations
 ```
 
@@ -55,15 +55,15 @@ Recommendations combine finding context, framework, source mapping when availabl
 
 ## Key capabilities
 
-- Project and framework detection (`detect`)
+- Project and framework detection (`detect`, `init`)
 - Route planning and adapter-based discovery (`routes`)
 - Accessibility profiles and viewports (`profiles`)
 - Interactive flows and checkpoints (`flows`)
 - Playwright + axe web auditing with evidence and screenshots (`audit`)
-- Baseline comparison during audit when a baseline file is present
+- Baseline comparison, classifications, and lifecycle labels
 - CI policy with deterministic exit codes
 - Machine-readable JSON results and portable run bundles
-- HTML, SARIF, JUnit, and Markdown outputs
+- HTML, SARIF, JUnit, Markdown, and GitHub annotation outputs
 - Offline report regeneration from stored results (`report`)
 - Source mapping, source ranking, and deterministic recommendations
 
@@ -138,8 +138,10 @@ Findings may include source-mapping fields and recommendation guidance. Source m
 
 ```bash
 pnpm a11yst detect --cwd examples/audit/html-accessible
+pnpm a11yst init --cwd examples/audit/html-accessible --force
 pnpm a11yst routes --cwd examples/audit/html-accessible
 pnpm a11yst profiles
+pnpm a11yst doctor --cwd examples/audit/html-accessible
 pnpm a11yst flows --cwd examples/flows/html-dialog
 ```
 
@@ -154,11 +156,13 @@ Audits can compare findings against a versioned baseline file (default `.a11yst/
 ```bash
 pnpm a11yst audit --cwd examples/audit/html-accessible --no-baseline
 pnpm a11yst audit --baseline .a11yst/baseline.json
+pnpm a11yst baseline create --cwd examples/audit/html-accessible
+pnpm a11yst baseline status --cwd examples/audit/html-accessible
 ```
 
 Lifecycle labels: `new`, `known`, `regressed`, `resolved`, `not-compared`.
 
-Comparison is coverage-sensitive: partial route lists or changed viewports produce `not-compared`, not silent resolutions. This checkout does not include `baseline`, `findings`, `classify`, or `unclassify` CLI commands. See [docs/baselines-and-governance.md](./docs/baselines-and-governance.md).
+Comparison is coverage-sensitive: partial route lists or changed viewports produce `not-compared`, not silent resolutions. See [docs/baselines-and-governance.md](./docs/baselines-and-governance.md).
 
 ## Reports
 
@@ -170,7 +174,9 @@ pnpm a11yst report --cwd examples/audit/html-accessible \
   .a11yst/results/runs/<auditId>/results.json --format markdown
 ```
 
-Supported `report --format` values: `html`, `sarif`, `junit`, `markdown`.
+Supported `report --format` values: `html`, `sarif`, `junit`, `markdown`, `github-annotations`.
+
+CI integration guide: **[docs/ci.md](./docs/ci.md)** (GitHub Actions and GitLab templates under [examples/ci/](./examples/ci/)).
 
 | Exit code | Meaning |
 | --- | --- |
@@ -184,12 +190,17 @@ Accessibility findings alone do not force exit `1`. Policy breaches exit `2` whe
 
 | Command | Purpose |
 | --- | --- |
+| `init` | Create a starter `a11yst.config.ts` |
 | `detect` | Detect platform, framework, and package manager |
 | `routes` | List resolved routes without a browser |
 | `profiles` | List accessibility profiles and limitations |
 | `flows` | List configured flows and checkpoints |
 | `audit` | Run an accessibility audit |
+| `doctor` | Check local environment readiness |
 | `report` | Regenerate reports from stored results |
+| `baseline` | Create, inspect, update, or migrate baselines |
+| `findings` | List findings from latest or explicit results |
+| `classify` / `unclassify` | Manage baseline classifications |
 
 Run `pnpm a11yst <command> --help` for options. This README does not list every flag.
 
@@ -201,15 +212,16 @@ a11yst does not certify compliance, automatically fix issues, or guarantee that 
 
 ## Documentation
 
-- [Getting Started](./docs/getting-started.md) — checkout setup, first audit, artifacts
+- [Getting Started](./docs/getting-started.md) — checkout setup, init, first audit, artifacts, baseline
 - [Configuration](./docs/configuration.md) — projects, routes, dev server, reports, policy
 - [Profiles](./docs/profiles.md) — default, keyboard, large-text, reduced-motion
 - [Flows](./docs/flows.md) — interactive checkpoints
 - [Baselines & governance](./docs/baselines-and-governance.md) — fingerprints, lifecycle, classifications
 - [Source analysis](./docs/source-analysis.md) — mapping, ranking, recommendations
-- [Reports](./docs/reports.md) — JSON, HTML, SARIF, JUnit, Markdown, regeneration
-- [CI guide](./docs/ci.md) — exit codes and policy
-- [Examples](./examples/) — audit, flows, profiles, and detection fixtures
+- [Reports](./docs/reports.md) — JSON, HTML, SARIF, JUnit, Markdown, GitHub annotations, regeneration
+- [CI guide](./docs/ci.md) — exit codes, policy, SARIF/JUnit/Markdown/GitHub outputs
+- [Examples](./examples/) — audit, baseline, flows, frameworks, profiles, and CI fixtures
+- [End-to-end demo](./examples/demo/a11yst-shop/README.md) — a11yst Shop showcase
 
 ## Contributing
 
