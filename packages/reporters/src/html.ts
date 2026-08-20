@@ -56,18 +56,6 @@ function sortFindings(findings: Finding[]): Finding[] {
   );
 }
 
-function safeHelpUrl(value: string | undefined): string | undefined {
-  if (!value) return undefined;
-  try {
-    const parsed = new URL(value);
-    return parsed.protocol === "http:" || parsed.protocol === "https:"
-      ? parsed.href
-      : undefined;
-  } catch {
-    return undefined;
-  }
-}
-
 function evidencePath(value: string): string {
   const normalized = value.replaceAll("\\", "/").replace(/^(\.\/|\/)+/, "");
   const path = normalized
@@ -218,12 +206,6 @@ function renderFinding(
   const viewport = finding.viewport ?? "Not available";
   const status = findingStatus(finding, runs);
   const screenshot = findingScreenshot(finding, runs);
-  const validHelpUrl = safeHelpUrl(finding.helpUrl);
-  const help = finding.helpUrl
-    ? validHelpUrl
-      ? `<a href="${escapeHtml(validHelpUrl)}">${escapeHtml(finding.helpUrl)}</a>`
-      : escapeHtml(finding.helpUrl)
-    : "Not available";
   const description = finding.description ?? finding.message ?? "No description provided.";
   const screenshotMarkup = screenshot
     ? `<img class="evidence" src="${escapeHtml(evidencePath(screenshot))}" alt="${escapeHtml(
@@ -251,7 +233,6 @@ function renderFinding(
           ${detail("Target", finding.target.join(", "))}
           ${detail("Failure summary", finding.failureSummary)}
           ${detail("Standards", finding.standards.join(", "))}
-          <div><dt>Help URL</dt><dd>${help}</dd></div>
           ${detail("Fingerprint", finding.fingerprint)}
           ${detail("Automation", finding.automation ?? "automated")}
           ${detail("Confidence", finding.confidence ?? "high")}
@@ -754,7 +735,6 @@ export function renderHtmlReport(
       <h3 id="profile-coverage-title">Profile coverage</h3>
       ${renderProfileCoverage(auditResult)}
       <div class="disclaimers">
-        <p>Accessibility profiles approximate test conditions. They do not reproduce the complete experience of disabled users or assistive technologies.</p>
         <p>a11yst does not certify WCAG conformance.</p>
         <p>Automated checks cover only part of accessibility.</p>
         <p>Manual review and testing with disabled users remain necessary.</p>

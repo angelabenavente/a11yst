@@ -84,7 +84,9 @@ function run(overrides: Partial<AuditRunResult> = {}): AuditRunResult {
   };
 }
 
-function webProject(overrides: Partial<ResolvedWebProject> = {}): ResolvedWebProject {
+function webProject(
+  overrides: Partial<ResolvedWebProject> = {},
+): ResolvedWebProject {
   return {
     name: "site",
     rootDir: ".",
@@ -132,7 +134,9 @@ function webProject(overrides: Partial<ResolvedWebProject> = {}): ResolvedWebPro
   };
 }
 
-function result(overrides: Partial<AuditExecutionResult> = {}): AuditExecutionResult {
+function result(
+  overrides: Partial<AuditExecutionResult> = {},
+): AuditExecutionResult {
   const findings = [finding()];
   const runs = [
     run({
@@ -161,7 +165,8 @@ function result(overrides: Partial<AuditExecutionResult> = {}): AuditExecutionRe
       findingCount: 1,
       findingsBySeverity: {
         critical: 1,
-        high: 0,        medium: 0,
+        high: 0,
+        medium: 0,
         minor: 0,
       },
     },
@@ -200,9 +205,9 @@ function result(overrides: Partial<AuditExecutionResult> = {}): AuditExecutionRe
 
 afterEach(async () => {
   await Promise.all(
-    temporaryDirectories.splice(0).map((directory) =>
-      rm(directory, { recursive: true, force: true }),
-    ),
+    temporaryDirectories
+      .splice(0)
+      .map((directory) => rm(directory, { recursive: true, force: true })),
   );
 });
 
@@ -223,17 +228,6 @@ describe("renderHtmlReport", () => {
     expect(html).not.toContain(dangerous);
     expect(html).toContain("&lt;/script&gt;&lt;img");
     expect(html).toContain("&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt;");
-  });
-
-  it("links only http and https help URLs", () => {
-    const unsafe = renderHtmlReport(
-      result({ findings: [finding({ helpUrl: "javascript:alert(1)" })] }),
-    );
-    expect(unsafe).toContain("javascript:alert(1)");
-    expect(unsafe).not.toContain('href="javascript:');
-
-    const safe = renderHtmlReport(result());
-    expect(safe).toContain('href="https://example.com/image-alt"');
   });
 
   it("renders framework integration, route table, adapter diagnostics, and readiness strategy", () => {
@@ -289,9 +283,13 @@ describe("renderHtmlReport", () => {
     expect(html).toContain("Navigation failed");
     expect(html).toContain("Profile evidence");
     expect(html).toContain("Profile coverage");
-    expect(html).toContain("Accessibility profiles approximate test conditions.");
+    expect(html).not.toContain(
+      "Accessibility profiles approximate test conditions.",
+    );
     expect(html).toContain("a11yst does not certify WCAG conformance.");
-    expect(html).toContain("Automated checks cover only part of accessibility.");
+    expect(html).toContain(
+      "Automated checks cover only part of accessibility.",
+    );
     expect(html).toContain(
       "Manual review and testing with disabled users remain necessary.",
     );
@@ -357,13 +355,22 @@ describe("renderHtmlReport", () => {
     const html = renderHtmlReport(result(), { auditId: "custom-audit" });
     expect(html.startsWith("<!doctype html>")).toBe(true);
     expect(html).toContain('<html lang="en">');
-    expect(html).toContain("<title>a11yst accessibility report — custom-audit</title>");
+    expect(html).toContain(
+      "<title>a11yst accessibility report — custom-audit</title>",
+    );
     expect(html).toContain('<a class="skip-link" href="#main-content">');
     expect(html).toContain('<main id="main-content">');
     expect(html).toContain("<header");
     expect(html).toContain("<nav");
     expect(html).toContain("<footer");
-    for (const name of ["severity", "project", "route", "viewport", "rule", "status"]) {
+    for (const name of [
+      "severity",
+      "project",
+      "route",
+      "viewport",
+      "rule",
+      "status",
+    ]) {
       expect(html).toContain(`for="filter-${name}"`);
       expect(html).toContain(`id="filter-${name}"`);
     }
@@ -400,7 +407,11 @@ describe("renderHtmlReport", () => {
             },
           ],
           findingsBySource: { axe: 1, a11yst: 0 },
-          findingsByAutomation: { automated: 1, heuristic: 0, "manual-review": 0 },
+          findingsByAutomation: {
+            automated: 1,
+            heuristic: 0,
+            "manual-review": 0,
+          },
           findingsByConfidence: { high: 1, medium: 0, low: 0 },
           manualReviewPending: 0,
         },

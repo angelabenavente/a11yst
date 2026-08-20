@@ -137,10 +137,6 @@ export interface ExecuteAuditOptions {
 const LIMITATIONS: string[] = [
   "Automated checks do not establish accessibility conformance.",
   "Automated checks cover only part of accessibility. Manual review and testing with disabled users remain necessary.",
-  "Accessibility profiles approximate test conditions. They do not reproduce the complete experience of disabled users or assistive technologies.",
-  "The large-text profile uses injected text scaling and does not verify full 400% reflow.",
-  "The keyboard profile traverses focus but does not operate every control or detect all focus indicator styles.",
-  "The reduced-motion profile emulates prefers-reduced-motion but cannot judge essential motion automatically.",
 ];
 
 function buildEnvironment(headed: boolean | undefined): AuditExecutionResult["environment"] {
