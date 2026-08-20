@@ -142,8 +142,8 @@ describe("CI documentation", () => {
       engines: { node: string };
       packageManager: string;
     };
-    expect(readFileSync(CI_PATHS.nvmrc, "utf8").trim()).toBe("20");
-    expect(pkg.engines.node).toContain("20");
+    expect(readFileSync(CI_PATHS.nvmrc, "utf8").trim()).toBe("22.12.0");
+    expect(pkg.engines.node).toContain("22.12");
     expect(pkg.packageManager).toContain("pnpm@");
     expect(examplesReadme).toContain(".nvmrc");
     expect(examplesReadme).toContain("packageManager");

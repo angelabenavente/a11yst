@@ -36,7 +36,7 @@ a11yst uses [Semantic Versioning](https://semver.org/) as a format.
 ## Preconditions
 
 - Clean working tree on the intended release commit.
-- Node.js >= 20 and pnpm 9.15.0 available.
+- Node.js >= 22.12 and pnpm 9.15.0 available.
 - License recorded in root `LICENSE` and all publishable package manifests (`MPL-2.0`).
 - Repository metadata confirmed for all publishable packages.
 - `publishConfig.access` confirmed for scoped packages when publishing publicly.

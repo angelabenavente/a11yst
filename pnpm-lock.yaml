@@ -890,8 +890,8 @@ importers:
         specifier: workspace:*
         version: link:../types
       '@angular/compiler':
-        specifier: 19.2.14
-        version: 19.2.14
+        specifier: 20.3.29
+        version: 20.3.29
       typescript:
         specifier: ^5.7.2
         version: 5.9.3
@@ -1179,9 +1179,9 @@ packages:
       '@angular/core':
         optional: true
 
-  '@angular/compiler@19.2.14':
-    resolution: {integrity: sha512-ZqJDYOdhgKpVGNq3+n/Gbxma8DVYElDsoRe0tvNtjkWBVdaOxdZZUqmJ3kdCBsqD/aqTRvRBu0KGo9s2fCChkA==}
-    engines: {node: ^18.19.1 || ^20.11.1 || >=22.0.0}
+  '@angular/compiler@20.3.29':
+    resolution: {integrity: sha512-AgR6Wq9ht5mpliSkJoUvWBILVLFdM7cEQ42pQIlPfGivmVp6Pe0eFqZezsmdDqlu4lsfWBei/FpzQbwak46DLw==}
+    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
 
   '@angular/core@18.2.14':
     resolution: {integrity: sha512-BIPrCs93ZZTY9ym7yfoTgAQ5rs706yoYeAdrgc8kh/bDbM9DawxKlgeKBx2FLt09Y0YQ1bFhKVp0cV4gDEaMxQ==}
@@ -8603,7 +8603,7 @@ snapshots:
     optionalDependencies:
       '@angular/core': 18.2.14(rxjs@7.8.2)(zone.js@0.14.10)
 
-  '@angular/compiler@19.2.14':
+  '@angular/compiler@20.3.29':
     dependencies:
       tslib: 2.8.1
 

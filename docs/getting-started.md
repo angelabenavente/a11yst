@@ -6,7 +6,7 @@ Published-package installation instructions will be added with the first public 
 
 ## Prerequisites
 
-- Node.js `>= 20` (see `.nvmrc` in the repository root)
+- Node.js `>= 22.12`
 - pnpm `9.x` (Corepack reads `packageManager` from `package.json`)
 - Playwright Chromium for browser audits
 

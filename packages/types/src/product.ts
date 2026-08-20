@@ -16,7 +16,7 @@ export const productMetadata = {
   /** Semantic version exposed by the CLI. */
   version: "1.0.0",
   /** Minimum supported Node.js major.minor. */
-  minNodeVersion: "20.0.0",
+  minNodeVersion: "22.12.0",
 } as const;
 
 /** Structured identity for documentation and downstream release phases. */

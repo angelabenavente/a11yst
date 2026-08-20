@@ -36,7 +36,7 @@
     "clean": "rm -rf dist *.tsbuildinfo"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22.12.0"
   },
   "dependencies": {
     "@a11yst/adapters": "workspace:*",

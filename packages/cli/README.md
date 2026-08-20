@@ -9,7 +9,7 @@ Automated accessibility checks do not establish WCAG conformance and do not repl
 
 ## Requirements
 
-- Node.js **>= 20**
+- Node.js **>= 22.12**
 - Playwright Chromium for browser-based audits (installed separately; see below)
 
 ## Installation

@@ -19,7 +19,7 @@ or CDN.
 
 ## Requirements
 
-- Node.js `>= 20` (see `.nvmrc`)
+- Node.js `>= 22.12`
 - pnpm `9.x`
 - A Chromium build for Playwright (`pnpm exec playwright install chromium`,
   run once from the repo root after `pnpm install`)

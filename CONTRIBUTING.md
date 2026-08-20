@@ -4,7 +4,7 @@ Thank you for helping improve a11yst. This document describes the real developme
 
 ## Prerequisites
 
-- Node.js **>= 20** (see `.nvmrc`)
+- Node.js **>= 22.12**
 - pnpm **9.15.0** (`packageManager` in root `package.json`)
 - Playwright Chromium for browser-based tests:
 

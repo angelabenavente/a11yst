@@ -154,7 +154,7 @@ Documented in [release.md](./release.md):
 
 - Location: `packages/cli/README.md`
 - Included in `@a11yst/cli` tarball.
-- Self-contained: Node >= 20, browser requirement, not-yet-published install wording, accessibility caveat.
+- Self-contained: Node >= 22.12, browser requirement, not-yet-published install wording, accessibility caveat.
 - Does not link to monorepo-only relative docs paths.
 
 ## Consumer install validation

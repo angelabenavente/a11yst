@@ -4,7 +4,7 @@ Use this checklist to validate a11yst against an external application without mo
 
 ## Prerequisites
 
-- Node.js 20 or newer
+- Node.js 22.12 or newer
 - pnpm 9.15 (or the version pinned in the a11yst repository)
 - Playwright Chromium for browser audits
 

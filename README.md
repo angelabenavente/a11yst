@@ -99,7 +99,7 @@ pnpm exec playwright install chromium
 pnpm a11yst --help
 ```
 
-Requirements: Node.js `>= 20` (see `.nvmrc`), pnpm `9.15.0`, and Playwright Chromium for browser audits.
+Requirements: Node.js `>= 22.12`, pnpm `9.15.0`, and Playwright Chromium for browser audits.
 
 The workspace exposes the CLI as `pnpm a11yst`, which runs `node packages/cli/dist/bin.js`.
 

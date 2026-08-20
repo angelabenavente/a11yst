@@ -94,7 +94,7 @@ describe("release package metadata", () => {
     const readme = await readFile(join(getRepoRoot(), "packages/cli/README.md"), "utf8");
     expect(readme).toContain("@a11yst/cli");
     expect(readme).toContain("a11yst");
-    expect(readme).toContain("Node.js **>= 20**");
+    expect(readme).toContain("Node.js **>= 22.12**");
     expect(readme).toContain("pnpm exec playwright install chromium");
     expect(readme).toContain("not published yet");
     expect(readme).toContain("MPL-2.0");

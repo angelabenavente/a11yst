@@ -56,8 +56,11 @@ describe.sequential("release consumer install", () => {
       let auditPort = 0;
 
       try {
-        const nodeMajor = Number(process.version.slice(1).split(".")[0]);
-        expect(nodeMajor, "consumer install validation requires Node 20+").toBeGreaterThanOrEqual(20);
+        const [nodeMajor = 0, nodeMinor = 0] = process.versions.node.split(".").map(Number);
+        expect(
+          nodeMajor > 22 || (nodeMajor === 22 && nodeMinor >= 12),
+          "consumer install validation requires Node 22.12+",
+        ).toBe(true);
 
         const { tarballByPackage, publishableClosure } = await packPublishableClosure(packsDir);
         expect(tarballByPackage.size).toBe(27);

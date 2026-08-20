@@ -31,7 +31,7 @@ These files are **inert examples**. They do not run in the a11yst repository its
 The GitHub templates read Node from `.nvmrc` via `actions/setup-node`. This repository declares:
 
 - `engines.node`: `>=20`
-- `.nvmrc`: `20`
+- `.nvmrc`: `22.12.0`
 - `packageManager`: `pnpm@9.15.0`
 
 In your project:
