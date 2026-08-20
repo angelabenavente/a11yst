@@ -45,12 +45,12 @@ During day-to-day work, run the smallest relevant suite. Before merging release-
 
 | Layer | Command | Notes |
 | --- | --- | --- |
-| Unit | `pnpm test:unit` | Fast; no browser |
-| Integration | `pnpm test:integration` | Includes browser audits; slower |
-| Release packaging | `pnpm vitest run tests/integration/release/package-tarballs.test.ts` | Real `pnpm pack` |
-| Consumer install | `pnpm vitest run tests/integration/release/consumer-install.test.ts` | External temp consumer; real Chromium |
+| Unit | `pnpm test:unit` | Parallel files; no browser |
+| Integration | `pnpm test:integration` | Serial files; includes isolated browser, server, and process tests |
+| Release packaging | `pnpm vitest run --config vitest.integration.config.ts tests/integration/release/package-tarballs.test.ts` | Real `pnpm pack` |
+| Consumer install | `pnpm vitest run --config vitest.integration.config.ts tests/integration/release/consumer-install.test.ts` | External temp consumer; real Chromium |
 
-Run release integration tests **sequentially**, not in parallel.
+Vitest uses separate unit and integration configurations. Unit files may run concurrently; integration files remain serialized because some own fixed ports or child-process lifecycle. Run release integration tests **sequentially**, not in parallel.
 
 Do not commit focused tests (`.only`) or unexpected skipped tests.
 

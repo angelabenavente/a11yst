@@ -70,8 +70,8 @@ From repository root after a successful build:
 
 ```bash
 pnpm build
-pnpm vitest run tests/unit/release
-pnpm vitest run tests/integration/release/package-tarballs.test.ts
+pnpm vitest run --config vitest.config.ts tests/unit/release
+pnpm vitest run --config vitest.integration.config.ts tests/integration/release/package-tarballs.test.ts
 ```
 
 Manual spot-check:

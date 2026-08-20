@@ -242,4 +242,4 @@ pnpm lint
 pnpm test:unit
 ```
 
-Integration tests (`pnpm test:integration`) require Playwright Chromium and exercise browser audits.
+Unit files run in parallel. Integration tests (`pnpm test:integration`) use a separate single-worker configuration because they exercise Playwright Chromium, local servers, fixed ports, and child processes.
