@@ -6,8 +6,6 @@ import { parse as parseYaml } from "yaml";
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "../../..");
 
 export const CI_PATHS = {
-  repositoryQuality: join(repoRoot, ".github/workflows/quality.yml"),
-  repositoryReleaseGate: join(repoRoot, ".github/workflows/release-gate.yml"),
   githubBase: join(repoRoot, "examples/ci/github-actions/a11yst-ci.yml"),
   githubCodeScanning: join(
     repoRoot,

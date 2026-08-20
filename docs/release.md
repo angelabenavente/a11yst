@@ -57,13 +57,6 @@ pnpm ci:release
 
 Optional before a major release: broader integration and demo suites when behavior outside packaging/docs changed.
 
-## Automated gates
-
-- [`.github/workflows/quality.yml`](../.github/workflows/quality.yml) runs the repository quality gate and targeted integration tests on pull requests and pushes to `main`.
-- [`.github/workflows/release-gate.yml`](../.github/workflows/release-gate.yml) runs the complete quality, production dependency audit, packaging, and consumer-install gates for `v*` tags or manual dispatch.
-- Both workflows use the pinned Node and pnpm versions from repository metadata, frozen lockfile installation, read-only repository permissions, and an explicit Playwright Chromium installation.
-- The release gate validates a release candidate; it never publishes packages.
-
 ## Packaging
 
 - Build all packages before `pnpm pack`.
