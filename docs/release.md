@@ -48,19 +48,21 @@ a11yst uses [Semantic Versioning](https://semver.org/) as a format.
 From repository root:
 
 ```bash
-pnpm build
-pnpm typecheck
-pnpm lint
-pnpm test:unit
-pnpm vitest run tests/unit/release
-pnpm vitest run tests/unit/docs
-pnpm vitest run tests/integration/release/package-tarballs.test.ts
-pnpm vitest run tests/integration/release/consumer-install.test.ts
+pnpm ci:quality
+pnpm exec playwright install chromium
+pnpm ci:release
 ```
 
-Run the two release integration tests sequentially.
+`ci:quality` runs build, typecheck, lint, and all unit tests. `ci:release` audits the published packages' production dependency paths, verifies release and documentation contracts, packs the publishable closure, and installs it in a clean consumer project. The two release integration tests run sequentially. Example applications are not shipped and their dependency paths are reported separately from the publication gate.
 
 Optional before a major release: broader integration and demo suites when behavior outside packaging/docs changed.
+
+## Automated gates
+
+- [`.github/workflows/quality.yml`](../.github/workflows/quality.yml) runs the repository quality gate and targeted integration tests on pull requests and pushes to `main`.
+- [`.github/workflows/release-gate.yml`](../.github/workflows/release-gate.yml) runs the complete quality, production dependency audit, packaging, and consumer-install gates for `v*` tags or manual dispatch.
+- Both workflows use the pinned Node and pnpm versions from repository metadata, frozen lockfile installation, read-only repository permissions, and an explicit Playwright Chromium installation.
+- The release gate validates a release candidate; it never publishes packages.
 
 ## Packaging
 

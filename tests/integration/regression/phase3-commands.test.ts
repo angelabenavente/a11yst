@@ -96,7 +96,7 @@ describe("Phase 3/5 regression: detect/init/doctor/routes never touch a browser 
     });
   });
 
-  it("@a11yst/browser is not a direct CLI dependency; artifacts only for offline report writers", async () => {
+  it("@a11yst/browser and artifact writers reach the CLI only through core", async () => {
     async function readManifest(pkg: string): Promise<{ dependencies?: Record<string, string> }> {
       const here = dirname(fileURLToPath(import.meta.url));
       const manifestPath = resolve(here, "../../../packages", pkg, "package.json");
@@ -130,10 +130,10 @@ describe("Phase 3/5 regression: detect/init/doctor/routes never touch a browser 
     // @a11yst/browser reaches the CLI transitively — but only that one path.
     expect(Object.keys(cliManifest.dependencies ?? {})).toContain("@a11yst/core");
     expect(Object.keys(cliManifest.dependencies ?? {})).toContain("@a11yst/reporters");
-    expect(Object.keys(cliManifest.dependencies ?? {})).toContain("@a11yst/artifacts");
+    expect(Object.keys(cliManifest.dependencies ?? {})).not.toContain("@a11yst/artifacts");
     expect(Object.keys(cliManifest.dependencies ?? {})).not.toContain("@a11yst/browser");
-    // `report --format` reads persisted results and writes offline via core input factories + artifact writers.
-    expect(reportSource).toMatch(/@a11yst\/artifacts/);
+    // `report --format` delegates persisted-result emission to core's canonical report boundary.
+    expect(reportSource).not.toMatch(/@a11yst\/artifacts/);
     expect(reportSource).toMatch(/@a11yst\/core/);
     expect(reportSource).not.toMatch(/@a11yst\/browser|playwright/i);
     expect(cliSource).not.toMatch(/^import .*["']@a11yst\/core["'];?$/m);

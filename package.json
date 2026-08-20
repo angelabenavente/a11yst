@@ -15,6 +15,10 @@
     "test": "vitest run",
     "test:unit": "vitest run tests/unit",
     "test:integration": "vitest run tests/integration",
+    "ci:quality": "pnpm build && pnpm typecheck && pnpm lint && pnpm test:unit",
+    "ci:integration": "vitest run tests/integration/regression tests/integration/cli/cli.test.ts tests/integration/cli/report-cli.test.ts tests/integration/source-analysis/core-policy.test.ts tests/integration/browser/audit-engine.test.ts",
+    "audit:published": "node scripts/audit-published-dependencies.mjs",
+    "ci:release": "pnpm audit:published && vitest run tests/unit/release tests/unit/docs && vitest run tests/integration/release/package-tarballs.test.ts && vitest run tests/integration/release/consumer-install.test.ts",
     "a11yst": "node packages/cli/dist/bin.js",
     "demo": "node examples/demo/a11yst-shop/scripts/demo.mjs",
     "clean": "pnpm -r --filter './packages/*' run clean && rm -rf node_modules/.vite coverage"
