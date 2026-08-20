@@ -583,9 +583,6 @@ importers:
       '@a11yst/adapters':
         specifier: workspace:*
         version: link:../adapters
-      '@a11yst/artifacts':
-        specifier: workspace:*
-        version: link:../artifacts
       '@a11yst/baseline':
         specifier: workspace:*
         version: link:../baseline
@@ -601,9 +598,6 @@ importers:
       '@a11yst/flows':
         specifier: workspace:*
         version: link:../flows
-      '@a11yst/junit':
-        specifier: workspace:*
-        version: link:../junit
       '@a11yst/policy':
         specifier: workspace:*
         version: link:../policy
@@ -613,9 +607,6 @@ importers:
       '@a11yst/reporters':
         specifier: workspace:*
         version: link:../reporters
-      '@a11yst/sarif':
-        specifier: workspace:*
-        version: link:../sarif
       '@a11yst/types':
         specifier: workspace:*
         version: link:../types

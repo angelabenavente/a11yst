@@ -47,6 +47,17 @@ export {
 export { applySourceAnalysis } from "./apply-source-analysis.js";
 export { applyPolicyEvaluation } from "./policy-evaluation.js";
 export {
+  emitReportArtifact,
+  type EmittableReportFormat,
+  type EmitReportArtifactOptions,
+  type EmitReportArtifactOutput,
+  type EmitHtmlReportOutput,
+  type EmitSarifReportOutput,
+  type EmitJunitReportOutput,
+  type EmitMarkdownReportOutput,
+  type EmitGitHubAnnotationsReportOutput,
+} from "./emit-report.js";
+export {
   buildReportManifestEntry,
   buildReportsManifest,
   buildJunitReportReference,

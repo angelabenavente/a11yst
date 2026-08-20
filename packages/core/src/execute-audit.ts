@@ -7,7 +7,6 @@ import {
   type EvidenceSink,
 } from "@a11yst/browser";
 import type { FlowEvidenceSink } from "@a11yst/flows";
-import { generateHtmlReport } from "@a11yst/reporters";
 import type {
   AccessibilityProfile,
   AuditExecutionResult,
@@ -34,22 +33,19 @@ import { applyBaselineComparison } from "./baseline-comparison.js";
 import { applySourceAnalysis } from "./apply-source-analysis.js";
 import { applyPolicyEvaluation } from "./policy-evaluation.js";
 import {
-  generateSarifReport,
   shouldGenerateSarifForAuditResult,
 } from "./generate-sarif-report.js";
 import {
-  generateJunitReport,
   shouldGenerateJunitForAuditResult,
 } from "./generate-junit-report.js";
 import {
-  generateMarkdownReportArtifact,
   generateMarkdownContentFromAuditResult,
   shouldGenerateMarkdownForAuditResult,
 } from "./generate-markdown-report.js";
 import {
-  generateGitHubAnnotationsReport,
   shouldGenerateGitHubAnnotationsForAuditResult,
 } from "./generate-github-annotations-report.js";
+import { emitReportArtifact } from "./emit-report.js";
 import {
   buildReportManifestEntry,
   buildJunitReportReference,
@@ -678,9 +674,10 @@ export async function executeAudit(
   if (options.html ?? true) {
     result.artifacts = relativeArtifactReferences(writer, true);
     try {
-      await generateHtmlReport({
-        auditResult: result,
-        outputDirectory: writer.runDirectory,
+      await emitReportArtifact({
+        format: "html",
+        result,
+        bundleDirectory: writer.runDirectory,
         auditId: writer.auditId,
       });
       reportGenerated = true;
@@ -704,7 +701,8 @@ export async function executeAudit(
         ?? (options.sarif?.outputPath
           ? resolve(config.configDir, options.sarif.outputPath)
           : undefined);
-      const sarifReport = await generateSarifReport({
+      const sarifReport = await emitReportArtifact({
+        format: "sarif",
         result,
         bundleDirectory: writer.runDirectory,
         ...(externalPath ? { externalOutputPath: externalPath } : {}),
@@ -731,7 +729,8 @@ export async function executeAudit(
         ?? (options.junit?.outputPath
           ? resolve(config.configDir, options.junit.outputPath)
           : undefined);
-      const junitReport = await generateJunitReport({
+      const junitReport = await emitReportArtifact({
+        format: "junit",
         result,
         bundleDirectory: writer.runDirectory,
         ...(externalPath ? { externalOutputPath: externalPath } : {}),
@@ -759,7 +758,8 @@ export async function executeAudit(
         ?? (options.markdown?.outputPath
           ? resolve(config.configDir, options.markdown.outputPath)
           : undefined);
-      const markdownReport = await generateMarkdownReportArtifact({
+      const markdownReport = await emitReportArtifact({
+        format: "markdown",
         result,
         bundleDirectory: writer.runDirectory,
         ...(externalPath ? { externalOutputPath: externalPath } : {}),
@@ -791,7 +791,8 @@ export async function executeAudit(
         ?? (options.githubAnnotations?.outputPath
           ? resolve(config.configDir, options.githubAnnotations.outputPath)
           : undefined);
-      const githubReport = await generateGitHubAnnotationsReport({
+      const githubReport = await emitReportArtifact({
+        format: "github-annotations",
         result,
         bundleDirectory: writer.runDirectory,
         ...(externalPath ? { externalOutputPath: externalPath } : {}),

@@ -145,6 +145,53 @@ describe("CLI report integration (persisted JSON only)", () => {
 
   it.each([
     {
+      format: "sarif",
+      output: "published/a11yst.sarif",
+      resultPathKey: "sarifPath",
+      expectedContent: '"version": "2.1.0"',
+    },
+    {
+      format: "github-annotations",
+      output: "published/github-annotations.txt",
+      resultPathKey: "githubAnnotationsPath",
+      expectedContent: "",
+    },
+  ])("generates $format through the shared report emitter", async ({
+    format,
+    output,
+    resultPathKey,
+    expectedContent,
+  }) => {
+    await withTempDir(`a11yst-report-${format}-`, async (dir) => {
+      await writeResult(join(dir, "run"));
+      const result = await runCli(
+        [
+          "report",
+          "run/results.json",
+          "--format",
+          format,
+          "--output",
+          output,
+          "--json",
+        ],
+        { cwd: dir },
+      );
+
+      expect(result.code).toBe(0);
+      const payload = JSON.parse(result.stdout) as Record<string, unknown>;
+      const generatedPath = payload[resultPathKey];
+      expect(generatedPath).toBe(join(await realpath(dir), output));
+      const contents = await readFile(String(generatedPath), "utf8");
+      if (expectedContent) {
+        expect(contents).toContain(expectedContent);
+      } else {
+        expect(contents).toBe("");
+      }
+    });
+  });
+
+  it.each([
+    {
       name: "missing result",
       path: "missing.json",
       contents: undefined,

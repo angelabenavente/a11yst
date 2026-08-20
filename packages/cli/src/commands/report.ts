@@ -1,25 +1,13 @@
 import { readFile } from "node:fs/promises";
-import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
-import { writeExternalGitHubAnnotationsArtifact, writeExternalJunitArtifact, writeExternalMarkdownArtifact, writeExternalSarifArtifact } from "@a11yst/artifacts";
-import {
-  createGitHubAnnotationsInputFromAuditResult,
-  createJunitInputFromAuditResult,
-  createMarkdownInputFromAuditResult,
-  createSarifInputFromAuditResult,
-} from "@a11yst/core";
+import { basename, dirname, isAbsolute, relative, resolve, sep } from "node:path";
+import { emitReportArtifact } from "@a11yst/core";
 import {
   findConfigPath,
   loadConfig,
   DEFAULT_OUTPUT_DIR,
 } from "@a11yst/config";
-import {
-  generateGitHubAnnotations,
-  generateHtmlReport,
-  generateMarkdownReport,
-  readAuditResult,
-} from "@a11yst/reporters";
-import { generateJunit, serializeJunit } from "@a11yst/junit";
-import { generateSarif, serializeSarif } from "@a11yst/sarif";
+import { readAuditResult } from "@a11yst/reporters";
+import type { AuditExecutionResult, ResolvedCiPolicyConfig } from "@a11yst/types";
 
 export type ReportFormat = "html" | "sarif" | "junit" | "markdown" | "github-annotations";
 
@@ -184,6 +172,24 @@ async function resolveOutputRoot(cwd: string): Promise<string> {
   return resolve(config.configDir, config.outputDir);
 }
 
+async function resolveReportPolicy(cwd: string): Promise<ResolvedCiPolicyConfig | undefined> {
+  if (!findConfigPath(cwd)) {
+    return undefined;
+  }
+  return (await loadConfig({ cwd })).ci;
+}
+
+function artifactReportPaths(result: AuditExecutionResult): {
+  sarif?: string;
+  junit?: string;
+} | undefined {
+  const paths = {
+    ...(result.reports?.sarif?.path ? { sarif: result.reports.sarif.path } : {}),
+    ...(result.reports?.junit?.path ? { junit: result.reports.junit.path } : {}),
+  };
+  return Object.keys(paths).length > 0 ? paths : undefined;
+}
+
 async function resolveLatest(cwd: string): Promise<{
   resultsPath: string;
   auditId?: string;
@@ -256,81 +262,70 @@ export async function runReport(options: RunReportOptions): Promise<ReportResult
 
   if (format === "sarif") {
     const sarifPath = resolveSarifOutputPath(cwd, options.output, resultsPath);
-    const input = createSarifInputFromAuditResult(auditResult);
-    const generation = generateSarif(input, { includeResolvedSummary: true });
-    const serialized = serializeSarif(generation.log);
-    const writtenPath = await writeExternalSarifArtifact({
-      targetPath: sarifPath,
-      serializedSarif: serialized,
+    const generation = await emitReportArtifact({
+      format: "sarif",
+      result: auditResult,
+      bundleDirectory: dirname(sarifPath),
+      bundleRelativePath: basename(sarifPath),
     });
 
     return {
       format: "sarif",
       status: "generated",
       resultsPath,
-      sarifPath: writtenPath,
+      sarifPath,
       ...(auditResult.auditId ?? latest?.auditId
         ? { auditId: auditResult.auditId ?? latest?.auditId }
         : {}),
-      summary: {
-        rules: generation.summary.rules,
-        results: generation.summary.results,
-        locatedResults: generation.summary.locatedResults,
-        unlocatedResults: generation.summary.unlocatedResults,
-      },
+      summary: generation.resultReference.summary,
     };
   }
 
   if (format === "junit") {
     const junitPath = resolveJunitOutputPath(cwd, options.output, resultsPath);
-    const input = createJunitInputFromAuditResult(auditResult);
-    const generation = generateJunit(input);
-    const serialized = serializeJunit(generation.document);
-    const writtenPath = await writeExternalJunitArtifact({
-      targetPath: junitPath,
-      serializedJunit: serialized,
+    const policy = await resolveReportPolicy(cwd);
+    const generation = await emitReportArtifact({
+      format: "junit",
+      result: auditResult,
+      bundleDirectory: dirname(junitPath),
+      bundleRelativePath: basename(junitPath),
+      ...(policy ? { policy } : {}),
     });
 
     return {
       format: "junit",
       status: "generated",
       resultsPath,
-      junitPath: writtenPath,
+      junitPath,
       ...(auditResult.auditId ?? latest?.auditId
         ? { auditId: auditResult.auditId ?? latest?.auditId }
         : {}),
-      summary: {
-        tests: generation.summary.tests,
-        failures: generation.summary.failures,
-        errors: generation.summary.errors,
-        skipped: generation.summary.skipped,
-        timeSeconds: generation.summary.timeSeconds,
-      },
+      summary: generation.resultReference.summary,
     };
   }
 
   if (format === "markdown") {
     const markdownPath = resolveMarkdownOutputPath(cwd, options.output, resultsPath);
-    const input = createMarkdownInputFromAuditResult(auditResult, undefined, auditResult.reports);
-    const generation = generateMarkdownReport(input);
-    const writtenPath = await writeExternalMarkdownArtifact({
-      targetPath: markdownPath,
-      serializedMarkdown: generation.markdown,
+    const policy = await resolveReportPolicy(cwd);
+    const paths = artifactReportPaths(auditResult);
+    const generation = await emitReportArtifact({
+      format: "markdown",
+      result: auditResult,
+      bundleDirectory: dirname(markdownPath),
+      bundleRelativePath: basename(markdownPath),
+      ...(policy ? { policy } : {}),
+      ...(paths ? { artifactReportPaths: paths } : {}),
     });
 
     return {
       format: "markdown",
       status: "generated",
       resultsPath,
-      markdownPath: writtenPath,
+      markdownPath,
       ...(auditResult.auditId ?? latest?.auditId
         ? { auditId: auditResult.auditId ?? latest?.auditId }
         : {}),
-      summary: {
-        findings: generation.summary.findings,
-        policyBreaches: generation.summary.policyBreaches,
-        truncatedFindings: generation.summary.truncatedFindings,
-      },
+      summary: generation.resultReference.summary,
     };
   }
 
@@ -340,37 +335,34 @@ export async function runReport(options: RunReportOptions): Promise<ReportResult
       options.output,
       resultsPath,
     );
-    const input = createGitHubAnnotationsInputFromAuditResult(auditResult);
-    const generation = generateGitHubAnnotations(input);
-    const writtenPath = await writeExternalGitHubAnnotationsArtifact({
-      targetPath: githubAnnotationsPath,
-      serializedCommands: generation.commands,
+    const policy = await resolveReportPolicy(cwd);
+    const generation = await emitReportArtifact({
+      format: "github-annotations",
+      result: auditResult,
+      bundleDirectory: dirname(githubAnnotationsPath),
+      bundleRelativePath: basename(githubAnnotationsPath),
+      ...(policy ? { policy } : {}),
     });
 
     return {
       format: "github-annotations",
       status: "generated",
       resultsPath,
-      githubAnnotationsPath: writtenPath,
+      githubAnnotationsPath,
       ...(auditResult.auditId ?? latest?.auditId
         ? { auditId: auditResult.auditId ?? latest?.auditId }
         : {}),
-      summary: {
-        annotations: generation.summary.annotations,
-        errors: generation.summary.errors,
-        warnings: generation.summary.warnings,
-        notices: generation.summary.notices,
-        truncated: generation.summary.truncated,
-      },
+      summary: generation.resultReference.summary,
     };
   }
 
   const outputDirectory = options.output
     ? resolve(cwd, options.output)
     : dirname(resultsPath);
-  const generated = await generateHtmlReport({
-    auditResult,
-    outputDirectory,
+  const generated = await emitReportArtifact({
+    format: "html",
+    result: auditResult,
+    bundleDirectory: outputDirectory,
     auditId: auditResult.auditId ?? latest?.auditId,
   });
 
@@ -378,7 +370,7 @@ export async function runReport(options: RunReportOptions): Promise<ReportResult
     format: "html",
     status: "generated",
     resultsPath,
-    reportPath: resolve(generated.indexPath),
+    reportPath: resolve(generated.bundlePath),
     ...(auditResult.auditId ?? latest?.auditId
       ? { auditId: auditResult.auditId ?? latest?.auditId }
       : {}),
