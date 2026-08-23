@@ -7,6 +7,8 @@ a11yst is an accessibility testing and regression CLI for web applications. It r
 
 Automated accessibility checks do not establish WCAG conformance and do not replace manual accessibility testing.
 
+Documentation: [www.a11yst.dev/getting-started](https://www.a11yst.dev/getting-started)
+
 ## Requirements
 
 - Node.js **>= 22.12**

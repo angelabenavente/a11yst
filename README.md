@@ -10,7 +10,9 @@ Automated testing does not establish WCAG conformance and does not replace manua
 
 Repository: [github.com/angelabenavente/a11yst](https://github.com/angelabenavente/a11yst)
 
-Documentation: [www.a11yst.dev](https://www.a11yst.dev)
+Documentation: [www.a11yst.dev/getting-started](https://www.a11yst.dev/getting-started)
+
+npm: [https://www.npmjs.com/package/@a11yst/cli](https://www.npmjs.com/package/@a11yst/cli)
 
 ## What is a11yst?
 
