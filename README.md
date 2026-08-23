@@ -8,8 +8,6 @@ Automated testing does not establish WCAG conformance and does not replace manua
 
 **Version:** `1.0.0`. The npm distribution is prepared as the public `@a11yst/*` package set, with `@a11yst/cli` as the consumer entry point.
 
-Repository: [github.com/angelabenavente/a11yst](https://github.com/angelabenavente/a11yst)
-
 Documentation: [www.a11yst.dev/getting-started](https://www.a11yst.dev/getting-started)
 
 npm: [https://www.npmjs.com/package/@a11yst/cli](https://www.npmjs.com/package/@a11yst/cli)
