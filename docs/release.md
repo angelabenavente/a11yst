@@ -24,7 +24,7 @@ Before accepting the first external code contribution: legal review of the final
 
 a11yst uses [Semantic Versioning](https://semver.org/) as a format.
 
-- All 27 publishable runtime packages currently share version `1.0.0`.
+- All 27 publishable runtime packages currently share version `1.0.1`.
 - Stable releases follow semantic-versioning compatibility expectations.
 - Publish internal packages in dependency order, with `@a11yst/cli` last.
 - Release tooling derives topological order from workspace runtime dependencies; do not maintain a hand-written list of 27 package names in this document.

@@ -1,6 +1,6 @@
 {
   "name": "@a11yst/cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Command-line interface for a11yst",
   "keywords": [
     "accessibility",
@@ -13,7 +13,8 @@
   ],
   "type": "module",
   "bin": {
-    "a11yst": "./dist/bin.js"
+    "a11yst": "./dist/bin.js",
+    "playwright": "./dist/playwright-bin.js"
   },
   "exports": {
     ".": {
@@ -49,7 +50,8 @@
     "@a11yst/profiles": "workspace:*",
     "@a11yst/reporters": "workspace:*",
     "@a11yst/types": "workspace:*",
-    "commander": "^12.1.0"
+    "commander": "^12.1.0",
+    "playwright": "1.62.0"
   },
   "devDependencies": {
     "typescript": "^5.7.2"

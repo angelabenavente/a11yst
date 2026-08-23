@@ -6,7 +6,7 @@ a11yst is a local CLI for accessibility testing and regression of **web** applic
 
 Automated testing does not establish WCAG conformance and does not replace manual accessibility testing.
 
-**Version:** `1.0.0`. The npm distribution is prepared as the public `@a11yst/*` package set, with `@a11yst/cli` as the consumer entry point.
+**Version:** `1.0.1`. The npm distribution is the public `@a11yst/*` package set, with `@a11yst/cli` as the consumer entry point.
 
 Documentation: [www.a11yst.dev/getting-started](https://www.a11yst.dev/getting-started)
 
@@ -97,7 +97,7 @@ pnpm exec playwright install chromium
 pnpm exec a11yst --help
 ```
 
-Node.js `>= 22.12` is required. Chromium is managed separately by Playwright and is not downloaded automatically during package installation.
+Node.js `>= 22.12` is required. `@a11yst/cli` exposes the Playwright CLI so `pnpm exec playwright` works after the package install. Chromium is managed separately by Playwright and is not downloaded automatically during package installation.
 
 ## Local development
 

@@ -64,7 +64,7 @@ describe("CLI foundation", () => {
   it("prints version", async () => {
     const result = await runCli(["--version"]);
     expect(result.code).toBe(0);
-    expect(result.stdout.trim()).toBe("1.0.0");
+    expect(result.stdout.trim()).toBe("1.0.1");
   });
 
   it("lists configured flows without a browser", async () => {
@@ -140,17 +140,18 @@ describe("CLI foundation", () => {
 
       const human = await runCli(["doctor"], { cwd: dir });
       expect(human.code).toBe(0);
-      expect(human.stdout).toMatch(/Overall status:\s+OK/i);
+      expect(human.stdout).toMatch(/Overall status:\s+(OK|WARN)/i);
       expect(human.stdout).toMatch(/Node\.js version/i);
+      expect(human.stdout).toMatch(/Playwright Chromium/i);
 
       const json = await runCli(["doctor", "--json"], { cwd: dir });
       expect(json.code).toBe(0);
       const payload = JSON.parse(json.stdout) as {
         status: string;
-        checks: unknown[];
+        checks: Array<{ id: string }>;
       };
-      expect(payload.status).toBe("ok");
-      expect(payload.checks.length).toBeGreaterThan(0);
+      expect(["ok", "warn"]).toContain(payload.status);
+      expect(payload.checks.some((check) => check.id === "playwright-chromium")).toBe(true);
     });
   });
 

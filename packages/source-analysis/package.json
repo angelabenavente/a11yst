@@ -1,6 +1,6 @@
 {
   "name": "@a11yst/source-analysis",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Orchestrates source indexing, mapping, ranking, and recommendations for a11yst audits",
   "type": "module",
   "exports": {

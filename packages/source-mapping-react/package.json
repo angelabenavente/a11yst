@@ -1,6 +1,6 @@
 {
   "name": "@a11yst/source-mapping-react",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Conservative React/JSX static source catalog and mapping for a11yst",
   "type": "module",
   "exports": {

@@ -1,6 +1,6 @@
 {
   "name": "@a11yst/source-index",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Safe deterministic repository source file indexing for a11yst",
   "type": "module",
   "exports": {

@@ -1,6 +1,6 @@
 {
   "name": "@a11yst/source-mapping-html",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Conservative HTML static source catalog and mapping for a11yst",
   "type": "module",
   "exports": {

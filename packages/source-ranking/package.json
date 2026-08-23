@@ -1,6 +1,6 @@
 {
   "name": "@a11yst/source-ranking",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Deterministic source mapping candidate ranking for a11yst",
   "type": "module",
   "exports": {

@@ -1,6 +1,6 @@
 {
   "name": "@a11yst/browser",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Playwright + axe-core web audit engine for a11yst",
   "type": "module",
   "exports": {

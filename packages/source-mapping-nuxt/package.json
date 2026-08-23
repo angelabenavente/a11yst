@@ -1,6 +1,6 @@
 {
   "name": "@a11yst/source-mapping-nuxt",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Conservative Nuxt static route catalog and source mapping for a11yst",
   "type": "module",
   "exports": {

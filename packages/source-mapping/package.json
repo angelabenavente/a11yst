@@ -1,6 +1,6 @@
 {
   "name": "@a11yst/source-mapping",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Pure source mapping domain model for a11yst findings",
   "type": "module",
   "exports": {

@@ -1,6 +1,6 @@
 {
   "name": "@a11yst/policy",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Pure CI policy evaluation for a11yst audit results",
   "type": "module",
   "exports": {

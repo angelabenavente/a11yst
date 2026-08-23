@@ -1,6 +1,6 @@
 {
   "name": "@a11yst/reporters",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Static report generation for a11yst audit results",
   "type": "module",
   "exports": {

@@ -18,7 +18,7 @@ Internal maintainability document for phases 13b–13j. **Not** public release d
 | Display name | a11yst |
 | CLI / package command | `a11yst` |
 | Tagline | Your accessibility analyst. |
-| Version (CLI) | 1.0.0 |
+| Version (CLI) | 1.0.1 |
 
 Package names (`@a11yst/*`), imports, and CLI commands are **unchanged** in 13a.
 
@@ -228,7 +228,7 @@ Config: `sourceAnalysis.enabled`, `.ranking`, `.recommendations` (no CLI flags).
 | --- | --- | --- | --- |
 | **Contributor (this repo)** | >= 20 (.nvmrc: 20) | pnpm 9.x (packageManager: pnpm@9.15.0) | Playwright Chromium (`pnpm exec playwright install chromium`) |
 | **CI / test** | >= 20 | pnpm frozen lockfile | Chromium headless |
-| **End user (future)** | >= 20 (engines) | pnpm/npm at publish time | Chromium via `pnpm exec playwright install chromium` after package install |
+| **End user** | >= 22.12 (engines) | pnpm/npm | Chromium via `pnpm exec playwright install chromium` (`@a11yst/cli` exposes the Playwright CLI) |
 
 ---
 

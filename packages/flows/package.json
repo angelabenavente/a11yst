@@ -1,6 +1,6 @@
 {
   "name": "@a11yst/flows",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Declarative user flow execution and checkpoint auditing for a11yst",
   "type": "module",
   "exports": {

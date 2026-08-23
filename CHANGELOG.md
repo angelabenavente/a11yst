@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
+## [1.0.1] - 2026-08-23
+
+### Fixed
+
+- `@a11yst/cli` now depends on Playwright and exposes the `playwright` binary so `pnpm exec playwright install chromium` works in consumer projects (pnpm does not expose transitive bins). `a11yst doctor` checks that Chromium is installed.
+
 ## [1.0.0] - 2026-08-23
 
 ### Added
