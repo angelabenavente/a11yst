@@ -28,19 +28,18 @@ describe("release documentation contracts", () => {
     expect(contributing).not.toMatch(/\bWCAG compliant\b|\bcertified\b|guaranteed accessible/i);
   });
 
-  it("includes CHANGELOG.md with Unreleased and no fake published release", async () => {
+  it("includes CHANGELOG.md with the prepared 1.0.0 release", async () => {
     const changelog = await readRootDoc("CHANGELOG.md");
     expect(changelog).toContain("## Unreleased");
-    expect(changelog).not.toMatch(/^## 0\.1\.0/m);
-    expect(changelog).not.toMatch(/202[0-9]-[0-9]{2}-[0-9]{2}/);
+    expect(changelog).toContain("## [1.0.0] - 2026-08-23");
   });
 
-  it("includes release process documentation with omitted publish commands", async () => {
+  it("includes an actionable release process", async () => {
     const release = await readFile(join(getRepoRoot(), "docs/release.md"), "utf8");
     expect(release).toContain("## Versioning");
     expect(release).toContain("confirmed: MPL-2.0");
-    expect(release).toContain("Publication commands are intentionally omitted");
+    expect(release).toContain("pnpm -r --filter './packages/*' publish --dry-run");
+    expect(release).toContain("pnpm -r --filter './packages/*' publish");
     expect(release).toContain("pnpm exec playwright install chromium");
-    expect(release).toMatch(/Do not run `npm publish`/);
   });
 });

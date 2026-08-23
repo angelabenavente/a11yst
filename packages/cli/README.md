@@ -14,11 +14,11 @@ Automated accessibility checks do not establish WCAG conformance and do not repl
 
 ## Installation
 
-This package is **not published yet**. Consumer installation has been validated from local release tarballs inside the a11yst monorepo release process.
+Install the CLI as development/CI tooling:
 
-After a public release, install the published `@a11yst/cli` package using the package-manager command documented for that release. Until then, do not treat registry install commands as currently executable.
-
-**Likely usage after publication:** development/CI tooling (`pnpm add -D @a11yst/cli` or equivalent) — confirm in release notes when publish occurs.
+```bash
+pnpm add -D @a11yst/cli
+```
 
 ## Browser setup
 
@@ -51,7 +51,7 @@ The consumer environment exposes the `a11yst` command via this package. Playwrig
 
 ## Security
 
-Report suspected vulnerabilities according to the security policy published with the a11yst repository. Do not open public issues for undisclosed security problems.
+Report suspected vulnerabilities through GitHub private vulnerability reporting at https://github.com/angelabenavente/a11yst/security/advisories/new. Do not disclose undisclosed security problems in public issues.
 
 ## License
 

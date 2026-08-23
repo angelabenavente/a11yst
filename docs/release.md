@@ -1,22 +1,20 @@
 # Release process
 
-Internal maintainer checklist for a11yst releases. This document does **not** authorize publishing by itself.
+Internal maintainer checklist for a11yst releases.
 
-## Decisions required before first public release
+## First public release decisions
 
 | Decision | Status |
 | --- | --- |
 | License (SPDX + `LICENSE` file) | **confirmed: MPL-2.0** |
-| Public repository URL and package metadata | **decision required** |
-| Security reporting channel | **decision required** |
-| npm publish access for `@a11yst/*` | **decision required** |
-| First public release version number | **decision required** |
+| Public repository URL and package metadata | **confirmed: `angelabenavente/a11yst`** |
+| Security reporting channel | **confirmed: GitHub private vulnerability reporting** |
+| npm publish access for `@a11yst/*` | **confirmed: public** |
+| First public release version number | **confirmed: 1.0.0** |
 | Contributor IP policy documentation | **prepared** |
 | Active external CLA | **no** |
 | External pull requests | **welcome** |
 | External code merge | **blocked until CLA activation (P3c)** |
-
-Do not invent these values in manifests or documentation.
 
 External pull requests may be opened and reviewed, but external code cannot be merged until contributor agreement legal review and CLA workflow activation (P3c). This does not block the first public release while external merges remain disabled.
 
@@ -31,7 +29,7 @@ a11yst uses [Semantic Versioning](https://semver.org/) as a format.
 - Publish internal packages in dependency order, with `@a11yst/cli` last.
 - Release tooling derives topological order from workspace runtime dependencies; do not maintain a hand-written list of 27 package names in this document.
 
-**First public release version:** `1.0.0`. Do not tag or publish until the release gate is complete.
+**First public release version:** confirmed 1.0.0. Do not tag or publish until the release gate is complete.
 
 ## Preconditions
 
@@ -80,11 +78,28 @@ pnpm exec playwright install chromium
 
 a11yst does not run this during package install. Missing-browser failures must remain actionable and must not be confused with CI policy breaches.
 
-## Publish preparation
+## Publish
 
-Publication commands are intentionally omitted until license, repository metadata, package access, security contact, and first public version are finalized.
+Authenticate with an npm account that can publish the `@a11yst` scope, then verify the identity:
 
-Do not run `npm publish`, `pnpm publish`, or equivalent from this checklist until Phase 13j completes the release gate.
+```bash
+npm login
+npm whoami
+```
+
+After the verification matrix is green and the intended release changes are committed, inspect the publish without changing the registry:
+
+```bash
+pnpm -r --filter './packages/*' publish --dry-run --publish-branch main
+```
+
+Publish all packages in topological dependency order. The manifests set public access explicitly:
+
+```bash
+pnpm -r --filter './packages/*' publish --publish-branch main
+```
+
+Do not publish only `@a11yst/cli`: registry consumers need the complete 27-package runtime closure at the same version.
 
 ## Post-release (future)
 
@@ -101,7 +116,7 @@ After a real public release:
 - [ ] Repository metadata confirmed
 - [ ] Publish access confirmed
 - [ ] First public version confirmed
-- [ ] Security reporting channel confirmed
+- [x] Security reporting channel confirmed (GitHub private vulnerability reporting)
 - [ ] Contributor IP policy documented (active CLA not required for initial release while external merges remain closed)
 - [ ] Full test matrix green
 - [ ] Packaging integration green

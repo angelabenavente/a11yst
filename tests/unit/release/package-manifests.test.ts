@@ -59,7 +59,7 @@ describe("release package manifests", () => {
     });
   });
 
-  it("requires MPL-2.0 license metadata on publishable manifests", async () => {
+  it("requires complete public npm metadata on publishable manifests", async () => {
     const packages = await loadWorkspacePackages();
     const cli = findCliPackage(packages)!;
     const map = toMinimalPackageMap(packages);
@@ -68,9 +68,15 @@ describe("release package manifests", () => {
     for (const name of closure) {
       const pkg = packages.find((entry) => entry.manifest.name === name)!;
       expect(pkg.manifest.license).toBe("MPL-2.0");
-      expect(pkg.manifest.repository).toBeUndefined();
-      expect(pkg.manifest.homepage).toBeUndefined();
-      expect(pkg.manifest.publishConfig).toBeUndefined();
+      expect(pkg.manifest.repository).toEqual({
+        type: "git",
+        url: "git+https://github.com/angelabenavente/a11yst.git",
+      });
+      expect(pkg.manifest.homepage).toBe("https://github.com/angelabenavente/a11yst#readme");
+      expect(pkg.manifest.bugs).toEqual({
+        url: "https://github.com/angelabenavente/a11yst/issues",
+      });
+      expect(pkg.manifest.publishConfig).toEqual({ access: "public" });
     }
   });
 

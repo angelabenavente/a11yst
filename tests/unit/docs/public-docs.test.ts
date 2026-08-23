@@ -62,9 +62,10 @@ describe("public project documentation", () => {
     expect(docs).not.toMatch(/React Native runtime auditing is (currently )?supported/i);
     expect(docs).toMatch(/React Native runtime auditing is not currently supported/i);
     expect(docs).not.toMatch(/a11yst Cloud\b|a11yst Pro\b|a11yst Enterprise\b/i);
-    expect(docs).not.toMatch(/npm install @a11yst|published on npm|npx a11yst/i);
+    expect(docs).toContain("pnpm add -D @a11yst/cli");
     expect(docs).not.toMatch(/website:dev|mkdocs|127\.0\.0\.1:8000/i);
-    expect(docs).not.toMatch(/a11yst\.(dev|io|com|app)/i);
+    expect(docs).toContain("www.a11yst.dev");
+    expect(docs).not.toMatch(/a11yst\.(io|com|app)/i);
   });
 
   it("does not revive old identity in public docs", async () => {

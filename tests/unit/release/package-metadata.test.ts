@@ -72,11 +72,11 @@ describe("release package metadata", () => {
     }
   });
 
-  it("reports license readiness while repository and publish metadata remain pending", async () => {
+  it("reports repository and publish metadata ready", async () => {
     const readiness = await evaluateReleaseReadiness();
     expect(readiness.publication.license).toBe(true);
-    expect(readiness.publication.repository).toBe(false);
-    expect(readiness.publication.publishAccess).toBe(false);
+    expect(readiness.publication.repository).toBe(true);
+    expect(readiness.publication.publishAccess).toBe(true);
   });
 
   it("keeps publishable package versions synchronized and SemVer-parseable", async () => {
@@ -96,10 +96,9 @@ describe("release package metadata", () => {
     expect(readme).toContain("a11yst");
     expect(readme).toContain("Node.js **>= 22.12**");
     expect(readme).toContain("pnpm exec playwright install chromium");
-    expect(readme).toContain("not published yet");
+    expect(readme).toContain("pnpm add -D @a11yst/cli");
     expect(readme).toContain("MPL-2.0");
     expect(readme).not.toMatch(/\bWCAG compliant\b|\bcertified\b|guaranteed accessible/i);
     expect(readme).not.toContain("../../docs/");
-    expect(readme).not.toContain("npm install @a11yst/cli");
   });
 });

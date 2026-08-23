@@ -6,9 +6,11 @@ a11yst is a local CLI for accessibility testing and regression of **web** applic
 
 Automated testing does not establish WCAG conformance and does not replace manual accessibility testing.
 
-**Version:** `1.0.0`. Packaging and external consumer installation are validated from local tarballs. The package is **not published** to npm yet.
+**Version:** `1.0.0`. The npm distribution is prepared as the public `@a11yst/*` package set, with `@a11yst/cli` as the consumer entry point.
 
 Repository: [github.com/angelabenavente/a11yst](https://github.com/angelabenavente/a11yst)
+
+Documentation: [www.a11yst.dev](https://www.a11yst.dev)
 
 ## What is a11yst?
 
@@ -85,9 +87,19 @@ React Native runtime auditing is not currently supported. `platform` is `web` on
 
 Detection fixtures live under [examples/detection](./examples/detection). Runnable audit examples live under [examples/audit](./examples/audit).
 
-## Local development
+## Installation
 
-Registry install commands are **not** documented here because the package is not published yet.
+Install the CLI as a development dependency, then install Playwright Chromium:
+
+```bash
+pnpm add -D @a11yst/cli
+pnpm exec playwright install chromium
+pnpm exec a11yst --help
+```
+
+Node.js `>= 22.12` is required. Chromium is managed separately by Playwright and is not downloaded automatically during package installation.
+
+## Local development
 
 From a checkout of this repository:
 

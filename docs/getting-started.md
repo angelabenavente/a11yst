@@ -1,8 +1,12 @@
 # Getting Started
 
-Run a11yst from a **development checkout** of this repository. Consumer package installation is not documented here because public distribution is still being prepared.
+Install a11yst in the project you want to audit:
 
-Published-package installation instructions will be added with the first public release.
+```bash
+pnpm add -D @a11yst/cli
+pnpm exec playwright install chromium
+pnpm exec a11yst --help
+```
 
 ## Prerequisites
 
@@ -10,7 +14,7 @@ Published-package installation instructions will be added with the first public 
 - pnpm `9.x` (Corepack reads `packageManager` from `package.json`)
 - Playwright Chromium for browser audits
 
-## 1. Prepare the checkout
+## 1. Prepare a development checkout
 
 From the repository root:
 

@@ -9,12 +9,12 @@ async function readRootDoc(filename: string): Promise<string> {
 }
 
 describe("licensing documentation contracts", () => {
-  it("documents MPL-2.0 in README without false publish claims", async () => {
+  it("documents MPL-2.0 and npm installation in README", async () => {
     const readme = await readRootDoc("README.md");
     expect(readme).toContain("MPL-2.0");
     expect(readme).toContain("Mozilla Public License 2.0");
     expect(readme).not.toMatch(/non-commercial|source-available only|commercial use prohibited/i);
-    expect(readme).not.toMatch(/published on npm|npm install @a11yst/i);
+    expect(readme).toContain("pnpm add -D @a11yst/cli");
   });
 
   it("includes docs/licensing.md with Community MPL guidance", async () => {
@@ -29,7 +29,7 @@ describe("licensing documentation contracts", () => {
     const cliReadme = await readFile(join(getRepoRoot(), "packages/cli/README.md"), "utf8");
     expect(cliReadme).toContain("MPL-2.0");
     expect(cliReadme).toContain("LICENSE file included with this package");
-    expect(cliReadme).not.toMatch(/npm install @a11yst|published on npm/i);
+    expect(cliReadme).toContain("pnpm add -D @a11yst/cli");
   });
 
   it("includes NOTICE.md without invented copyright holder or mandatory marketing credit", async () => {

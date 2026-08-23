@@ -28,5 +28,16 @@
   "devDependencies": {
     "typescript": "^5.7.2"
   },
-  "license": "MPL-2.0"
+  "license": "MPL-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/angelabenavente/a11yst.git"
+  },
+  "homepage": "https://github.com/angelabenavente/a11yst#readme",
+  "bugs": {
+    "url": "https://github.com/angelabenavente/a11yst/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

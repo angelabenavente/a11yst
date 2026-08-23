@@ -96,7 +96,7 @@ describe("MPL-2.0 licensing", () => {
     expect(trademarks).toMatch(/does not claim that a11yst is a registered trademark/i);
   });
 
-  it("keeps root private and reports license readiness without release-license-undecided", async () => {
+  it("keeps root private and reports no publication blockers", async () => {
     const rootManifest = JSON.parse(
       readFileSync(join(getRepoRoot(), "package.json"), "utf8"),
     ) as { private?: boolean; license?: string; publishConfig?: unknown };
@@ -108,10 +108,6 @@ describe("MPL-2.0 licensing", () => {
       technical: { packaging: true, consumerInstall: true },
     });
     expect(readiness.publication.license).toBe(true);
-    expect(readiness.blockers).not.toContain("release-license-undecided");
-    expect(readiness.blockers).toContain("release-repository-metadata-missing");
-    expect(readiness.blockers).toContain("publish-access-not-configured");
-    expect(readiness.blockers).toContain("first-public-version-undecided");
-    expect(readiness.blockers).toContain("security-contact-decision-required");
+    expect(readiness.blockers).toEqual([]);
   });
 });

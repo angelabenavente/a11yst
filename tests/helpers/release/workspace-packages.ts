@@ -24,6 +24,7 @@ export type WorkspacePackageManifest = {
   keywords?: string[];
   repository?: unknown;
   homepage?: string;
+  bugs?: { url?: string };
 };
 
 export type LoadedWorkspacePackage = {

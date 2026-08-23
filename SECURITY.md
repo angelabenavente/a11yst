@@ -6,16 +6,16 @@ Only the latest development line in this repository is evaluated for security fi
 
 | Version | Supported |
 | --- | --- |
-| Current development (`1.0.0`) | yes |
-| Earlier unpublished snapshots | no |
+| `1.0.x` | yes |
+| Earlier versions | no |
 
 ## Reporting a vulnerability
 
 Do **not** disclose suspected security vulnerabilities in public issues, pull requests, or discussion threads.
 
-Use the private security reporting mechanism of the repository hosting this project **when that mechanism is available and confirmed for this repository**. Until a concrete reporting channel is confirmed for public release, treat security contact as a release decision that must be finalized before the first public publish.
+Security reporting channel confirmed: GitHub private vulnerability reporting at https://github.com/angelabenavente/a11yst/security/advisories/new
 
-Reports will be reviewed as capacity allows during pre-release development. No response-time SLA is promised.
+Use that private advisory form to report suspected vulnerabilities. Include enough detail to reproduce the issue and the version or commit you tested. Reports will be reviewed as capacity allows. No response-time SLA is promised.
 
 ## Scope
 
@@ -32,6 +32,6 @@ Out of scope: accessibility findings in applications you audit with a11yst, unle
 
 ## Disclosure
 
-a11yst does not guarantee coordinated disclosure timelines during pre-release development. If you report a vulnerability, include enough detail to reproduce the issue and the version or commit you tested.
+a11yst does not guarantee coordinated disclosure timelines. If you report a vulnerability through the confirmed GitHub channel, include enough detail to reproduce the issue and the version or commit you tested.
 
 Automated accessibility checks do not establish WCAG conformance and do not replace manual accessibility testing.

@@ -23,7 +23,7 @@ const SAMPLE_MANIFESTS: WorkspacePackageManifest[] = [
 ];
 
 describe("release readiness evaluator", () => {
-  it("reports current repository publication blockers without inventing metadata", async () => {
+  it("reports the current repository ready for public release", async () => {
     const readiness = await evaluateReleaseReadiness({
       technical: { packaging: true, consumerInstall: true },
     });
@@ -31,18 +31,13 @@ describe("release readiness evaluator", () => {
     expect(readiness.technical.packaging).toBe(true);
     expect(readiness.technical.consumerInstall).toBe(true);
     expect(readiness.publication.license).toBe(true);
-    expect(readiness.publication.repository).toBe(false);
-    expect(readiness.publication.publishAccess).toBe(false);
+    expect(readiness.publication.repository).toBe(true);
+    expect(readiness.publication.publishAccess).toBe(true);
     expect(readiness.publication.versionStrategy).toBe(true);
-    expect(readiness.publication.firstPublicVersion).toBe(false);
-    expect(readiness.publication.securityContact).toBe(false);
-    expect(readiness.blockers).not.toContain("release-license-undecided");
-    expect(readiness.blockers).toContain("release-repository-metadata-missing");
-    expect(readiness.blockers).toContain("publish-access-not-configured");
-    expect(readiness.blockers).toContain("first-public-version-undecided");
-    expect(readiness.blockers).toContain("security-contact-decision-required");
-    expect(readiness.blockers).not.toContain("version-strategy-provisional");
-    expect(isPublicReleaseReady(readiness)).toBe(false);
+    expect(readiness.publication.firstPublicVersion).toBe(true);
+    expect(readiness.publication.securityContact).toBe(true);
+    expect(readiness.blockers).toEqual([]);
+    expect(isPublicReleaseReady(readiness)).toBe(true);
   });
 
   it("returns zero publication blockers for a synthetic ready fixture", async () => {
@@ -152,5 +147,6 @@ describe("release readiness evaluator", () => {
     expect(
       hasExplicitSecurityContact("Security reporting channel confirmed: mailto:security@a11yst.test"),
     ).toBe(true);
+    expect(hasExplicitSecurityContact("Security reporting channel confirmed: none.")).toBe(true);
   });
 });

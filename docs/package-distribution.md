@@ -1,6 +1,6 @@
 # Package distribution
 
-Internal release documentation for a11yst workspace packaging. This document describes the current local tarball strategy only. It is not a public installation guide.
+Internal release documentation for the a11yst workspace package set.
 
 ## Consumer entry package
 
@@ -57,8 +57,8 @@ No workspace runtime package is currently marked `private`.
 ## Packaging rules
 
 1. Run `pnpm build` before `pnpm pack`.
-2. Generate tarballs only in temporary directories during 13g verification.
-3. Do not publish to npm in 13g.
+2. Generate verification tarballs only in temporary directories.
+3. Publish only after the full release gate passes.
 4. Keep the dependency graph unchanged unless a real packaging defect requires a manifest fix.
 5. Do not commit generated `.tgz` files.
 6. Each publishable package uses `"files": ["dist", "LICENSE"]` (CLI adds README, NOTICE, TRADEMARKS).
@@ -97,14 +97,12 @@ Static checks in 13g verify:
 
 The definitive undeclared-dependency test remains the external consumer install in 13h.
 
-## Remaining release blockers
+## Release decisions
 
-### Blocks public publish
-
-- `release-repository-metadata-missing` — no repository/homepage/bugs metadata on publishable packages.
-- `publish-access-not-configured` — scoped packages have no `publishConfig.access`.
-- `first-public-version-undecided` — first public release version not confirmed.
-- `security-contact-decision-required` — no confirmed private vulnerability reporting channel.
+- Repository metadata points to `angelabenavente/a11yst`.
+- Every scoped package sets `publishConfig.access` to `public`.
+- The first public release version is `1.0.0`.
+- Security reporting uses GitHub private vulnerability reporting, documented in `SECURITY.md`.
 
 ### Resolved in Phase 13h
 
@@ -118,25 +116,20 @@ The definitive undeclared-dependency test remains the external consumer install 
 - Formal `SECURITY.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, and release checklist.
 - `@a11yst/cli` package README, LICENSE, NOTICE, and TRADEMARKS included in tarball.
 
-### Does not block Phase 13j gate prep
+### Before publishing
 
-- Missing repository/homepage metadata (blocker documented; not invented).
-- Missing `publishConfig.access` (blocker documented; not applied without decision).
-
-### Important follow-ups for 13j
-
-- Confirm repository URL, publish access, security contact, and first public version.
-- Execute full release gate verification before any publish attempt.
+- Execute the full release gate verification.
+- Authenticate to npm and confirm publish permission for the `@a11yst` scope.
 
 ## Public metadata state (Phase 13i)
 
 | Field | Publishable packages (27) | Notes |
 | --- | --- | --- |
 | `license` | MPL-2.0 | Confirmed for all publishable packages |
-| `repository` | not set | Blocker until owner decision |
-| `homepage` | not set | Pending |
-| `bugs` | not set | Pending |
-| `publishConfig.access` | not set | Blocker until owner decision |
+| `repository` | `git+https://github.com/angelabenavente/a11yst.git` | Confirmed |
+| `homepage` | `https://github.com/angelabenavente/a11yst#readme` | Confirmed |
+| `bugs` | `https://github.com/angelabenavente/a11yst/issues` | Confirmed |
+| `publishConfig.access` | `public` | Confirmed |
 | `description` | present | Technical descriptions only |
 | `keywords` | `@a11yst/cli` only | Optional discoverability |
 | `files` | `dist` + `LICENSE` (+ CLI README, NOTICE, TRADEMARKS) | Each tarball includes license text |
