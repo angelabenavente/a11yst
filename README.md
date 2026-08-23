@@ -8,7 +8,7 @@ Automated testing does not establish WCAG conformance and does not replace manua
 
 **Version:** `1.0.0`. Packaging and external consumer installation are validated from local tarballs. The package is **not published** to npm yet.
 
-Repository: [github.com/WeekendGarage/a11yst](https://github.com/WeekendGarage/a11yst)
+Repository: [github.com/angelabenavente/a11yst](https://github.com/angelabenavente/a11yst)
 
 ## What is a11yst?
 
@@ -18,7 +18,7 @@ A typical audit plans work across **routes**, optional **flows** with **checkpoi
 
 ## Why a11yst?
 
-A basic page scanner often answers: *what did axe find on this URL right now?*
+A basic page scanner often answers: _what did axe find on this URL right now?_
 
 a11yst is built for teams that need repeatable coverage and regression tracking:
 
@@ -69,17 +69,17 @@ Recommendations combine finding context, framework, source mapping when availabl
 
 ## Framework support
 
-| Framework | Runtime audit | Routes | Source mapping | Status |
-| --- | --- | --- | --- | --- |
-| HTML / Vanilla | yes | yes (filesystem) | yes | first-class |
-| React | yes | partial (React Router static forms; explicit routes recommended) | yes | first-class |
-| Next.js | yes | yes (App/Pages static routes) | yes | first-class |
-| Vue | yes | partial (explicit routes recommended) | yes | first-class |
-| Nuxt | yes | yes (pages/app filesystem routes) | yes | first-class |
-| Angular | yes | partial (explicit routes; no Angular Router parsing) | yes (templates) | first-class |
-| Svelte / SvelteKit | yes (generic web) | partial | no | preview |
-| Astro, Preact, Solid, Qwik, Ember, Lit | runtime-compatible | partial | no | runtime-compatible |
-| React Native / Expo | no | n/a | n/a | unsupported |
+| Framework                              | Runtime audit      | Routes                                                           | Source mapping  | Status             |
+| -------------------------------------- | ------------------ | ---------------------------------------------------------------- | --------------- | ------------------ |
+| HTML / Vanilla                         | yes                | yes (filesystem)                                                 | yes             | first-class        |
+| React                                  | yes                | partial (React Router static forms; explicit routes recommended) | yes             | first-class        |
+| Next.js                                | yes                | yes (App/Pages static routes)                                    | yes             | first-class        |
+| Vue                                    | yes                | partial (explicit routes recommended)                            | yes             | first-class        |
+| Nuxt                                   | yes                | yes (pages/app filesystem routes)                                | yes             | first-class        |
+| Angular                                | yes                | partial (explicit routes; no Angular Router parsing)             | yes (templates) | first-class        |
+| Svelte / SvelteKit                     | yes (generic web)  | partial                                                          | no              | preview            |
+| Astro, Preact, Solid, Qwik, Ember, Lit | runtime-compatible | partial                                                          | no              | runtime-compatible |
+| React Native / Expo                    | no                 | n/a                                                              | n/a             | unsupported        |
 
 React Native runtime auditing is not currently supported. `platform` is `web` only.
 
@@ -178,29 +178,29 @@ Supported `report --format` values: `html`, `sarif`, `junit`, `markdown`, `githu
 
 CI integration guide: **[docs/ci.md](./docs/ci.md)** (GitHub Actions and GitLab templates under [examples/ci/](./examples/ci/)).
 
-| Exit code | Meaning |
-| --- | --- |
-| `0` | Audit completed; CI policy disabled or passed |
-| `1` | Operational/configuration error, partial or failed audit, or policy could not be evaluated |
-| `2` | Audit completed; configured CI policy failed |
+| Exit code | Meaning                                                                                    |
+| --------- | ------------------------------------------------------------------------------------------ |
+| `0`       | Audit completed; CI policy disabled or passed                                              |
+| `1`       | Operational/configuration error, partial or failed audit, or policy could not be evaluated |
+| `2`       | Audit completed; configured CI policy failed                                               |
 
 Accessibility findings alone do not force exit `1`. Policy breaches exit `2` when CI policy flags or config enable them.
 
 ## Commands
 
-| Command | Purpose |
-| --- | --- |
-| `init` | Create a starter `a11yst.config.ts` |
-| `detect` | Detect platform, framework, and package manager |
-| `routes` | List resolved routes without a browser |
-| `profiles` | List accessibility profiles and limitations |
-| `flows` | List configured flows and checkpoints |
-| `audit` | Run an accessibility audit |
-| `doctor` | Check local environment readiness |
-| `report` | Regenerate reports from stored results |
-| `baseline` | Create, inspect, update, or migrate baselines |
-| `findings` | List findings from latest or explicit results |
-| `classify` / `unclassify` | Manage baseline classifications |
+| Command                   | Purpose                                         |
+| ------------------------- | ----------------------------------------------- |
+| `init`                    | Create a starter `a11yst.config.ts`             |
+| `detect`                  | Detect platform, framework, and package manager |
+| `routes`                  | List resolved routes without a browser          |
+| `profiles`                | List accessibility profiles and limitations     |
+| `flows`                   | List configured flows and checkpoints           |
+| `audit`                   | Run an accessibility audit                      |
+| `doctor`                  | Check local environment readiness               |
+| `report`                  | Regenerate reports from stored results          |
+| `baseline`                | Create, inspect, update, or migrate baselines   |
+| `findings`                | List findings from latest or explicit results   |
+| `classify` / `unclassify` | Manage baseline classifications                 |
 
 Run `pnpm a11yst <command> --help` for options. This README does not list every flag.
 
