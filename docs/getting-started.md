@@ -1,5 +1,7 @@
 # Getting Started
 
+Requirements: Node.js `>= 22.12`, pnpm `9.15.0`, and Playwright Chromium for browser audits.
+
 Install a11yst in the project you want to audit:
 
 ```bash
@@ -184,13 +186,13 @@ pnpm a11yst baseline status --cwd examples/audit/html-accessible
 
 Lifecycle labels on findings:
 
-| Status | Meaning |
-| --- | --- |
-| `new` | Present now, absent from baseline |
-| `known` | Present in both with unchanged severity |
-| `regressed` | Known finding worsened or classification expired |
-| `resolved` | In baseline but not found in current audit |
-| `not-compared` | In baseline but outside current audit coverage |
+| Status         | Meaning                                          |
+| -------------- | ------------------------------------------------ |
+| `new`          | Present now, absent from baseline                |
+| `known`        | Present in both with unchanged severity          |
+| `regressed`    | Known finding worsened or classification expired |
+| `resolved`     | In baseline but not found in current audit       |
+| `not-compared` | In baseline but outside current audit coverage   |
 
 Fingerprints match findings deterministically; changing routes, flows, profiles, or viewports affects comparison coverage.
 
