@@ -14,7 +14,7 @@ export const productMetadata = {
   /** Primary public tagline. */
   tagline: "Your accessibility analyst.",
   /** Semantic version exposed by the CLI. */
-  version: "1.0.0",
+  version: "1.0.1",
   /** Minimum supported Node.js major.minor. */
   minNodeVersion: "22.12.0",
 } as const;

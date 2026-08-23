@@ -104,6 +104,41 @@ function checkArtifactsWritable(cwd: string): DoctorCheck {
   }
 }
 
+const PLAYWRIGHT_CHROMIUM_HINT =
+  "Run `pnpm exec playwright install chromium` after installing @a11yst/cli.";
+
+async function checkPlaywrightChromium(): Promise<DoctorCheck> {
+  try {
+    const { chromium } = await import("playwright");
+    const executablePath = chromium.executablePath();
+    if (existsSync(executablePath)) {
+      return {
+        id: "playwright-chromium",
+        title: "Playwright Chromium",
+        status: "ok",
+        detail: `Chromium executable found at ${executablePath}.`,
+      };
+    }
+    return {
+      id: "playwright-chromium",
+      title: "Playwright Chromium",
+      status: "warn",
+      detail: `Chromium is not installed (expected at ${executablePath}).`,
+      hint: PLAYWRIGHT_CHROMIUM_HINT,
+    };
+  } catch (error) {
+    return {
+      id: "playwright-chromium",
+      title: "Playwright Chromium",
+      status: "warn",
+      detail: `Cannot resolve Playwright Chromium: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+      hint: PLAYWRIGHT_CHROMIUM_HINT,
+    };
+  }
+}
+
 function checkPackageManager(cwd: string): DoctorCheck {
   const manifest = readPackageJson(cwd);
   const detection = detectPackageManager(cwd, manifest);
@@ -430,6 +465,7 @@ export async function runDoctor(cwd: string): Promise<DoctorReport> {
 
   checks.push(checkArtifactsWritable(cwd));
   checks.push(checkPackageManager(cwd));
+  checks.push(await checkPlaywrightChromium());
 
   if (config) {
     checks.push(...(await checkProjectsAgainstDetection(config)));

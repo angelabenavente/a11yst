@@ -8,6 +8,8 @@ pnpm exec playwright install chromium
 pnpm exec a11yst --help
 ```
 
+`@a11yst/cli` depends on Playwright and exposes the `playwright` binary, so `pnpm exec playwright` works after that install (pnpm does not expose transitive package binaries).
+
 ## Prerequisites
 
 - Node.js `>= 22.12`
@@ -28,7 +30,7 @@ pnpm a11yst --help
 
 The workspace exposes the CLI as `pnpm a11yst`, which runs `node packages/cli/dist/bin.js`.
 
-Chromium installation is required once per machine or CI image before `audit`. It is separate from installing Node dependencies.
+Chromium installation is required once per machine or CI image before `audit`. It is separate from installing Node dependencies. `pnpm exec a11yst doctor` reports whether the Chromium executable is present.
 
 ## Progress feedback
 
@@ -200,7 +202,7 @@ Classification workflows (`classify`, `unclassify`, migrations, and advanced bas
 pnpm a11yst doctor --cwd examples/audit/html-accessible
 ```
 
-Doctor verifies Node version, configuration validity, writable artifact paths, and related readiness checks without starting a browser.
+Doctor verifies Node version, configuration validity, writable artifact paths, Playwright Chromium, and related readiness checks without starting a browser.
 
 ## 9. Next steps
 

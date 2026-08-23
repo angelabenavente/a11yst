@@ -26,12 +26,10 @@ pnpm exec playwright install --with-deps chromium
 
 ## Installation
 
-**Provisional package name:** `a11yst` (not yet published to a public registry).
-
-Until a public release is available, install from your organization's registry, a built tarball, or a monorepo workspace link. When published:
+Install `@a11yst/cli` as a development dependency. The package exposes the `playwright` binary so the Chromium install command works under pnpm.
 
 ```bash
-pnpm add -D a11yst
+pnpm add -D @a11yst/cli
 pnpm exec playwright install chromium
 ```
 

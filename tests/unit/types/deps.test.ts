@@ -5,9 +5,14 @@ import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 
-function readPkg(relative: string): { name: string; dependencies?: Record<string, string> } {
+function readPkg(relative: string): {
+  name: string;
+  bin?: Record<string, string>;
+  dependencies?: Record<string, string>;
+} {
   return JSON.parse(readFileSync(resolve(root, relative), "utf8")) as {
     name: string;
+    bin?: Record<string, string>;
     dependencies?: Record<string, string>;
   };
 }
@@ -32,6 +37,13 @@ describe("package dependency graph", () => {
     const detect = readPkg("packages/detect/package.json");
     expect(cli.dependencies?.["@a11yst/detect"]).toBe("workspace:*");
     expect(detect.dependencies?.["@a11yst/cli"]).toBeUndefined();
+  });
+
+  it("exposes Playwright from the CLI so pnpm exec playwright works for consumers", () => {
+    const cli = readPkg("packages/cli/package.json");
+    expect(cli.dependencies?.playwright).toBe("1.62.0");
+    expect(cli.bin?.a11yst).toBe("./dist/bin.js");
+    expect(cli.bin?.playwright).toBe("./dist/playwright-bin.js");
   });
 
   it("keeps adapters depending only on types and static parsers", () => {

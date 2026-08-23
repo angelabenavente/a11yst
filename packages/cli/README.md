@@ -24,7 +24,7 @@ pnpm add -D @a11yst/cli
 
 ## Browser setup
 
-a11yst uses Playwright Chromium for browser-based audits. Install the browser binary explicitly **after** installing the package:
+a11yst uses Playwright Chromium for browser-based audits. This package depends on Playwright and exposes the `playwright` command, so the documented install works with pnpm (which does not expose transitive binaries):
 
 ```bash
 pnpm exec playwright install chromium
@@ -38,7 +38,7 @@ Then run audits from your project directory:
 pnpm exec a11yst audit
 ```
 
-The consumer environment exposes the `a11yst` command via this package. Playwright is invoked through the installed dependency graph (`pnpm exec playwright …`).
+The consumer environment exposes `a11yst` and `playwright` from this package. Use `pnpm exec a11yst doctor` to confirm Chromium is installed.
 
 ## What this package is
 
