@@ -79,8 +79,6 @@ export default defineConfig({
 });
 ```
 
-This config is validated by the repository test suite (see `tests/unit/docs/getting-started-config.test.ts`).
-
 ## 3. Run your first audit
 
 ```bash

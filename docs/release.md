@@ -51,7 +51,7 @@ pnpm exec playwright install chromium
 pnpm ci:release
 ```
 
-`ci:quality` runs build, typecheck, lint, and all unit tests. `ci:release` audits the published packages' production dependency paths, verifies release and documentation contracts, packs the publishable closure, and installs it in a clean consumer project. The two release integration tests run sequentially. Example applications are not shipped and their dependency paths are reported separately from the publication gate.
+`ci:quality` runs build, typecheck, lint, and all unit tests. `ci:release` audits production dependency paths of the publishable packages.
 
 Optional before a major release: broader integration and demo suites when behavior outside packaging/docs changed.
 

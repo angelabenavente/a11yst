@@ -31,7 +31,7 @@ See dedicated guides for [profiles](./profiles.md), [flows](./flows.md), [baseli
 
 ## Advanced example
 
-The repository validates this shape in `tests/fixtures/docs/advanced-config/a11yst.config.ts`:
+Example:
 
 ```typescript
 import { defineConfig } from "@a11yst/config";

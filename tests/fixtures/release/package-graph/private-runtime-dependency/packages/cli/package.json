@@ -1,7 +1,0 @@
-{
-  "name": "@fixture/cli",
-  "version": "0.0.0",
-  "dependencies": {
-    "@fixture/runtime": "workspace:*"
-  }
-}
