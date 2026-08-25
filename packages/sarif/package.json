@@ -1,6 +1,6 @@
 {
   "name": "@a11yst/sarif",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Pure SARIF 2.1.0 generation for a11yst audit results",
   "type": "module",
   "exports": {
@@ -31,7 +31,7 @@
     "type": "git",
     "url": "git+https://github.com/angelabenavente/a11yst.git"
   },
-  "homepage": "https://github.com/angelabenavente/a11yst#readme",
+  "homepage": "https://www.a11yst.dev",
   "bugs": {
     "url": "https://github.com/angelabenavente/a11yst/issues"
   },

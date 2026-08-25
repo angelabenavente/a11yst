@@ -1,4 +1,4 @@
-# @a11yst/source-mapping
+# @a11yst/source-mapping [![NPM version](https://img.shields.io/npm/v/@a11yst/source-mapping.svg?style=flat)](https://www.npmjs.com/package/@a11yst/source-mapping) [![License: MPL-2.0](https://img.shields.io/badge/License-MPL--2.0-blue.svg)](LICENSE) [![NPM total downloads](https://img.shields.io/npm/dt/@a11yst/source-mapping.svg?style=flat)](https://www.npmjs.com/package/@a11yst/source-mapping)
 
 Pure domain model for mapping browser findings to repository-relative source
 locations with explicit confidence, provenance, and safety invariants.

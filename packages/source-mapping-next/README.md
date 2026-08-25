@@ -1,4 +1,4 @@
-# @a11yst/source-mapping-next
+# @a11yst/source-mapping-next [![NPM version](https://img.shields.io/npm/v/@a11yst/source-mapping-next.svg?style=flat)](https://www.npmjs.com/package/@a11yst/source-mapping-next) [![License: MPL-2.0](https://img.shields.io/badge/License-MPL--2.0-blue.svg)](LICENSE) [![NPM total downloads](https://img.shields.io/npm/dt/@a11yst/source-mapping-next.svg?style=flat)](https://www.npmjs.com/package/@a11yst/source-mapping-next)
 
 Conservative static Next.js route catalog and source mapping for a11yst Phase 10e.
 

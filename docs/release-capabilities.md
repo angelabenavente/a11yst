@@ -18,7 +18,7 @@ Internal maintainability document for phases 13b–13j. **Not** public release d
 | Display name | a11yst |
 | CLI / package command | `a11yst` |
 | Tagline | Your accessibility analyst. |
-| Version (CLI) | 1.0.1 |
+| Version (CLI) | 1.0.2 |
 
 Package names (`@a11yst/*`), imports, and CLI commands are **unchanged** in 13a.
 

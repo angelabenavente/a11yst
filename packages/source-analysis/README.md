@@ -1,4 +1,4 @@
-# @a11yst/source-analysis
+# @a11yst/source-analysis [![NPM version](https://img.shields.io/npm/v/@a11yst/source-analysis.svg?style=flat)](https://www.npmjs.com/package/@a11yst/source-analysis) [![License: MPL-2.0](https://img.shields.io/badge/License-MPL--2.0-blue.svg)](LICENSE) [![NPM total downloads](https://img.shields.io/npm/dt/@a11yst/source-analysis.svg?style=flat)](https://www.npmjs.com/package/@a11yst/source-analysis)
 
 Orchestrates repository source indexing, framework mapping, candidate ranking, and
 accessibility recommendations for a11yst audit findings.

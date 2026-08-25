@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## Unreleased
 
+## [1.0.2] - 2026-08-24
+
+### Changed
+
+- Package README badges (npm version, MPL-2.0 license, total downloads) and `homepage` metadata now point to https://www.a11yst.dev.
+
 ## [1.0.1] - 2026-08-23
 
 ### Fixed

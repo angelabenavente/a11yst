@@ -1,4 +1,4 @@
-# @a11yst/sarif
+# @a11yst/sarif [![NPM version](https://img.shields.io/npm/v/@a11yst/sarif.svg?style=flat)](https://www.npmjs.com/package/@a11yst/sarif) [![License: MPL-2.0](https://img.shields.io/badge/License-MPL--2.0-blue.svg)](LICENSE) [![NPM total downloads](https://img.shields.io/npm/dt/@a11yst/sarif.svg?style=flat)](https://www.npmjs.com/package/@a11yst/sarif)
 
 Pure SARIF 2.1.0 generation for a11yst audit results.
 

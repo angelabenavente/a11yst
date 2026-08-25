@@ -1,6 +1,6 @@
 {
   "name": "@a11yst/baseline",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Versioned accessibility baselines, comparison, and classifications for a11yst",
   "type": "module",
   "exports": {
@@ -31,7 +31,7 @@
     "type": "git",
     "url": "git+https://github.com/angelabenavente/a11yst.git"
   },
-  "homepage": "https://github.com/angelabenavente/a11yst#readme",
+  "homepage": "https://www.a11yst.dev",
   "bugs": {
     "url": "https://github.com/angelabenavente/a11yst/issues"
   },

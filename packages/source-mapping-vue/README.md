@@ -1,4 +1,4 @@
-# @a11yst/source-mapping-vue
+# @a11yst/source-mapping-vue [![NPM version](https://img.shields.io/npm/v/@a11yst/source-mapping-vue.svg?style=flat)](https://www.npmjs.com/package/@a11yst/source-mapping-vue) [![License: MPL-2.0](https://img.shields.io/badge/License-MPL--2.0-blue.svg)](LICENSE) [![NPM total downloads](https://img.shields.io/npm/dt/@a11yst/source-mapping-vue.svg?style=flat)](https://www.npmjs.com/package/@a11yst/source-mapping-vue)
 
 Conservative static source catalog and mapping for Vue 3 Single-File Components.
 
